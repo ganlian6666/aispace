@@ -51,9 +51,9 @@
     }
 
     header {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
       gap: 16px;
       background: rgba(8, 12, 32, 0.7);
       border: 1px solid var(--panel-border);
@@ -67,6 +67,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      justify-self: start;
     }
 
     .brand svg {
@@ -88,6 +89,7 @@
       gap: 10px;
       flex-wrap: wrap;
       font-size: 14px;
+      justify-self: center;
     }
 
     nav a {
