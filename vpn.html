@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VPN推荐 · 自由空间</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      --bg: #040912;
+      --panel: rgba(15, 23, 42, 0.85);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --card: rgba(8, 10, 25, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-glow: #45e0ff;
+      --accent-warm: #ffbd4a;
+      --text-muted: rgba(230, 241, 255, 0.65);
+      --orange: #ff6b1a;
+      --orange-light: #ff8d4b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1c2b62, transparent 55%),
+        radial-gradient(circle at 20% 10%, #0b5cfd, transparent 35%),
+        radial-gradient(circle at 80% 0%, #40e0ff, transparent 45%),
+        var(--bg);
+      color: #f8fbff;
+    }
+
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 24px clamp(16px, 4vw, 40px) 64px;
+      gap: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(8, 12, 32, 0.7);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 16px 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(4, 8, 24, 0.8);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand svg {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff8d4b, #f266ff);
+      padding: 8px;
+      box-shadow: 0 8px 25px rgba(255, 100, 200, 0.35);
+    }
+
+    .brand strong {
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 999px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: rgba(69, 224, 255, 0.12);
+      color: #fff;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .top-actions button {
+      border: 1px solid var(--panel-border);
+      background: transparent;
+      color: #fdfefe;
+      border-radius: 999px;
+      padding: 6px 18px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: transform 0.2s ease, border-color 0.3s ease;
+    }
+
+    .top-actions button:hover {
+      border-color: var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 20px 28px;
+      border: 1px solid var(--panel-border);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(26px, 3vw, 34px);
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      margin: 8px 0 0;
+      max-width: 520px;
+    }
+
+    .vpn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1200px) {
+      .vpn-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .vpn-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .vpn-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 0;
+      box-shadow:
+        0 15px 35px rgba(3, 6, 16, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .vpn-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .top-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: white;
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(255, 107, 26, 0.4);
+    }
+
+    .top-badge.silver {
+      background: linear-gradient(135deg, #7a8a9e, #a5b4c4);
+      box-shadow: 0 4px 15px rgba(122, 138, 158, 0.4);
+    }
+
+    .vpn-header {
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .vpn-name {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      color: var(--orange-light);
+    }
+
+    .vpn-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .rating svg {
+      width: 18px;
+      height: 18px;
+      fill: #ffd700;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge.speed {
+      background: rgba(255, 193, 7, 0.15);
+      color: #ffc107;
+    }
+
+    .badge.stable {
+      background: rgba(76, 175, 80, 0.15);
+      color: #4caf50;
+    }
+
+    .vpn-price {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--orange);
+      margin: 16px 0 12px 0;
+    }
+
+    .vpn-price small {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .vpn-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .vpn-body {
+      padding: 24px;
+      flex-grow: 1;
+    }
+
+    .feature-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .feature-tag {
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .core-features {
+      margin-top: 20px;
+    }
+
+    .core-features h4 {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0 0 12px 0;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .feature-list li {
+      padding: 6px 0;
+      padding-left: 20px;
+      position: relative;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .feature-list li::before {
+      content: "●";
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+    }
+
+    .payment-methods {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .payment-methods h5 {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin: 0 0 8px 0;
+      font-weight: 500;
+    }
+
+    .method-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .method-tag {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.8);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quality-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .quality-tag {
+      background: rgba(69, 224, 255, 0.1);
+      color: #79fffe;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      border: 1px solid rgba(69, 224, 255, 0.3);
+    }
+
+    .vpn-footer {
+      padding: 0 24px 24px;
+    }
+
+    .visit-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .visit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 107, 26, 0.4);
+    }
+
+    .visit-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="brand">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path
+            fill="url(#grad1)"
+            d="M12 8l24 32H12z"
+            opacity="0.9"
+          ></path>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff9a4d"></stop>
+              <stop offset="100%" stop-color="#f552ff"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <strong>自由空间</strong>
+          <p style="margin: 0; font-size: 12px; color: var(--text-muted);">
+            自由AI空间·开放分享平台
+          </p>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">API中转汇聚</a>
+        <a href="vpn.html" class="active">VPN</a>
+        <a href="guide.html">配置指南</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>VPN 推荐 · 精选服务</h1>
+        <p>经过严格测试和用户反馈筛选的优质VPN服务，提供稳定快速的全球网络访问体验。</p>
+      </div>
+    </section>
+
+    <div class="vpn-grid">
+      <!-- VPN Card 1 -->
+      <article class="vpn-card">
+        <div class="top-badge">TOP 1</div>
+        <div class="vpn-header">
+          <h2 class="vpn-name">飞鸟云</h2>
+          <div class="vpn-meta">
+            <div class="rating">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <span>4.8</span>
+            </div>
+            <span class="badge speed">⚡ 速度</span>
+            <span class="badge stable">● 稳定</span>
+          </div>
+          <div class="vpn-price">
+            1RMB<small>/月起</small>
+          </div>
+          <p class="vpn-desc">极致性价比，支持支付宝，稳定快速的VPN服务。</p>
+        </div>
+        <div class="vpn-body">
+          <div class="feature-tags">
+            <span class="feature-tag">极致性价比</span>
+            <span class="feature-tag">稳定合中国用户</span>
+          </div>
+          <div class="core-features">
+            <h4>核心特性</h4>
+            <ul class="feature-list">
+              <li>地区：台湾日本新加坡香港美国</li>
+              <li>请知悉无退款服务</li>
+              <li>不限网速，不限设备数量</li>
+              <li>支持最新Hysteria2协议</li>
+              <li>需要自己配置，记得读一下使用文档</li>
+              <li>可访问ChatGPT，Google和Netflix</li>
+            </ul>
+          </div>
+          <div class="payment-methods">
+            <h5>💳 支付方式</h5>
+            <div class="method-tags">
+              <span class="method-tag">支付宝</span>
+              <span class="method-tag">信用卡</span>
+              <span class="method-tag">微信</span>
+            </div>
+          </div>
+          <div class="quality-tags">
+            <span class="quality-tag">推荐</span>
+            <span class="quality-tag">支付宝</span>
+            <span class="quality-tag">中国优化</span>
+          </div>
+        </div>
+        <div class="vpn-footer">
+          <a href="https://feiniaoyun11.life/#/register?code=2J2dfAIx" target="_blank" class="visit-btn">
+            立即访问
+            <svg viewBox="0 0 24 24">
+              <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- VPN Card 2 -->
+      <article class="vpn-card">
+        <div class="top-badge silver">TOP 2</div>
+        <div class="vpn-header">
+          <h2 class="vpn-name">流量光</h2>
+          <div class="vpn-meta">
+            <div class="rating">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <span>4.7</span>
+            </div>
+            <span class="badge speed">⚡ 速度</span>
+            <span class="badge stable">● 稳定</span>
+          </div>
+          <div class="vpn-price">
+            9.90RMB<small>/月起</small>
+          </div>
+          <p class="vpn-desc">注重隐私保护的高端VPN服务，在中国表现稳定。</p>
+        </div>
+        <div class="vpn-body">
+          <div class="feature-tags">
+            <span class="feature-tag">极致隐私保护</span>
+            <span class="feature-tag">流媒体解锁</span>
+          </div>
+          <div class="core-features">
+            <h4>核心特性</h4>
+            <ul class="feature-list">
+              <li>不限制设备数,不限速</li>
+              <li>最高倍率: ×1（直连节点0倍率）</li>
+              <li>高优先级BGP专线, 港日新台专线互联</li>
+              <li>提供优秀的流媒体解锁与 ChatGPT 解锁</li>
+              <li>国家/地区: 香港, 台湾, 日本, 美国, 新加坡, 韩国</li>
+              <li>冷门国家/地区IP: 美国, 加拿大, 南极洲</li>
+              <li>通知频道群与工单售后保障</li>
+              <li>特殊商品, 无任何退款政策, 谨慎下单</li>
+            </ul>
+          </div>
+          <div class="payment-methods">
+            <h5>💳 支付方式</h5>
+            <div class="method-tags">
+              <span class="method-tag">信用卡</span>
+              <span class="method-tag">支付宝</span>
+              <span class="method-tag">微信</span>
+            </div>
+          </div>
+          <div class="quality-tags">
+            <span class="quality-tag">高端私密</span>
+            <span class="quality-tag">稳定</span>
+          </div>
+        </div>
+        <div class="vpn-footer">
+          <a href="https://llg01.com/#/register?code=vuLu4sOe" target="_blank" class="visit-btn">
+            立即访问
+            <svg viewBox="0 0 24 24">
+              <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- VPN Card 3 -->
+      <article class="vpn-card">
+        <div class="top-badge">TOP 3</div>
+        <div class="vpn-header">
+          <h2 class="vpn-name">樱花猫</h2>
+          <div class="vpn-meta">
+            <div class="rating">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <span>4.9</span>
+            </div>
+            <span class="badge speed">⚡ 速度</span>
+            <span class="badge stable">● 稳定</span>
+          </div>
+          <div class="vpn-price">
+            3.8RMB<small>/月起</small>
+          </div>
+          <p class="vpn-desc">全球知名的顶级VPN服务，速度快，稳定性强。</p>
+        </div>
+        <div class="vpn-body">
+          <div class="feature-tags">
+            <span class="feature-tag">业界标杆</span>
+            <span class="feature-tag">超快速度</span>
+          </div>
+          <div class="core-features">
+            <h4>核心特性</h4>
+            <ul class="feature-list">
+              <li>灵活套餐：支持月付、季付、半年付、年付等多种周期</li>
+              <li>客服保障：Telegram在线客服和工单系统支持</li>
+              <li>多端支持：多客户端导入和二维码订阅功能</li>
+              <li>邀请返利：完善的邀请返利和佣金管理系统</li>
+              <li>注意事项：不支持新疆地区，购买后无法退款，流量不可叠加</li>
+            </ul>
+          </div>
+          <div class="payment-methods">
+            <h5>💳 支付方式</h5>
+            <div class="method-tags">
+              <span class="method-tag">信用卡</span>
+              <span class="method-tag">支付宝</span>
+              <span class="method-tag">微信</span>
+            </div>
+          </div>
+          <div class="quality-tags">
+            <span class="quality-tag">顶级</span>
+            <span class="quality-tag">高速</span>
+            <span class="quality-tag">推荐</span>
+          </div>
+        </div>
+        <div class="vpn-footer">
+          <a href="https://sakura-cat3.com/register?code=3X1mwrVL" target="_blank" class="visit-btn">
+            立即访问
+            <svg viewBox="0 0 24 24">
+              <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>
+            </svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</body>
+</html>

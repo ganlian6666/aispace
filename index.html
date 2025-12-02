@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API中转汇聚 · 自由空间</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      --bg: #040912;
+      --panel: rgba(15, 23, 42, 0.85);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --card: rgba(8, 10, 25, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-glow: #45e0ff;
+      --accent-warm: #ffbd4a;
+      --text-muted: rgba(230, 241, 255, 0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1c2b62, transparent 55%),
+        radial-gradient(circle at 20% 10%, #0b5cfd, transparent 35%),
+        radial-gradient(circle at 80% 0%, #40e0ff, transparent 45%),
+        var(--bg);
+      color: #f8fbff;
+    }
+
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 24px clamp(16px, 4vw, 40px) 64px;
+      gap: 20px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(8, 12, 32, 0.7);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 16px 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(4, 8, 24, 0.8);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand svg {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ff8d4b, #f266ff);
+      padding: 8px;
+      box-shadow: 0 8px 25px rgba(255, 100, 200, 0.35);
+    }
+
+    .brand strong {
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 999px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      background: rgba(69, 224, 255, 0.12);
+      color: #fff;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .top-actions button {
+      border: 1px solid var(--panel-border);
+      background: transparent;
+      color: #fdfefe;
+      border-radius: 999px;
+      padding: 6px 18px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: transform 0.2s ease, border-color 0.3s ease;
+    }
+
+    .top-actions button:hover {
+      border-color: var(--accent-glow);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--panel);
+      border-radius: 20px;
+      padding: 20px 28px;
+      border: 1px solid var(--panel-border);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(26px, 3vw, 34px);
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      margin: 8px 0 0;
+      max-width: 420px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(69, 224, 255, 0.12);
+      color: #79fffe;
+      border-radius: 999px;
+      font-size: 12px;
+      padding: 6px 14px;
+      border: 1px solid rgba(69, 224, 255, 0.35);
+    }
+
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1200px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow:
+        0 15px 35px rgba(3, 6, 16, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 220px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-head h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .status {
+      border-radius: 12px;
+      padding: 4px 12px;
+      font-size: 12px;
+      background: rgba(69, 224, 255, 0.15);
+      color: #7ef3ff;
+      border: 1px solid rgba(69, 224, 255, 0.5);
+    }
+
+    .card p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 14px;
+      min-height: 42px;
+    }
+
+    .link-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .link-block a {
+      color: var(--accent-warm);
+      font-weight: 600;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .link-block button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .link-block button:hover {
+      background: rgba(69, 224, 255, 0.25);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-footer strong {
+      color: #fff;
+      font-size: 15px;
+    }
+
+
+    .floating-actions {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 5;
+    }
+
+    .floating-actions button {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(6, 9, 32, 0.8);
+      color: #fefefe;
+      cursor: pointer;
+      box-shadow: 0 15px 35px rgba(3, 6, 16, 0.85);
+      transition: transform 0.2s ease;
+    }
+
+    .floating-actions button:hover {
+      transform: translateY(-4px);
+    }
+
+    .floating-actions span {
+      display: block;
+      font-size: 10px;
+      margin-top: 6px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-actions" aria-label="快捷操作">
+    <button title="快速筛选">
+      <span>⋮</span>
+    </button>
+    <button title="客户支持">
+      <span>?</span>
+    </button>
+  </div>
+  <div class="app-shell">
+    <header>
+      <div class="brand">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path
+            fill="url(#grad1)"
+            d="M12 8l24 32H12z"
+            opacity="0.9"
+          ></path>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff9a4d"></stop>
+              <stop offset="100%" stop-color="#f552ff"></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <strong>自由空间</strong>
+          <p style="margin: 0; font-size: 12px; color: var(--text-muted);">
+            自由AI空间·开放分享平台
+          </p>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html" class="active">API中转汇聚</a>
+        <a href="vpn.html">VPN</a>
+        <a href="guide.html">配置指南</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1>不定期分享优质API接口</h1>
+        <p>每一条 API 都经过人工检测，基本支持claude code，codex和国内优质AI模型，请放心使用！</p>
+      </div>
+    </section>
+
+
+    <div class="card-grid">
+      <article class="card" data-card-id="1">
+        <div class="card-head">
+          <h3>Evolai - 注册送积分 + Plus 会话</h3>
+          <span class="status">在线</span>
+        </div>
+        <p>全链路监控保证可用性，通过专属网关访问低延迟接口。</p>
+        <div class="link-block">
+          <a href="https://www.evolai.cn/?inviteCode=PDGD2EDT" target="_blank"
+            >https://www.evolai.cn/?inviteCode=PDGD2EDT</a
+          >
+          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+        </div>
+        <div class="card-footer">
+          <div>
+            响应时间 <strong>0 ms</strong>
+          </div>
+          <div>最后检测 2025-12-01</div>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="2">
+        <div class="card-head">
+          <h3>CodeMirror - 注册送 6kw Token</h3>
+          <span class="status">在线</span>
+        </div>
+        <p>多层身份识别与加密通道，适合接入生产环境。</p>
+        <div class="link-block">
+          <a href="https://api.codemirror.codes/register?aff=EUsy" target="_blank"
+            >https://api.codemirror.codes/register?aff=EUsy</a
+          >
+          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+        </div>
+        <div class="card-footer">
+          <div>
+            响应时间 <strong>0 ms</strong>
+          </div>
+          <div>最后检测 2025-12-01</div>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="3">
+        <div class="card-head">
+          <h3>AgentRouter - AI 路由服务</h3>
+          <span class="status">在线</span>
+        </div>
+        <p>智能路由分发，支持多模型切换，稳定高效。</p>
+        <div class="link-block">
+          <a href="https://agentrouter.org/register?aff=wZbO" target="_blank"
+            >https://agentrouter.org/register?aff=wZbO</a
+          >
+          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+        </div>
+        <div class="card-footer">
+          <div>
+            响应时间 <strong>0 ms</strong>
+          </div>
+          <div>最后检测 2025-12-01</div>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="4">
+        <div class="card-head">
+          <h3>CodeRelay - API 中转服务</h3>
+          <span class="status">在线</span>
+        </div>
+        <p>面向企业级，自动限流保护，汇总监控报警。</p>
+        <div class="link-block">
+          <a href="https://api.code-relay.com/register?aff=B1LY" target="_blank"
+            >https://api.code-relay.com/register?aff=B1LY</a
+          >
+          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+        </div>
+        <div class="card-footer">
+          <div>
+            响应时间 <strong>0 ms</strong>
+          </div>
+          <div>最后检测 2025-12-01</div>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="5">
+        <div class="card-head">
+          <h3>七牛云 - 百亿 Token 奖励</h3>
+          <span class="status">在线</span>
+        </div>
+        <p>叠加多地节点，上传速度与 Token 限额均可实时追踪。</p>
+        <div class="link-block">
+          <a href="https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea" target="_blank"
+            >https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea</a
+          >
+          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+        </div>
+        <div class="card-footer">
+          <div>
+            响应时间 <strong>0 ms</strong>
+          </div>
+          <div>最后检测 2025-12-01</div>
+        </div>
+      </article>
+
+      <article class="card" data-card-id="6">
+        <div class="card-head">
+          <h3>API520 - 稳定 API 服务</h3>
+          <span class="status">在线</span>
+        </div>
+        <p>多轮会话、问题求解均可使用，支持日常任务调度。</p>
+        <div class="link-block">
+          <a href="https://api520.pro/register?aff=klcS" target="_blank"
+            >https://api520.pro/register?aff=klcS</a
+          >
+          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+        </div>
+        <div class="card-footer">
+          <div>
+            响应时间 <strong>0 ms</strong>
+          </div>
+          <div>最后检测 2025-12-01</div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    // 复制链接功能
+    function copyLink(button) {
+      const linkBlock = button.parentElement;
+      const link = linkBlock.querySelector('a').href;
+
+      navigator.clipboard.writeText(link).then(() => {
+        const originalText = button.textContent;
+        button.textContent = '已复制!';
+        button.style.background = 'rgba(69, 224, 255, 0.3)';
+
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.background = '';
+        }, 1500);
+      }).catch(() => {
+        // 降级方案
+        const textarea = document.createElement('textarea');
+        textarea.value = link;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+
+        button.textContent = '已复制!';
+        setTimeout(() => {
+          button.textContent = '邀请链接 · 复制';
+        }, 1500);
+      });
+    }
+  </script>
+</body>
+</html>
+
