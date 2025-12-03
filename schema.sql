@@ -23,3 +23,20 @@ CREATE TABLE IF NOT EXISTS comments (
   ip TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS site_status (
+  card_id INTEGER PRIMARY KEY,
+  url TEXT NOT NULL,
+  status TEXT DEFAULT 'checking',
+  latency INTEGER DEFAULT 0,
+  last_checked DATETIME
+);
+
+-- 初始化 6 个卡片的 URL (如果不存在则插入)
+INSERT OR IGNORE INTO site_status (card_id, url) VALUES
+(1, 'https://www.evolai.cn/'),
+(2, 'https://api.codemirror.codes/'),
+(3, 'https://agentrouter.org/'),
+(4, 'https://api.code-relay.com/'),
+(5, 'https://www.qiniu.com/'),
+(6, 'https://api520.pro/');
