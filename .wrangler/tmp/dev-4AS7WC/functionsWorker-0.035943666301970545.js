@@ -93,6 +93,38 @@ async function onRequestPost(context) {
 __name(onRequestPost, "onRequestPost");
 __name2(onRequestPost, "onRequestPost");
 async function onRequestGet2(context) {
+  const { env, request } = context;
+  const url = new URL(request.url);
+  const key = url.searchParams.get("key");
+  if (key !== "admin123") {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  try {
+    const { results } = await env.DB.prepare(
+      "SELECT * FROM submissions ORDER BY created_at DESC"
+    ).all();
+    if (!results || results.length === 0) {
+      return new Response("No submissions found", { status: 200 });
+    }
+    const headers = Object.keys(results[0]).join(",");
+    const rows = results.map(
+      (row) => Object.values(row).map((value) => `"${value}"`).join(",")
+    ).join("\n");
+    const csv = `${headers}
+${rows}`;
+    return new Response(csv, {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": 'attachment; filename="submissions.csv"'
+      }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+}
+__name(onRequestGet2, "onRequestGet2");
+__name2(onRequestGet2, "onRequestGet");
+async function onRequestGet3(context) {
   const { env } = context;
   try {
     const { results } = await env.DB.prepare(
@@ -105,8 +137,8 @@ async function onRequestGet2(context) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
-__name(onRequestGet2, "onRequestGet2");
-__name2(onRequestGet2, "onRequestGet");
+__name(onRequestGet3, "onRequestGet3");
+__name2(onRequestGet3, "onRequestGet");
 async function onRequestPost2(context) {
   const { request, env } = context;
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
@@ -172,11 +204,18 @@ var routes = [
     modules: [onRequestPost]
   },
   {
-    routePath: "/api/likes",
+    routePath: "/api/export",
     mountPath: "/api",
     method: "GET",
     middlewares: [],
     modules: [onRequestGet2]
+  },
+  {
+    routePath: "/api/likes",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet3]
   },
   {
     routePath: "/api/likes",
