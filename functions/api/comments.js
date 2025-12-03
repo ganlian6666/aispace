@@ -23,13 +23,13 @@ export async function onRequestPost(context) {
     try {
         const { card_id, nickname, content } = await request.json();
 
-        // Check limit: 3 comments per IP per day
+        // Check limit: 3 comments per IP per CARD per day
         const { results } = await env.DB.prepare(
-            "SELECT count(*) as count FROM comments WHERE ip = ? AND created_at > datetime('now', '-1 day')"
-        ).bind(ip).all();
+            "SELECT count(*) as count FROM comments WHERE ip = ? AND card_id = ? AND created_at > datetime('now', '-1 day')"
+        ).bind(ip, card_id).all();
 
         if (results[0].count >= 3) {
-            return new Response(JSON.stringify({ error: 'Daily comment limit reached' }), { status: 429 });
+            return new Response(JSON.stringify({ error: 'Daily comment limit reached for this item' }), { status: 429 });
         }
 
         await env.DB.prepare(
