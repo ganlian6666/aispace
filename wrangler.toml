@@ -5,4 +5,4 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "freespace-db"
-database_id = "YOUR_DATABASE_ID_HERE" # 你需要在 Cloudflare 后台创建数据库后填入这里
+
