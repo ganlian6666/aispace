@@ -132,28 +132,6 @@
       fill: currentColor;
     }
 
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .top-actions button {
-      border: 1px solid var(--panel-border);
-      background: transparent;
-      color: #fdfefe;
-      border-radius: 999px;
-      padding: 6px 18px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: transform 0.2s ease, border-color 0.3s ease;
-    }
-
-    .top-actions button:hover {
-      border-color: var(--accent-glow);
-      transform: translateY(-2px);
-    }
-
     .hero {
       display: flex;
       align-items: center;
@@ -164,6 +142,7 @@
       padding: 20px 28px;
       border: 1px solid var(--panel-border);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
     }
 
     .hero h1 {
@@ -174,21 +153,25 @@
     .hero p {
       color: var(--text-muted);
       margin: 8px 0 0;
-      max-width: 420px;
+      max-width: 500px;
     }
 
-    .status-pill {
-      display: inline-flex;
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(69, 224, 255, 0.12);
-      color: #79fffe;
-      border-radius: 999px;
-      font-size: 12px;
-      padding: 6px 14px;
-      border: 1px solid rgba(69, 224, 255, 0.35);
+      gap: 8px;
+      transition: background 0.2s;
     }
-
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
 
     .card-grid {
       display: grid;
@@ -290,23 +273,220 @@
       color: var(--text-muted);
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
 
-    .card-footer strong {
+    .card-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,0.05);
       color: #fff;
-      font-size: 15px;
     }
 
+    .action-btn.liked {
+      color: #ff4b4b;
+    }
+    
+    .action-btn.liked svg {
+      fill: #ff4b4b;
+    }
+
+    .action-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+    
+    .action-btn.liked svg {
+      stroke: none;
+    }
+
+    /* Comments Section */
+    .comments-section {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .comments-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .comment-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .comment-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .comment-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    .comment-item {
+      font-size: 13px;
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .comment-input {
+      flex: 1;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 8px;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .comment-submit {
+      background: var(--accent-glow);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 0 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #1e293b;
+      border: 1px solid var(--panel-border);
+      padding: 24px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-backdrop.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal h2 {
+      margin: 0 0 16px 0;
+      font-size: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 10px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-glow);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
 
     @media (max-width: 640px) {
       header {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      .top-actions {
-        width: 100%;
-        justify-content: flex-end;
       }
     }
   </style>
@@ -355,10 +535,18 @@
         <h1>不定期分享优质API接口</h1>
         <p>每一条 API 都经过人工检测，基本支持claude code，codex和国内优质AI模型，请放心使用！</p>
       </div>
+      <button class="btn-primary" onclick="openModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        提交网站
+      </button>
     </section>
 
 
     <div class="card-grid">
+      <!-- Card 1 -->
       <article class="card" data-card-id="1">
         <div class="card-head">
           <h3>Evolai - 注册送积分 + Plus 会话</h3>
@@ -366,19 +554,32 @@
         </div>
         <p>全链路监控保证可用性，通过专属网关访问低延迟接口。</p>
         <div class="link-block">
-          <a href="https://www.evolai.cn/?inviteCode=PDGD2EDT" target="_blank"
-            >https://www.evolai.cn/?inviteCode=PDGD2EDT</a
-          >
+          <a href="https://www.evolai.cn/?inviteCode=PDGD2EDT" target="_blank">https://www.evolai.cn/?inviteCode=PDGD2EDT</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
-          <div>
-            响应时间 <strong>0 ms</strong>
+          <div class="card-actions">
+            <button class="action-btn like-btn" onclick="toggleLike(1)">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count">0</span>
+            </button>
+            <button class="action-btn" onclick="toggleComments(1)">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              评论
+            </button>
           </div>
           <div>最后检测 2025-12-01</div>
         </div>
+        <div class="comments-section" id="comments-1">
+          <div class="comment-list"></div>
+          <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(1)">
+            <button class="comment-submit" onclick="postComment(1)">发送</button>
+          </div>
+        </div>
       </article>
 
+      <!-- Card 2 -->
       <article class="card" data-card-id="2">
         <div class="card-head">
           <h3>CodeMirror - 注册送 6kw Token</h3>
@@ -386,19 +587,32 @@
         </div>
         <p>多层身份识别与加密通道，适合接入生产环境。</p>
         <div class="link-block">
-          <a href="https://api.codemirror.codes/register?aff=EUsy" target="_blank"
-            >https://api.codemirror.codes/register?aff=EUsy</a
-          >
+          <a href="https://api.codemirror.codes/register?aff=EUsy" target="_blank">https://api.codemirror.codes/register?aff=EUsy</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
-          <div>
-            响应时间 <strong>0 ms</strong>
+          <div class="card-actions">
+            <button class="action-btn like-btn" onclick="toggleLike(2)">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count">0</span>
+            </button>
+            <button class="action-btn" onclick="toggleComments(2)">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              评论
+            </button>
           </div>
           <div>最后检测 2025-12-01</div>
         </div>
+        <div class="comments-section" id="comments-2">
+          <div class="comment-list"></div>
+          <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(2)">
+            <button class="comment-submit" onclick="postComment(2)">发送</button>
+          </div>
+        </div>
       </article>
 
+      <!-- Card 3 -->
       <article class="card" data-card-id="3">
         <div class="card-head">
           <h3>AgentRouter - AI 路由服务</h3>
@@ -406,19 +620,32 @@
         </div>
         <p>智能路由分发，支持多模型切换，稳定高效。</p>
         <div class="link-block">
-          <a href="https://agentrouter.org/register?aff=wZbO" target="_blank"
-            >https://agentrouter.org/register?aff=wZbO</a
-          >
+          <a href="https://agentrouter.org/register?aff=wZbO" target="_blank">https://agentrouter.org/register?aff=wZbO</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
-          <div>
-            响应时间 <strong>0 ms</strong>
+          <div class="card-actions">
+            <button class="action-btn like-btn" onclick="toggleLike(3)">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count">0</span>
+            </button>
+            <button class="action-btn" onclick="toggleComments(3)">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              评论
+            </button>
           </div>
           <div>最后检测 2025-12-01</div>
         </div>
+        <div class="comments-section" id="comments-3">
+          <div class="comment-list"></div>
+          <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(3)">
+            <button class="comment-submit" onclick="postComment(3)">发送</button>
+          </div>
+        </div>
       </article>
 
+      <!-- Card 4 -->
       <article class="card" data-card-id="4">
         <div class="card-head">
           <h3>CodeRelay - API 中转服务</h3>
@@ -426,19 +653,32 @@
         </div>
         <p>面向企业级，自动限流保护，汇总监控报警。</p>
         <div class="link-block">
-          <a href="https://api.code-relay.com/register?aff=B1LY" target="_blank"
-            >https://api.code-relay.com/register?aff=B1LY</a
-          >
+          <a href="https://api.code-relay.com/register?aff=B1LY" target="_blank">https://api.code-relay.com/register?aff=B1LY</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
-          <div>
-            响应时间 <strong>0 ms</strong>
+          <div class="card-actions">
+            <button class="action-btn like-btn" onclick="toggleLike(4)">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count">0</span>
+            </button>
+            <button class="action-btn" onclick="toggleComments(4)">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              评论
+            </button>
           </div>
           <div>最后检测 2025-12-01</div>
         </div>
+        <div class="comments-section" id="comments-4">
+          <div class="comment-list"></div>
+          <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(4)">
+            <button class="comment-submit" onclick="postComment(4)">发送</button>
+          </div>
+        </div>
       </article>
 
+      <!-- Card 5 -->
       <article class="card" data-card-id="5">
         <div class="card-head">
           <h3>七牛云 - 百亿 Token 奖励</h3>
@@ -446,19 +686,32 @@
         </div>
         <p>叠加多地节点，上传速度与 Token 限额均可实时追踪。</p>
         <div class="link-block">
-          <a href="https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea" target="_blank"
-            >https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea</a
-          >
+          <a href="https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea" target="_blank">https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
-          <div>
-            响应时间 <strong>0 ms</strong>
+          <div class="card-actions">
+            <button class="action-btn like-btn" onclick="toggleLike(5)">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count">0</span>
+            </button>
+            <button class="action-btn" onclick="toggleComments(5)">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              评论
+            </button>
           </div>
           <div>最后检测 2025-12-01</div>
         </div>
+        <div class="comments-section" id="comments-5">
+          <div class="comment-list"></div>
+          <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(5)">
+            <button class="comment-submit" onclick="postComment(5)">发送</button>
+          </div>
+        </div>
       </article>
 
+      <!-- Card 6 -->
       <article class="card" data-card-id="6">
         <div class="card-head">
           <h3>API520 - 稳定 API 服务</h3>
@@ -466,18 +719,62 @@
         </div>
         <p>多轮会话、问题求解均可使用，支持日常任务调度。</p>
         <div class="link-block">
-          <a href="https://api520.pro/register?aff=klcS" target="_blank"
-            >https://api520.pro/register?aff=klcS</a
-          >
+          <a href="https://api520.pro/register?aff=klcS" target="_blank">https://api520.pro/register?aff=klcS</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
-          <div>
-            响应时间 <strong>0 ms</strong>
+          <div class="card-actions">
+            <button class="action-btn like-btn" onclick="toggleLike(6)">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count">0</span>
+            </button>
+            <button class="action-btn" onclick="toggleComments(6)">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              评论
+            </button>
           </div>
           <div>最后检测 2025-12-01</div>
         </div>
+        <div class="comments-section" id="comments-6">
+          <div class="comment-list"></div>
+          <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(6)">
+            <button class="comment-submit" onclick="postComment(6)">发送</button>
+          </div>
+        </div>
       </article>
+    </div>
+  </div>
+
+  <!-- Submission Modal -->
+  <div class="modal-backdrop" id="submitModal" onclick="if(event.target === this) closeModal()">
+    <div class="modal">
+      <h2>提交新路由器</h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+        分享你的路由器，让更多人发现和使用。提交后需要审核验证。
+      </p>
+      <form id="submitForm" onsubmit="submitWebsite(event)">
+        <div class="form-group">
+          <label>路由器名称 *</label>
+          <input type="text" name="name" class="form-control" placeholder="例如: OpenAI官方API" required>
+        </div>
+        <div class="form-group">
+          <label>网站地址 *</label>
+          <input type="url" name="url" class="form-control" placeholder="例如: https://chatgpt.com/" required>
+        </div>
+        <div class="form-group">
+          <label>邀请链接</label>
+          <input type="url" name="invite_link" class="form-control" placeholder="例如: https://example.com/invite?code=abc">
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea name="description" class="form-control" rows="3" placeholder="简单介绍一下..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeModal()">取消</button>
+          <button type="submit" class="btn-primary">提交</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -511,7 +808,171 @@
         }, 1500);
       });
     }
+
+    // Modal Logic
+    function openModal() {
+      document.getElementById('submitModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('submitModal').classList.remove('active');
+    }
+
+    async function submitWebsite(event) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const btn = form.querySelector('button[type="submit"]');
+      
+      btn.disabled = true;
+      btn.textContent = '提交中...';
+
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          alert('提交成功！感谢您的分享。');
+          closeModal();
+          form.reset();
+        } else {
+          const err = await res.json();
+          alert('提交失败: ' + (err.error || '未知错误'));
+        }
+      } catch (e) {
+        alert('网络错误，请稍后重试');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '提交';
+      }
+    }
+
+    // Likes Logic
+    async function loadLikes() {
+      try {
+        const res = await fetch('/api/likes');
+        const likes = await res.json();
+        document.querySelectorAll('.card').forEach(card => {
+          const id = card.dataset.cardId;
+          const countSpan = card.querySelector('.like-count');
+          if (likes[id]) countSpan.textContent = likes[id];
+        });
+      } catch (e) {
+        console.error('Failed to load likes', e);
+      }
+    }
+
+    async function toggleLike(cardId) {
+      const btn = document.querySelector(`.card[data-card-id="${cardId}"] .like-btn`);
+      const countSpan = btn.querySelector('.like-count');
+      
+      // Optimistic update
+      const currentCount = parseInt(countSpan.textContent) || 0;
+      
+      try {
+        const res = await fetch('/api/likes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ card_id: cardId })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          countSpan.textContent = data.count;
+          btn.classList.add('liked');
+        } else {
+          const err = await res.json();
+          if (res.status === 429) {
+            alert('您今天点赞太频繁了，请明天再来！');
+          } else {
+            console.error(err);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Comments Logic
+    async function toggleComments(cardId) {
+      const section = document.getElementById(`comments-${cardId}`);
+      const isActive = section.classList.contains('active');
+      
+      if (!isActive) {
+        section.classList.add('active');
+        loadComments(cardId);
+      } else {
+        section.classList.remove('active');
+      }
+    }
+
+    async function loadComments(cardId) {
+      const list = document.querySelector(`#comments-${cardId} .comment-list`);
+      list.innerHTML = '<div style="padding:8px;text-align:center;color:var(--text-muted)">加载中...</div>';
+      
+      try {
+        const res = await fetch(`/api/comments?card_id=${cardId}`);
+        const comments = await res.json();
+        
+        list.innerHTML = '';
+        if (comments.length === 0) {
+          list.innerHTML = '<div style="padding:8px;text-align:center;color:var(--text-muted)">暂无评论，快来抢沙发！</div>';
+          return;
+        }
+
+        comments.forEach(c => {
+          const div = document.createElement('div');
+          div.className = 'comment-item';
+          div.innerHTML = `
+            <div class="comment-header">
+              <span>${c.nickname || '匿名用户'}</span>
+              <span>${new Date(c.created_at).toLocaleDateString()}</span>
+            </div>
+            <div>${c.content}</div>
+          `;
+          list.appendChild(div);
+        });
+      } catch (e) {
+        list.innerHTML = '<div style="padding:8px;text-align:center;color:red">加载失败</div>';
+      }
+    }
+
+    async function postComment(cardId) {
+      const section = document.getElementById(`comments-${cardId}`);
+      const input = section.querySelector('.comment-input');
+      const content = input.value.trim();
+      
+      if (!content) return;
+
+      try {
+        const res = await fetch('/api/comments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ card_id: cardId, content })
+        });
+
+        if (res.ok) {
+          input.value = '';
+          loadComments(cardId); // Reload
+        } else {
+          const err = await res.json();
+          if (res.status === 429) {
+            alert('您今天评论太多了，休息一下吧！');
+          } else {
+            alert('评论失败: ' + err.error);
+          }
+        }
+      } catch (e) {
+        alert('网络错误');
+      }
+    }
+
+    // Init
+    loadLikes();
   </script>
 </body>
 </html>
-
