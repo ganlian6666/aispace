@@ -1,80 +1,80 @@
 export async function onRequestGet(context) {
-    const { env } = context;
+  const { env } = context;
 
-    // 1. 定义站点数据 (元数据)
-    const sites = [
-        {
-            id: 1,
-            name: "Evolai - 注册送积分 + Plus 会话",
-            desc: "全链路监控保证可用性，通过专属网关访问低延迟接口。",
-            invite: "https://www.evolai.cn/?inviteCode=PDGD2EDT",
-            display: "https://www.evolai.cn/",
-            last_check: "2025-12-01"
-        },
-        {
-            id: 2,
-            name: "七牛云 - 百亿 Token 奖励",
-            desc: "叠加多地节点，上传速度与 Token 限额均可实时追踪。",
-            invite: "https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea",
-            display: "https://www.qiniu.com/",
-            last_check: "2025-12-01"
-        },
-        {
-            id: 3,
-            name: "Univibe - 注册即送6000积分",
-            desc: "高速稳定的原版OpenAI CodeX和 Claude Code。",
-            invite: "https://www.univibe.cc/console/auth?type=register&invite=CDO7IQ",
-            display: "https://www.univibe.cc/",
-            last_check: "2025-12-04"
-        },
-        {
-            id: 4,
-            name: "AgentRouter - AI 路由服务",
-            desc: "智能路由分发，支持多模型切换，稳定高效。",
-            invite: "https://agentrouter.org/register?aff=wZbO",
-            display: "https://agentrouter.org/",
-            last_check: "2025-12-01"
-        },
-        {
-            id: 5,
-            name: "CodeMirror - 注册送 6kw Token",
-            desc: "多层身份识别与加密通道，适合接入生产环境。",
-            invite: "https://api.codemirror.codes/register?aff=EUsy",
-            display: "https://api.codemirror.codes/",
-            last_check: "2025-12-01"
-        },
-        {
-            id: 6,
-            name: "API520 - 稳定 API 服务",
-            desc: "多轮会话、问题求解均可使用，支持日常任务调度。",
-            invite: "https://api520.pro/register?aff=klcS",
-            display: "https://api520.pro/",
-            last_check: "2025-12-01"
-        }
-    ];
-
-    // 2. 获取点赞数据
-    let likesMap = {};
-    try {
-        const { results } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
-        results.forEach(r => {
-            likesMap[r.card_id] = r.count;
-        });
-    } catch (e) {
-        console.error("DB Error:", e);
-        // 即使数据库挂了，也要保证页面能渲染
+  // 1. 定义站点数据 (元数据)
+  const sites = [
+    {
+      id: 1,
+      name: "Evolai - 注册送积分 + Plus 会话",
+      desc: "全链路监控保证可用性，通过专属网关访问低延迟接口。",
+      invite: "https://www.evolai.cn/?inviteCode=PDGD2EDT",
+      display: "https://www.evolai.cn/",
+      last_check: "2025-12-01"
+    },
+    {
+      id: 2,
+      name: "七牛云 - 百亿 Token 奖励",
+      desc: "叠加多地节点，上传速度与 Token 限额均可实时追踪。",
+      invite: "https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea",
+      display: "https://www.qiniu.com/",
+      last_check: "2025-12-01"
+    },
+    {
+      id: 3,
+      name: "Univibe - 注册即送6000积分",
+      desc: "高速稳定的原版OpenAI CodeX和 Claude Code。",
+      invite: "https://www.univibe.cc/console/auth?type=register&invite=CDO7IQ",
+      display: "https://www.univibe.cc/",
+      last_check: "2025-12-04"
+    },
+    {
+      id: 4,
+      name: "AgentRouter - AI 路由服务",
+      desc: "智能路由分发，支持多模型切换，稳定高效。",
+      invite: "https://agentrouter.org/register?aff=wZbO",
+      display: "https://agentrouter.org/",
+      last_check: "2025-12-01"
+    },
+    {
+      id: 5,
+      name: "CodeMirror - 注册送 6kw Token",
+      desc: "多层身份识别与加密通道，适合接入生产环境。",
+      invite: "https://api.codemirror.codes/register?aff=EUsy",
+      display: "https://api.codemirror.codes/",
+      last_check: "2025-12-01"
+    },
+    {
+      id: 6,
+      name: "API520 - 稳定 API 服务",
+      desc: "多轮会话、问题求解均可使用，支持日常任务调度。",
+      invite: "https://api520.pro/register?aff=klcS",
+      display: "https://api520.pro/",
+      last_check: "2025-12-01"
     }
+  ];
 
-    // 3. 排序：点赞数倒序 -> ID 正序
-    sites.sort((a, b) => {
-        const likeA = likesMap[a.id] || 0;
-        const likeB = likesMap[b.id] || 0;
-        if (likeB !== likeA) return likeB - likeA;
-        return a.id - b.id;
+  // 2. 获取点赞数据
+  let likesMap = {};
+  try {
+    const { results } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
+    results.forEach(r => {
+      likesMap[r.card_id] = r.count;
     });
+  } catch (e) {
+    console.error("DB Error:", e);
+    // 即使数据库挂了，也要保证页面能渲染
+  }
 
-    // 4. 生成 HTML
-    const cardsHtml = sites.map(site => `
+  // 3. 排序：点赞数倒序 -> ID 正序
+  sites.sort((a, b) => {
+    const likeA = likesMap[a.id] || 0;
+    const likeB = likesMap[b.id] || 0;
+    if (likeB !== likeA) return likeB - likeA;
+    return a.id - b.id;
+  });
+
+  // 4. 生成 HTML
+  const cardsHtml = sites.map(site => `
       <article class="card" data-card-id="${site.id}">
         <div class="card-head">
           <h3>${site.name}</h3>
@@ -114,7 +114,7 @@ export async function onRequestGet(context) {
       </article>
   `).join('');
 
-    const html = `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
@@ -211,7 +211,7 @@ export async function onRequestGet(context) {
       border: 1px solid rgba(69, 224, 255, 0.5);
     }
     .card p { margin: 0; color: rgba(255, 255, 255, 0.88); font-size: 14px; min-height: 42px; }
-    .link-block { display: flex; flex-direction: column; gap: 8px; }
+    .link-block { display: flex; flex-direction: column; gap: 8px; align-items: center; margin-top: -5px; }
     .link-block a { color: var(--accent-warm); font-weight: 600; text-decoration: none; word-break: break-all; }
     .link-block button {
       border: none; border-radius: 12px; padding: 10px;
@@ -617,9 +617,9 @@ export async function onRequestGet(context) {
 </body>
 </html>`;
 
-    return new Response(html, {
-        headers: {
-            'content-type': 'text/html;charset=UTF-8',
-        },
-    });
+  return new Response(html, {
+    headers: {
+      'content-type': 'text/html;charset=UTF-8',
+    },
+  });
 }
