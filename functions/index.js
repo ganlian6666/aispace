@@ -1,81 +1,37 @@
 export async function onRequestGet(context) {
   const { env } = context;
 
-  // 1. 定义站点数据 (元数据)
-  const sites = [
-    {
-      id: 1,
-      name: "Evolai - 注册送积分 + 3天Plus 会话",
-      desc: "全链路监控保证可用性，通过专属网关访问低延迟接口。",
-      invite: "https://www.evolai.cn/?inviteCode=PDGD2EDT",
-      display: "https://www.evolai.cn/",
-      last_check: "2025-12-01"
-    },
-    {
-      id: 2,
-      name: "七牛云 - 注册就送千万AI大模型 Token 奖励",
-      desc: "叠加多地节点，上传速度与 Token 限额均可实时追踪。",
-      invite: "https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea",
-      display: "https://www.qiniu.com/",
-      last_check: "2025-12-01"
-    },
-    {
-      id: 3,
-      name: "Univibe - 注册即送6000积分",
-      desc: "高速稳定的原版OpenAI CodeX和 Claude Code。",
-      invite: "https://www.univibe.cc/console/auth?type=register&invite=CDO7IQ",
-      display: "https://www.univibe.cc/",
-      last_check: "2025-12-04"
-    },
-    {
-      id: 4,
-      name: "AgentRouter - AI 路由服务",
-      desc: "智能路由分发，支持多模型切换，稳定高效。",
-      invite: "https://agentrouter.org/register?aff=wZbO",
-      display: "https://agentrouter.org/",
-      last_check: "2025-12-01"
-    },
-    {
-      id: 5,
-      name: "CodeMirror - 注册送 25$ 的体验额度",
-      desc: "多层身份识别与加密通道，适合接入生产环境。",
-      invite: "https://api.codemirror.codes/register?aff=EUsy",
-      display: "https://api.codemirror.codes/",
-      last_check: "2025-12-01"
-    },
-    {
-      id: 6,
-      name: "API520 - 稳定 API 服务",
-      desc: "多轮会话、问题求解均可使用，支持日常任务调度。",
-      invite: "https://api520.pro/register?aff=klcS",
-      display: "https://api520.pro/",
-      last_check: "2025-12-01"
-    }
-  ];
-
-  // 2. 获取点赞和状态数据
+  // 1. 从数据库获取站点数据
+  let sites = [];
   let likesMap = {};
-  let statusMap = {};
+
   try {
+    // 获取所有网站信息
+    const { results: siteResults } = await env.DB.prepare("SELECT * FROM websites").all();
+    sites = siteResults || [];
+
+    // 获取点赞数据
     const { results: likeResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
     likeResults.forEach(r => {
       likesMap[r.card_id] = r.count;
     });
 
-    const { results: statusResults } = await env.DB.prepare("SELECT card_id, last_checked FROM site_status").all();
-    statusResults.forEach(r => {
-      if (r.last_checked) {
-        // Format date to YYYY-MM-DD
-        const date = new Date(r.last_checked);
-        const dateStr = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
-        statusMap[r.card_id] = dateStr;
+    // 格式化 last_checked 日期
+    sites.forEach(site => {
+      if (site.last_checked) {
+        const date = new Date(site.last_checked);
+        site.formatted_date = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+      } else {
+        site.formatted_date = '从未检测';
       }
     });
+
   } catch (e) {
     console.error("DB Error:", e);
+    // 如果数据库挂了，sites 为空，页面会显示空白，但不会报错崩掉
   }
 
-  // 3. 排序：点赞数倒序 -> ID 正序
+  // 2. 排序：点赞数倒序 -> ID 正序
   sites.sort((a, b) => {
     const likeA = likesMap[a.id] || 0;
     const likeB = likesMap[b.id] || 0;
@@ -90,9 +46,9 @@ export async function onRequestGet(context) {
           <h3>${site.name}</h3>
           <span class="status">检测中...</span>
         </div>
-        <p>${site.desc}</p>
+        <p>${site.description}</p>
         <div class="link-block">
-          <a href="${site.invite}" target="_blank">${site.display}</a>
+          <a href="${site.invite_link}" target="_blank">${site.display_url}</a>
           <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
         </div>
         <div class="card-footer">
@@ -106,7 +62,7 @@ export async function onRequestGet(context) {
               评论
             </button>
           </div>
-          <div>最后检测 ${statusMap[site.id] || site.last_check}</div>
+          <div>最后检测 ${site.formatted_date}</div>
         </div>
         <div class="comments-section" id="comments-${site.id}">
           <div class="comment-list"></div>

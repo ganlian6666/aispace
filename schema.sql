@@ -24,25 +24,28 @@ CREATE TABLE IF NOT EXISTS comments (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS site_status (
-  card_id INTEGER PRIMARY KEY,
-  url TEXT NOT NULL,
+-- 新的核心表：Websites
+-- 合并了原来的 site_status 功能，并存储所有展示信息
+CREATE TABLE IF NOT EXISTS websites (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT,
+  invite_link TEXT NOT NULL,
+  display_url TEXT NOT NULL, -- 用于展示，也用于状态检测
+  
+  -- 状态字段
   status TEXT DEFAULT 'checking',
   latency INTEGER DEFAULT 0,
-  last_checked DATETIME
+  last_checked DATETIME,
+  
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 初始化 6 个卡片的 URL (按新顺序)
--- 1. Evolai
--- 2. Qiniu
--- 3. Univibe
--- 4. AgentRouter
--- 5. CodeMirror
--- 6. API520
-INSERT OR IGNORE INTO site_status (card_id, url) VALUES
-(1, 'https://www.evolai.cn/'),
-(2, 'https://www.qiniu.com/'),
-(3, 'https://www.univibe.cc/'),
-(4, 'https://agentrouter.org/'),
-(5, 'https://api.codemirror.codes/'),
-(6, 'https://api520.pro/');
+-- 初始化数据 (迁移原来的 6 个网站)
+INSERT OR IGNORE INTO websites (id, name, description, invite_link, display_url) VALUES
+(1, 'Evolai - 注册送积分 + 3天Plus 会话', '全链路监控保证可用性，通过专属网关访问低延迟接口。', 'https://www.evolai.cn/?inviteCode=PDGD2EDT', 'https://www.evolai.cn/'),
+(2, '七牛云 - 注册就送千万AI大模型 Token 奖励', '叠加多地节点，上传速度与 Token 限额均可实时追踪。', 'https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea', 'https://www.qiniu.com/'),
+(3, 'Univibe - 注册即送6000积分', '高速稳定的原版OpenAI CodeX和 Claude Code。', 'https://www.univibe.cc/console/auth?type=register&invite=CDO7IQ', 'https://www.univibe.cc/'),
+(4, 'AgentRouter - AI 路由服务', '智能路由分发，支持多模型切换，稳定高效。', 'https://agentrouter.org/register?aff=wZbO', 'https://agentrouter.org/'),
+(5, 'CodeMirror - 注册送 25$ 的体验额度', '多层身份识别与加密通道，适合接入生产环境。', 'https://api.codemirror.codes/register?aff=EUsy', 'https://api.codemirror.codes/'),
+(6, 'API520 - 稳定 API 服务', '多轮会话、问题求解均可使用，支持日常任务调度。', 'https://api520.pro/register?aff=klcS', 'https://api520.pro/');
