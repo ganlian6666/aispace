@@ -363,7 +363,7 @@ export async function onRequestGet(context) {
       </p>
       <div class="form-group">
         <label>昵称 *</label>
-        <input type="text" id="nicknameInput" class="form-control" placeholder="例如: 匿名用户" maxlength="20">
+        <input type="text" id="nicknameInput" class="form-control" placeholder="例如: 匿名用户" maxlength="20" onkeypress="if(event.key==='Enter') saveNickname()">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-secondary" onclick="closeModal('nicknameModal')">取消</button>
