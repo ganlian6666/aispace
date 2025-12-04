@@ -172,21 +172,24 @@ export async function onRequest(context) {
     const API_URL = '/api/admin/websites';
 
     // Auth Logic
+    // 内存变量，刷新页面即丢失
+    let currentKey = '';
+
     function login() {
       const pwd = document.getElementById('password').value;
       if (!pwd) return alert('请输入密码');
       
-      sessionStorage.setItem('admin_key', pwd);
+      currentKey = pwd;
       loadSites();
     }
 
     function logout() {
-      sessionStorage.removeItem('admin_key');
+      currentKey = '';
       location.reload();
     }
 
     function getKey() {
-      return sessionStorage.getItem('admin_key');
+      return currentKey;
     }
 
     // Data Logic
@@ -327,9 +330,6 @@ export async function onRequest(context) {
     }
 
     // Check login on load
-    // 清理旧的 localStorage 残留
-    localStorage.removeItem('admin_key');
-    
     if (getKey()) {
       loadSites();
     }
