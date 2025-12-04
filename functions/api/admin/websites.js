@@ -2,16 +2,17 @@ export async function onRequest(context) {
     const { request, env } = context;
     const url = new URL(request.url);
 
-    // 检查环境变量中的密码
-    const correctKey = env.ADMIN_PASSWORD;
-
-    if (!correctKey || authKey !== correctKey) {
-        // 故意延迟 2 秒，防止暴力破解
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
-
     try {
+        // 1. 安全验证
+        const authKey = request.headers.get('X-Admin-Key');
+        const correctKey = env.ADMIN_PASSWORD;
+
+        if (!correctKey || authKey !== correctKey) {
+            // 故意延迟 2 秒，防止暴力破解
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+        }
+
         // 2. 根据请求方法处理不同操作
         if (request.method === 'GET') {
             return await handleList(env);
