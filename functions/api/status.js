@@ -39,17 +39,24 @@ async function updateStatuses(env, sites) {
 
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            // 增加超时时间到 8 秒
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
 
+            // 改用 GET 请求，兼容性更好
             const res = await fetch(site.display_url, {
-                method: 'HEAD',
+                method: 'GET',
                 signal: controller.signal,
-                headers: { 'User-Agent': 'Mozilla/5.0 (compatible; SiteMonitor/1.0)' }
+                headers: {
+                    // 伪装成普通浏览器
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+                }
             });
 
             clearTimeout(timeoutId);
 
-            if (res.ok || res.status === 403 || res.status === 401) {
+            // 只要有响应，哪怕是 403/401/503，通常也说明服务器是活的
+            if (res.ok || res.status === 403 || res.status === 401 || res.status === 503) {
                 status = 'online';
             }
             latency = Date.now() - start;

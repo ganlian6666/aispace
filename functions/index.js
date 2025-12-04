@@ -31,11 +31,24 @@ export async function onRequestGet(context) {
     // 如果数据库挂了，sites 为空，页面会显示空白，但不会报错崩掉
   }
 
-  // 2. 排序：点赞数倒序 -> ID 正序
+  // 2. 排序：状态(在线优先) -> 点赞数倒序 -> ID 正序
   sites.sort((a, b) => {
+    // 状态权重：online = 1, 其他(offline/checking) = 0
+    // 注意：新添加的网站 status 可能是 null，视为 0
+    const statusA = (a.status === 'online') ? 1 : 0;
+    const statusB = (b.status === 'online') ? 1 : 0;
+
+    // 如果状态不同，在线的排前面
+    if (statusA !== statusB) {
+      return statusB - statusA;
+    }
+
+    // 如果状态相同，按点赞数倒序
     const likeA = likesMap[a.id] || 0;
     const likeB = likesMap[b.id] || 0;
     if (likeB !== likeA) return likeB - likeA;
+
+    // 最后按 ID 排序
     return a.id - b.id;
   });
 
