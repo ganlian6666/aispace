@@ -6,3 +6,4 @@ wrangler.toml
 reset sql.txt
 1.txt
 DEPLOY_GUIDE.md
+.dev.vars
