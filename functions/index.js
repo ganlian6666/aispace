@@ -5,7 +5,7 @@ export async function onRequestGet(context) {
   const sites = [
     {
       id: 1,
-      name: "Evolai - 注册送积分 + Plus 会话",
+      name: "Evolai - 注册送积分 + 3天Plus 会话",
       desc: "全链路监控保证可用性，通过专属网关访问低延迟接口。",
       invite: "https://www.evolai.cn/?inviteCode=PDGD2EDT",
       display: "https://www.evolai.cn/",
@@ -13,7 +13,7 @@ export async function onRequestGet(context) {
     },
     {
       id: 2,
-      name: "七牛云 - 百亿 Token 奖励",
+      name: "七牛云 - 注册就送千万AI大模型 Token 奖励",
       desc: "叠加多地节点，上传速度与 Token 限额均可实时追踪。",
       invite: "https://www.qiniu.com/ai/promotion/invited?cps_key=1hga674ddglea",
       display: "https://www.qiniu.com/",
@@ -37,7 +37,7 @@ export async function onRequestGet(context) {
     },
     {
       id: 5,
-      name: "CodeMirror - 注册送 6kw Token",
+      name: "CodeMirror - 注册送 25$ 的体验额度",
       desc: "多层身份识别与加密通道，适合接入生产环境。",
       invite: "https://api.codemirror.codes/register?aff=EUsy",
       display: "https://api.codemirror.codes/",
@@ -184,7 +184,7 @@ export async function onRequestGet(context) {
     }
     .hero h1 { margin: 0; font-size: clamp(26px, 3vw, 34px); }
     .hero p { color: var(--text-muted); margin: 8px 0 0; max-width: 500px; }
-    .hero .btn-primary { margin-top: 15px; }
+    .hero .btn-primary { margin-top: 55px; }
     .btn-primary {
       background: #2563eb; color: white; border: none; padding: 10px 20px;
       border-radius: 8px; font-weight: 600; cursor: pointer; display: flex;
