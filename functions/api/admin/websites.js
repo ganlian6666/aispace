@@ -2,13 +2,12 @@ export async function onRequest(context) {
     const { request, env } = context;
     const url = new URL(request.url);
 
-    // 1. 安全验证
-    // 从请求头获取密码
-    const authKey = request.headers.get('X-Admin-Key');
     // 检查环境变量中的密码
     const correctKey = env.ADMIN_PASSWORD;
 
     if (!correctKey || authKey !== correctKey) {
+        // 故意延迟 2 秒，防止暴力破解
+        await new Promise(resolve => setTimeout(resolve, 2000));
         return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
