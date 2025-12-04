@@ -3,17 +3,27 @@ export async function onRequestGet(context) {
 
     try {
         // 1. 获取所有站点 (只取需要的字段)
-        const { results } = await env.DB.prepare("SELECT id, display_url, last_checked FROM websites").all();
+        const { results } = await env.DB.prepare("SELECT id, display_url, last_checked, status FROM websites").all();
 
         if (!results || results.length === 0) {
             return new Response(JSON.stringify([]), { status: 200 });
         }
 
         // 2. 检查是否需要更新
-        // 360分钟 = 6小时
+        const url = new URL(request.url);
+        const forceUpdate = url.searchParams.get('force') === 'true';
+
+        // 智能间隔：在线的 6小时(360分)查一次，离线的 30分钟查一次
         const lastChecked = new Date(results[0].last_checked || 0).getTime();
         const now = Date.now();
-        const shouldUpdate = (now - lastChecked) > (360 * 60 * 1000);
+
+        // 只要有一个网站是 offline，且距离上次检测超过 30 分钟，就触发更新
+        // 或者所有网站都 online，但距离上次检测超过 6 小时，也触发更新
+
+        const hasOffline = results.some(r => r.status !== 'online');
+        const interval = hasOffline ? (30 * 60 * 1000) : (360 * 60 * 1000);
+
+        const shouldUpdate = forceUpdate || ((now - lastChecked) > interval);
 
         if (shouldUpdate) {
             const updatedResults = await updateStatuses(env, results);
