@@ -32,11 +32,17 @@ CREATE TABLE IF NOT EXISTS site_status (
   last_checked DATETIME
 );
 
--- 初始化 6 个卡片的 URL (如果不存在则插入)
+-- 初始化 6 个卡片的 URL (按新顺序)
+-- 1. Evolai
+-- 2. Qiniu
+-- 3. Univibe
+-- 4. AgentRouter
+-- 5. CodeMirror
+-- 6. API520
 INSERT OR IGNORE INTO site_status (card_id, url) VALUES
 (1, 'https://www.evolai.cn/'),
-(2, 'https://api.codemirror.codes/'),
-(3, 'https://agentrouter.org/'),
-(4, 'https://api.code-relay.com/'),
-(5, 'https://www.qiniu.com/'),
+(2, 'https://www.qiniu.com/'),
+(3, 'https://www.univibe.cc/'),
+(4, 'https://agentrouter.org/'),
+(5, 'https://api.codemirror.codes/'),
 (6, 'https://api520.pro/');
