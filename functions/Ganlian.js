@@ -176,17 +176,17 @@ export async function onRequest(context) {
       const pwd = document.getElementById('password').value;
       if (!pwd) return alert('请输入密码');
       
-      localStorage.setItem('admin_key', pwd);
+      sessionStorage.setItem('admin_key', pwd);
       loadSites();
     }
 
     function logout() {
-      localStorage.removeItem('admin_key');
+      sessionStorage.removeItem('admin_key');
       location.reload();
     }
 
     function getKey() {
-      return localStorage.getItem('admin_key');
+      return sessionStorage.getItem('admin_key');
     }
 
     // Data Logic
@@ -327,6 +327,9 @@ export async function onRequest(context) {
     }
 
     // Check login on load
+    // 清理旧的 localStorage 残留
+    localStorage.removeItem('admin_key');
+    
     if (getKey()) {
       loadSites();
     }
