@@ -53,16 +53,26 @@ export async function onRequestGet(context) {
     }
   ];
 
-  // 2. 获取点赞数据
+  // 2. 获取点赞和状态数据
   let likesMap = {};
+  let statusMap = {};
   try {
-    const { results } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
-    results.forEach(r => {
+    const { results: likeResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
+    likeResults.forEach(r => {
       likesMap[r.card_id] = r.count;
+    });
+
+    const { results: statusResults } = await env.DB.prepare("SELECT card_id, last_checked FROM site_status").all();
+    statusResults.forEach(r => {
+      if (r.last_checked) {
+        // Format date to YYYY-MM-DD
+        const date = new Date(r.last_checked);
+        const dateStr = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+        statusMap[r.card_id] = dateStr;
+      }
     });
   } catch (e) {
     console.error("DB Error:", e);
-    // 即使数据库挂了，也要保证页面能渲染
   }
 
   // 3. 排序：点赞数倒序 -> ID 正序
@@ -96,7 +106,7 @@ export async function onRequestGet(context) {
               评论
             </button>
           </div>
-          <div>最后检测 ${site.last_check}</div>
+          <div>最后检测 ${statusMap[site.id] || site.last_check}</div>
         </div>
         <div class="comments-section" id="comments-${site.id}">
           <div class="comment-list"></div>
@@ -222,7 +232,7 @@ export async function onRequestGet(context) {
     .card-footer {
       display: flex; align-items: center; justify-content: space-between;
       font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 8px;
-      margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);
     }
     .card-actions { display: flex; gap: 12px; }
     .action-btn {
