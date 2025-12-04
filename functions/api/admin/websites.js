@@ -7,10 +7,39 @@ export async function onRequest(context) {
         const authKey = request.headers.get('X-Admin-Key');
         const correctKey = env.ADMIN_PASSWORD;
 
+        // 获取 IP (Cloudflare 特定 header，本地开发可能为空)
+        const ip = request.headers.get('CF-Connecting-IP') || '127.0.0.1';
+
+        // 检查该 IP 的失败次数
+        const { results: attempts } = await env.DB.prepare("SELECT count FROM login_attempts WHERE ip = ?").bind(ip).all();
+        const failCount = attempts.length > 0 ? attempts[0].count : 0;
+
         if (!correctKey || authKey !== correctKey) {
-            // 故意延迟 2 秒，防止暴力破解
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+            // 密码错误：记录失败次数并惩罚
+            const newCount = failCount + 1;
+
+            // 更新数据库
+            await env.DB.prepare(
+                "INSERT OR REPLACE INTO login_attempts (ip, count, last_attempt) VALUES (?, ?, datetime('now'))"
+            ).bind(ip, newCount).run();
+
+            // 计算指数退避时间: 2^(N-1) 秒
+            // 第1次: 1s, 第2次: 2s, 第3次: 4s, 第4次: 8s...
+            // 设置上限 60秒，防止超时
+            let delaySeconds = Math.pow(2, newCount - 1);
+            if (delaySeconds > 60) delaySeconds = 60;
+
+            console.log(`Login failed for IP ${ip}. Count: ${newCount}. Delay: ${delaySeconds}s`);
+
+            // 执行延时
+            await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
+
+            return new Response(JSON.stringify({ error: 'Unauthorized', retry_after: delaySeconds }), { status: 401 });
+        }
+
+        // 密码正确：清除失败记录
+        if (failCount > 0) {
+            await env.DB.prepare("DELETE FROM login_attempts WHERE ip = ?").bind(ip).run();
         }
 
         // 2. 根据请求方法处理不同操作

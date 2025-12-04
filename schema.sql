@@ -41,6 +41,13 @@ CREATE TABLE IF NOT EXISTS websites (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 登录失败记录表 (用于指数退避)
+CREATE TABLE IF NOT EXISTS login_attempts (
+  ip TEXT PRIMARY KEY,
+  count INTEGER DEFAULT 0,
+  last_attempt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 初始化数据 (迁移原来的 6 个网站)
 INSERT OR IGNORE INTO websites (id, name, description, invite_link, display_url) VALUES
 (1, 'Evolai - 注册送积分 + 3天Plus 会话', '全链路监控保证可用性，通过专属网关访问低延迟接口。', 'https://www.evolai.cn/?inviteCode=PDGD2EDT', 'https://www.evolai.cn/'),
