@@ -1,0 +1,8 @@
+node_modules/
+.wrangler/
+.vscode/
+*.log
+wrangler.toml
+reset sql.txt
+1.txt
+DEPLOY_GUIDE.md
