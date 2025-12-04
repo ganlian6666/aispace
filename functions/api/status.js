@@ -9,22 +9,23 @@ export async function onRequestGet(context) {
             return new Response(JSON.stringify([]), { status: 200 });
         }
 
-        // 2. 检查是否需要更新
-        // 360分钟 = 6小时
-        const lastChecked = new Date(results[0].last_checked || 0).getTime();
+        // 2. 筛选需要更新的站点 (按需检测)
         const now = Date.now();
-        const shouldUpdate = (now - lastChecked) > (360 * 60 * 1000);
+        const sitesToUpdate = results.filter(site => {
+            // 如果从未检测过 (last_checked is null)，或者超过 6 小时
+            if (!site.last_checked) return true;
+            const lastChecked = new Date(site.last_checked).getTime();
+            return (now - lastChecked) > (360 * 60 * 1000);
+        });
 
-        if (shouldUpdate) {
-            const updatedResults = await updateStatuses(env, results);
-            return new Response(JSON.stringify(updatedResults), { status: 200 });
+        if (sitesToUpdate.length > 0) {
+            // 只更新过期或新增的站点
+            await updateStatuses(env, sitesToUpdate);
         }
 
-        // 不需要更新，直接返回数据库里的状态
-        // 为了前端兼容，我们需要把 id 映射回 card_id (虽然现在就是 id)
-        // 并且把 display_url 映射回 url
-        const { results: cachedResults } = await env.DB.prepare("SELECT id as card_id, display_url as url, status, latency, last_checked FROM websites").all();
-        return new Response(JSON.stringify(cachedResults), { status: 200 });
+        // 3. 返回最新状态 (直接查库，确保返回全量数据)
+        const { results: finalResults } = await env.DB.prepare("SELECT id as card_id, display_url as url, status, latency, last_checked FROM websites").all();
+        return new Response(JSON.stringify(finalResults), { status: 200 });
 
     } catch (err) {
         return new Response(JSON.stringify({ error: err.message }), { status: 500 });
