@@ -211,7 +211,7 @@ export async function onRequestGet(context) {
       border: 1px solid rgba(69, 224, 255, 0.5);
     }
     .card p { margin: 0; color: rgba(255, 255, 255, 0.88); font-size: 14px; min-height: 42px; }
-    .link-block { display: flex; flex-direction: column; gap: 8px; }
+    .link-block { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .link-block a { color: var(--accent-warm); font-weight: 600; text-decoration: none; word-break: break-all; text-align: center; margin-top: -10px; }
     .link-block button {
       border: none; border-radius: 12px; padding: 10px;
