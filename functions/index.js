@@ -365,9 +365,12 @@ export async function onRequestGet(context) {
         <label>昵称 *</label>
         <input type="text" id="nicknameInput" class="form-control" placeholder="例如: 匿名用户" maxlength="20" onkeypress="if(event.key==='Enter') saveNickname()">
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" onclick="closeModal('nicknameModal')">取消</button>
-        <button type="button" class="btn-primary" onclick="saveNickname()">保存</button>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn-secondary" style="border-style: dashed;" onclick="setAnonymous()">匿名访问</button>
+        <div style="display: flex; gap: 12px;">
+            <button type="button" class="btn-secondary" onclick="closeModal('nicknameModal')">取消</button>
+            <button type="button" class="btn-primary" onclick="saveNickname()">保存</button>
+        </div>
       </div>
     </div>
   </div>
@@ -424,6 +427,19 @@ export async function onRequestGet(context) {
         const nickname = localStorage.getItem('user_nickname') || '';
         document.getElementById('nicknameInput').value = nickname;
         openModal('nicknameModal');
+    }
+
+    function setAnonymous() {
+      localStorage.setItem('user_nickname', 'anonymous');
+      closeModal('nicknameModal');
+      
+      // Update UI
+      document.querySelectorAll('.current-nickname').forEach(el => el.textContent = 'anonymous');
+
+      if (pendingCommentCardId) {
+        toggleComments(pendingCommentCardId);
+        pendingCommentCardId = null;
+      }
     }
 
     function saveNickname() {
