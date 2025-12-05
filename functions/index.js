@@ -577,6 +577,12 @@ export async function onRequestGet(context) {
         if (res.ok) {
           input.value = '';
           loadComments(cardId);
+          // 立即更新评论数显示
+          const countSpan = document.querySelector(\`.card[data-card-id="\${cardId}"] .comment-count\`);
+          if (countSpan) {
+            const current = parseInt(countSpan.textContent) || 0;
+            countSpan.textContent = current + 1;
+          }
         } else {
           const err = await res.json();
           if (res.status === 429) {
