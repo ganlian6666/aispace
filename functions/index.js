@@ -4,6 +4,7 @@ export async function onRequestGet(context) {
   // 1. 从数据库获取站点数据
   let sites = [];
   let likesMap = {};
+  let commentsMap = {};
 
   try {
     // 获取所有网站信息
@@ -14,6 +15,12 @@ export async function onRequestGet(context) {
     const { results: likeResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
     likeResults.forEach(r => {
       likesMap[r.card_id] = r.count;
+    });
+
+    // 获取评论数据
+    const { results: commentResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM comments GROUP BY card_id").all();
+    commentResults.forEach(r => {
+      commentsMap[r.card_id] = r.count;
     });
 
     // 格式化 last_checked 日期
@@ -57,7 +64,7 @@ export async function onRequestGet(context) {
       <article class="card" data-card-id="${site.id}">
         <div class="card-head">
           <h3>${site.name}</h3>
-          <span class="status">检测中...</span>
+          <div class="status"><div>检测中</div></div>
         </div>
         <p>${site.description}</p>
         <div class="link-block">
@@ -72,7 +79,7 @@ export async function onRequestGet(context) {
             </button>
             <button class="action-btn" onclick="checkNicknameAndToggleComments(${site.id})">
               <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-              评论
+              <span class="comment-count">${commentsMap[site.id] || 0}</span>
             </button>
           </div>
           <div>最后检测 ${site.formatted_date}</div>
@@ -185,10 +192,13 @@ export async function onRequestGet(context) {
     .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
     .card-head h3 { margin: 0; font-size: 18px; line-height: 1.4; }
     .status {
-      border-radius: 12px; padding: 4px 12px; font-size: 12px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      border-radius: 8px; padding: 4px 8px; font-size: 11px; line-height: 1.2;
       background: rgba(69, 224, 255, 0.15); color: #7ef3ff;
       border: 1px solid rgba(69, 224, 255, 0.5);
+      min-width: 60px; text-align: center;
     }
+    .status .latency { font-size: 10px; opacity: 0.8; }
     .card p { margin: 0; color: rgba(255, 255, 255, 0.88); font-size: 14px; min-height: 42px; }
     .link-block { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
     .link-block a { color: var(--accent-warm); font-weight: 600; text-decoration: none; word-break: break-all; text-align: center; margin-top: -10px; }
@@ -590,12 +600,12 @@ export async function onRequestGet(context) {
           if (!card) return;
           const statusSpan = card.querySelector('.status');
           if (site.status === 'online') {
-            statusSpan.textContent = \`在线 \${site.latency}ms\`;
+            statusSpan.innerHTML = \`<div>在线</div><div class="latency">\${site.latency}ms</div>\`;
             statusSpan.style.color = '#4ade80';
             statusSpan.style.background = 'rgba(74, 222, 128, 0.15)';
             statusSpan.style.borderColor = 'rgba(74, 222, 128, 0.5)';
           } else {
-            statusSpan.textContent = '维护中';
+            statusSpan.innerHTML = \`<div>维护中</div>\`;
             statusSpan.style.color = '#f87171';
             statusSpan.style.background = 'rgba(248, 113, 113, 0.15)';
             statusSpan.style.borderColor = 'rgba(248, 113, 113, 0.5)';

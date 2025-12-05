@@ -24,7 +24,8 @@ export async function onRequestGet(context) {
             Object.values(row).map(value => `"${value}"`).join(',')
         ).join('\n');
 
-        const csv = `${headers}\n${rows}`;
+        const bom = '\uFEFF';
+        const csv = bom + headers + '\n' + rows;
 
         return new Response(csv, {
             headers: {
