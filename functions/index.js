@@ -16,6 +16,15 @@ export async function onRequestGet(context) {
       likesMap[r.card_id] = r.count;
     });
 
+    // 获取评论数据
+    let commentsMap = {};
+    const { results: commentResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM comments GROUP BY card_id").all();
+    if (commentResults) {
+      commentResults.forEach(r => {
+        commentsMap[r.card_id] = r.count;
+      });
+    }
+
     // 格式化 last_checked 日期
     sites.forEach(site => {
       if (site.last_checked) {
@@ -72,7 +81,7 @@ export async function onRequestGet(context) {
             </button>
             <button class="action-btn" onclick="checkNicknameAndToggleComments(${site.id})">
               <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-              评论
+              评论 <span class="comment-count" style="margin-left:2px">${commentsMap[site.id] || 0}</span>
             </button>
           </div>
           <div>最后检测 ${site.formatted_date}</div>
@@ -188,6 +197,7 @@ export async function onRequestGet(context) {
       border-radius: 12px; padding: 4px 12px; font-size: 12px;
       background: rgba(69, 224, 255, 0.15); color: #7ef3ff;
       border: 1px solid rgba(69, 224, 255, 0.5);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.2; min-width: 70px;
     }
     .card p { margin: 0; color: rgba(255, 255, 255, 0.88); font-size: 14px; min-height: 42px; }
     .link-block { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
@@ -590,7 +600,7 @@ export async function onRequestGet(context) {
           if (!card) return;
           const statusSpan = card.querySelector('.status');
           if (site.status === 'online') {
-            statusSpan.textContent = \`在线 \${site.latency}ms\`;
+            statusSpan.innerHTML = \`在线<br><span style="font-size:10px; opacity:0.9">\${site.latency}ms</span>\`;
             statusSpan.style.color = '#4ade80';
             statusSpan.style.background = 'rgba(74, 222, 128, 0.15)';
             statusSpan.style.borderColor = 'rgba(74, 222, 128, 0.5)';

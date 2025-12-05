@@ -116,6 +116,9 @@ export async function onRequest(context) {
         <h1>网站管理</h1>
         <div>
           <button onclick="openModal()">+ 添加新网站</button>
+          <button onclick="exportCSV()" style="background:#10b981; border:none;">导出 CSV</button>
+          <button onclick="triggerImport()" style="background:#8b5cf6; border:none;">导入 CSV</button>
+          <input type="file" id="import-file" style="display:none" accept=".csv" onchange="importCSV(this)">
           <button onclick="logout()" style="background:transparent; border:1px solid var(--border);">退出</button>
         </div>
       </div>
@@ -314,7 +317,7 @@ export async function onRequest(context) {
       if (!confirm('确定要删除这个网站吗？相关点赞和评论也会被删除！')) return;
 
       try {
-        const res = await fetch(\`\${API_URL}?id=\${id}\`, {
+        const res = await fetch(`${ API_URL }?id = ${ id }`, {
           method: 'DELETE',
           headers: { 'X-Admin-Key': getKey() }
         });
@@ -327,6 +330,68 @@ export async function onRequest(context) {
       } catch (e) {
         alert('网络错误');
       }
+    }
+
+    // Export Logic
+    function exportCSV() {
+      const key = getKey();
+      if (!key) return alert('请先登录');
+      window.open(`/ api /export?key = ${ encodeURIComponent(key) } `, '_blank');
+    }
+
+    // Import Logic
+    function triggerImport() {
+      document.getElementById('import-file').click();
+    }
+
+    async function importCSV(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        let successCount = 0;
+        
+        // Skip header, start from index 1
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          
+          // Simple CSV parse (handles basic quotes)
+          // 假设列顺序: id, name, description, invite_link, display_url...
+          // 我们只需要 name(1), description(2), invite_link(3), display_url(4)
+          const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+          if (!parts || parts.length < 5) continue;
+          
+          const clean = (str) => str ? str.replace(/^"|"$/g, '').replace(/""/g, '"') : '';
+
+          const data = {
+            name: clean(parts[1]),
+            description: clean(parts[2]),
+            invite_link: clean(parts[3]),
+            display_url: clean(parts[4])
+          };
+
+          try {
+            await fetch(API_URL, {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'X-Admin-Key': getKey()
+              },
+              body: JSON.stringify(data)
+            });
+            successCount++;
+          } catch (e) { console.error(e); }
+        }
+        
+        alert(`导入完成！成功添加 ${ successCount } 个网站`);
+        loadSites();
+        input.value = '';
+      };
+      reader.readAsText(file);
     }
 
     // Check login on load
