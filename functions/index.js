@@ -201,7 +201,23 @@ export async function onRequestGet(context) {
     .status .latency { font-size: 10px; opacity: 0.8; }
     .card p { margin: 0; color: rgba(255, 255, 255, 0.88); font-size: 14px; min-height: 42px; }
     .link-block { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
-    .link-block a { color: var(--accent-warm); font-weight: 600; text-decoration: none; word-break: break-all; text-align: center; margin-top: -10px; }
+    .link-block a {
+      color: var(--accent-warm); font-weight: 600; text-decoration: none;
+      word-break: break-all; text-align: center; margin-top: -10px;
+      position: relative; display: inline-block; transition: all 0.3s ease;
+      padding-bottom: 2px;
+    }
+    .link-block a::after {
+      content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-warm), transparent);
+      transition: all 0.3s ease; transform: translateX(-50%); opacity: 0;
+    }
+    .link-block a:hover {
+      color: #fff; text-shadow: 0 0 8px rgba(255, 165, 0, 0.6);
+    }
+    .link-block a:hover::after {
+      width: 100%; opacity: 1;
+    }
     .link-block button {
       border: none; border-radius: 12px; padding: 10px;
       background: rgba(255, 255, 255, 0.04); color: #fff; cursor: pointer;
