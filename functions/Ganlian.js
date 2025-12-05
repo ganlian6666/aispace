@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>缃戠珯绠＄悊鍚庡彴</title>
+  <title>网站管理后台</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -105,21 +105,18 @@
   <div class="container">
     <!-- Login -->
     <div id="login-panel">
-      <h2>绠＄悊鍛樼櫥褰?/h2>
-      <input type="password" id="password" placeholder="璇疯緭鍏ョ鐞嗗瘑鐮? onkeypress="if(event.key==='Enter') login()">
-      <button onclick="login()">杩涘叆鍚庡彴</button>
+      <h2>管理员登录</h2>
+      <input type="password" id="password" placeholder="请输入管理密码" onkeypress="if(event.key==='Enter') login()">
+      <button onclick="login()">进入后台</button>
     </div>
 
     <!-- Admin -->
     <div id="admin-panel">
       <div class="toolbar">
-        <h1>缃戠珯绠＄悊</h1>
+        <h1>网站管理</h1>
         <div>
-          <button onclick="openModal()">+ 娣诲姞鏂扮綉绔?/button>
-          <button onclick="exportCSV()" style="background:#10b981; border:none;">瀵煎嚭 CSV</button>
-          <button onclick="triggerImport()" style="background:#8b5cf6; border:none;">瀵煎叆 CSV</button>
-          <input type="file" id="import-file" style="display:none" accept=".csv" onchange="importCSV(this)">
-          <button onclick="logout()" style="background:transparent; border:1px solid var(--border);">閫€鍑?/button>
+          <button onclick="openModal()">+ 添加新网站</button>
+          <button onclick="logout()" style="background:transparent; border:1px solid var(--border);">退出</button>
         </div>
       </div>
 
@@ -127,10 +124,10 @@
         <thead>
           <tr>
             <th style="width:50px">ID</th>
-            <th>鍚嶇О</th>
-            <th>鏄剧ず閾炬帴</th>
-            <th>鐘舵€?/th>
-            <th style="width:120px">鎿嶄綔</th>
+            <th>名称</th>
+            <th>显示链接</th>
+            <th>状态</th>
+            <th style="width:120px">操作</th>
           </tr>
         </thead>
         <tbody id="site-list">
@@ -143,29 +140,29 @@
   <!-- Edit/Add Modal -->
   <div class="modal-backdrop" id="editModal">
     <div class="modal">
-      <h2 id="modalTitle">娣诲姞缃戠珯</h2>
+      <h2 id="modalTitle">添加网站</h2>
       <input type="hidden" id="edit-id">
       
       <div class="form-group">
-        <label>缃戠珯鍚嶇О</label>
-        <input type="text" id="edit-name" placeholder="渚嬪: Google">
+        <label>网站名称</label>
+        <input type="text" id="edit-name" placeholder="例如: Google">
       </div>
       <div class="form-group">
-        <label>绠€鍗曟弿杩?/label>
-        <textarea id="edit-desc" rows="3" placeholder="鎻忚堪涓€涓?.."></textarea>
+        <label>简单描述</label>
+        <textarea id="edit-desc" rows="3" placeholder="描述一下..."></textarea>
       </div>
       <div class="form-group">
-        <label>鏄剧ず閾炬帴 (鐢ㄤ簬灞曠ず鍜屾娴?</label>
+        <label>显示链接 (用于展示和检测)</label>
         <input type="text" id="edit-display" placeholder="https://google.com">
       </div>
       <div class="form-group">
-        <label>閭€璇?璺宠浆閾炬帴</label>
+        <label>邀请/跳转链接</label>
         <input type="text" id="edit-invite" placeholder="https://google.com?aff=123">
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-        <button onclick="closeModal()" style="background:transparent; border:1px solid var(--border);">鍙栨秷</button>
-        <button onclick="saveSite()">淇濆瓨</button>
+        <button onclick="closeModal()" style="background:transparent; border:1px solid var(--border);">取消</button>
+        <button onclick="saveSite()">保存</button>
       </div>
     </div>
   </div>
@@ -175,12 +172,12 @@
     const API_URL = '/api/admin/websites';
 
     // Auth Logic
-    // 鍐呭瓨鍙橀噺锛屽埛鏂伴〉闈㈠嵆涓㈠け
+    // 内存变量，刷新页面即丢失
     let currentKey = '';
 
     function login() {
       const pwd = document.getElementById('password').value;
-      if (!pwd) return alert('璇疯緭鍏ュ瘑鐮?);
+      if (!pwd) return alert('请输入密码');
       
       currentKey = pwd;
       loadSites();
@@ -206,7 +203,7 @@
         });
 
         if (res.status === 401) {
-          alert('瀵嗙爜閿欒');
+          alert('密码错误');
           localStorage.removeItem('admin_key');
           return;
         }
@@ -218,7 +215,7 @@
         document.getElementById('login-panel').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'block';
       } catch (e) {
-        alert('鍔犺浇澶辫触: ' + e.message);
+        alert('加载失败: ' + e.message);
       }
     }
 
@@ -234,12 +231,12 @@
           <td><a href="\${site.display_url}" target="_blank" style="color:#3b82f6">\${site.display_url}</a></td>
           <td>
             <span style="color: \${site.status === 'online' ? '#4ade80' : '#ef4444'}">
-              \${site.status === 'online' ? '鍦ㄧ嚎' : '绂荤嚎'}
+              \${site.status === 'online' ? '在线' : '离线'}
             </span>
           </td>
           <td>
-            <button class="btn-sm" onclick="editSite(\${site.id})">缂栬緫</button>
-            <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">鍒犻櫎</button>
+            <button class="btn-sm" onclick="editSite(\${site.id})">编辑</button>
+            <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
           </td>
         </tr>
       \`).join('');
@@ -254,7 +251,7 @@
       document.getElementById('edit-desc').value = '';
       document.getElementById('edit-display').value = '';
       document.getElementById('edit-invite').value = '';
-      document.getElementById('modalTitle').textContent = '娣诲姞缃戠珯';
+      document.getElementById('modalTitle').textContent = '添加网站';
     }
 
     function closeModal() {
@@ -270,7 +267,7 @@
       document.getElementById('edit-desc').value = site.description;
       document.getElementById('edit-display').value = site.display_url;
       document.getElementById('edit-invite').value = site.invite_link;
-      document.getElementById('modalTitle').textContent = '缂栬緫缃戠珯';
+      document.getElementById('modalTitle').textContent = '编辑网站';
       
       document.getElementById('editModal').style.display = 'flex';
     }
@@ -285,7 +282,7 @@
       };
 
       if (!data.name || !data.display_url || !data.invite_link) {
-        return alert('璇峰～鍐欏畬鏁翠俊鎭?);
+        return alert('请填写完整信息');
       }
 
       const method = id ? 'PUT' : 'POST';
@@ -306,18 +303,18 @@
           loadSites();
         } else {
           const err = await res.json();
-          alert('淇濆瓨澶辫触: ' + err.error);
+          alert('保存失败: ' + err.error);
         }
       } catch (e) {
-        alert('缃戠粶閿欒');
+        alert('网络错误');
       }
     }
 
     async function deleteSite(id) {
-      if (!confirm('纭畾瑕佸垹闄よ繖涓綉绔欏悧锛熺浉鍏崇偣璧炲拰璇勮涔熶細琚垹闄わ紒')) return;
+      if (!confirm('确定要删除这个网站吗？相关点赞和评论也会被删除！')) return;
 
       try {
-        const res = await fetch(`${API_URL}?id=${id}`, {
+        const res = await fetch(\`\${API_URL}?id=\${id}\`, {
           method: 'DELETE',
           headers: { 'X-Admin-Key': getKey() }
         });
@@ -325,73 +322,11 @@
         if (res.ok) {
           loadSites();
         } else {
-          alert('鍒犻櫎澶辫触');
+          alert('删除失败');
         }
       } catch (e) {
-        alert('缃戠粶閿欒');
+        alert('网络错误');
       }
-    }
-
-    // Export Logic
-    function exportCSV() {
-      const key = getKey();
-      if (!key) return alert('璇峰厛鐧诲綍');
-      window.open(`/api/export?key=${encodeURIComponent(key)}`, '_blank');
-    }
-
-    // Import Logic
-    function triggerImport() {
-      document.getElementById('import-file').click();
-    }
-
-    async function importCSV(input) {
-      const file = input.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        const text = e.target.result;
-        const lines = text.split('\n');
-        let successCount = 0;
-        
-        // Skip header, start from index 1
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i].trim();
-          if (!line) continue;
-          
-          // Simple CSV parse (handles basic quotes)
-          // 鍋囪鍒楅『搴? id, name, description, invite_link, display_url...
-          // 鎴戜滑鍙渶瑕?name(1), description(2), invite_link(3), display_url(4)
-          const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-          if (!parts || parts.length < 5) continue;
-          
-          const clean = (str) => str ? str.replace(/^"|"$/g, '').replace(/""/g, '"') : '';
-
-          const data = {
-            name: clean(parts[1]),
-            description: clean(parts[2]),
-            invite_link: clean(parts[3]),
-            display_url: clean(parts[4])
-          };
-
-          try {
-            await fetch(API_URL, {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'X-Admin-Key': getKey()
-              },
-              body: JSON.stringify(data)
-            });
-            successCount++;
-          } catch (e) { console.error(e); }
-        }
-        
-        alert(`导入完成！成功添加 ${successCount} 个网站`);
-        loadSites();
-        input.value = '';
-      };
-      reader.readAsText(file);
     }
 
     // Check login on load

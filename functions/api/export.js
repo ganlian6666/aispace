@@ -11,33 +11,25 @@ export async function onRequestGet(context) {
 
     try {
         const { results } = await env.DB.prepare(
-            "SELECT * FROM websites ORDER BY id DESC"
+            "SELECT * FROM submissions ORDER BY created_at DESC"
         ).all();
 
         if (!results || results.length === 0) {
-            return new Response('No websites found', { status: 200 });
+            return new Response('No submissions found', { status: 200 });
         }
 
         // Convert to CSV
-        // 1. 获取表头
         const headers = Object.keys(results[0]).join(',');
-
-        // 2. 构建行数据 (处理包含逗号或换行的内容)
         const rows = results.map(row =>
-            Object.values(row).map(value => {
-                if (value === null || value === undefined) return '""';
-                const str = String(value).replace(/"/g, '""'); // 转义双引号
-                return `"${str}"`;
-            }).join(',')
+            Object.values(row).map(value => `"${value}"`).join(',')
         ).join('\n');
 
-        // 3. 拼接 CSV 内容，并添加 BOM (\uFEFF) 解决 Excel 中文乱码
-        const csv = `\uFEFF${headers}\n${rows}`;
+        const csv = `${headers}\n${rows}`;
 
         return new Response(csv, {
             headers: {
                 'Content-Type': 'text/csv; charset=utf-8',
-                'Content-Disposition': `attachment; filename="websites_${new Date().toISOString().slice(0, 10)}.csv"`
+                'Content-Disposition': 'attachment; filename="submissions.csv"'
             }
         });
     } catch (err) {
