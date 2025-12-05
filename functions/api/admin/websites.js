@@ -6,8 +6,6 @@ export async function onRequest(context) {
         // 1. 安全验证
         const authKey = request.headers.get('X-Admin-Key');
         const correctKey = env.ADMIN_PASSWORD;
-
-        // 获取 IP (Cloudflare 特定 header，本地开发可能为空)
         const ip = request.headers.get('CF-Connecting-IP') || '127.0.0.1';
 
         // 检查该 IP 的失败次数
@@ -15,42 +13,35 @@ export async function onRequest(context) {
         const failCount = attempts.length > 0 ? attempts[0].count : 0;
 
         if (!correctKey || authKey !== correctKey) {
-            // 密码错误：记录失败次数并惩罚
             const newCount = failCount + 1;
-
-            // 更新数据库
             await env.DB.prepare(
                 "INSERT OR REPLACE INTO login_attempts (ip, count, last_attempt) VALUES (?, ?, datetime('now'))"
             ).bind(ip, newCount).run();
 
-            // 计算指数退避时间: 2^(N-1) 秒
-            // 第1次: 1s, 第2次: 2s, 第3次: 4s, 第4次: 8s...
-            // 设置上限 60秒，防止超时
             let delaySeconds = Math.pow(2, newCount - 1);
             if (delaySeconds > 60) delaySeconds = 60;
 
-            console.log(`Login failed for IP ${ip}. Count: ${newCount}. Delay: ${delaySeconds}s`);
-
-            // 执行延时
             await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
-
             return new Response(JSON.stringify({ error: 'Unauthorized', retry_after: delaySeconds }), { status: 401 });
         }
 
-        // 密码正确：清除失败记录
         if (failCount > 0) {
             await env.DB.prepare("DELETE FROM login_attempts WHERE ip = ?").bind(ip).run();
         }
 
         // 2. 根据请求方法处理不同操作
+        const type = url.searchParams.get('type') || 'websites'; // 'websites' or 'submissions'
+
         if (request.method === 'GET') {
-            return await handleList(env);
+            return await handleList(env, type);
         } else if (request.method === 'POST') {
+            // POST 仅用于添加/导入到 websites 表 (submissions 一般由用户端提交，后台仅查看或删除)
+            // 但为了灵活性，如果 type=submissions 也可以支持添加（暂不需要）
             return await handleAdd(request, env);
         } else if (request.method === 'PUT') {
-            return await handleUpdate(request, env);
+            return await handleUpdate(request, env, type);
         } else if (request.method === 'DELETE') {
-            return await handleDelete(url, env);
+            return await handleDelete(url, env, type);
         }
 
         return new Response('Method not allowed', { status: 405 });
@@ -60,12 +51,13 @@ export async function onRequest(context) {
 }
 
 // 获取列表
-async function handleList(env) {
-    const { results } = await env.DB.prepare("SELECT * FROM websites ORDER BY id ASC").all();
+async function handleList(env, type) {
+    const table = type === 'submissions' ? 'submissions' : 'websites';
+    const { results } = await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id DESC`).all();
     return new Response(JSON.stringify(results), { status: 200 });
 }
 
-// 添加新网站 (支持 JSON 单个添加 和 JSON 批量导入)
+// 添加/导入新网站 (主要针对 websites 表)
 async function handleAdd(request, env) {
     const data = await request.json();
 
@@ -79,51 +71,41 @@ async function handleAdd(request, env) {
         const stmtUpdate = env.DB.prepare("UPDATE websites SET name = ?, description = ?, invite_link = ?, display_url = ? WHERE id = ?");
 
         for (const item of data) {
-            // 简单的数据清洗
             const id = item.id;
             const name = item.name;
             const desc = item.description || '';
-            // 兼容 submissions 表的 url 字段
-            const invite = item.invite_link || item.url || '';
-            const display = item.display_url || item.url || '';
+            const invite = item.invite_link || item.url || ''; // 兼容 submissions
+            const display = item.display_url || item.url || ''; // 兼容 submissions
 
             if (!name || (!invite && !display)) continue;
 
             try {
                 if (id) {
-                    // 如果有 ID，优先尝试用 ID 操作
                     if (overwrite) {
-                        // 尝试更新
                         const res = await stmtUpdate.bind(name, desc, invite, display, id).run();
                         if (res.meta.changes > 0) {
                             successCount++;
                         } else {
-                            // 更新失败（ID不存在），则强制插入该 ID
                             await stmtInsertWithId.bind(id, name, desc, invite, display).run();
                             successCount++;
                         }
                     } else {
-                        // 不覆盖，直接尝试插入该 ID
-                        // 如果 ID 已存在会报错，catch 住即可
                         await stmtInsertWithId.bind(id, name, desc, invite, display).run();
                         successCount++;
                     }
                 } else {
-                    // 没有 ID，走自增插入
                     await stmtInsert.bind(name, desc, invite, display).run();
                     successCount++;
                 }
             } catch (e) {
                 console.error(`Import error for ${name}:`, e);
-                // 如果是 ID 冲突且 overwrite=false，这里会报错，符合预期
             }
         }
         return new Response(JSON.stringify({ success: true, count: successCount }), { status: 200 });
     }
 
-    // 2. 处理 JSON 单个添加 (原有逻辑)
+    // 2. 单个添加
     const { name, description, invite_link, display_url } = data;
-
     if (!name || !invite_link || !display_url) {
         return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
@@ -135,36 +117,81 @@ async function handleAdd(request, env) {
     return new Response(JSON.stringify({ success: true, id: res.meta.last_row_id }), { status: 201 });
 }
 
-// 更新网站
-async function handleUpdate(request, env) {
+// 更新网站/提交 (支持修改 ID)
+async function handleUpdate(request, env, type) {
     const data = await request.json();
-    const { id, name, description, invite_link, display_url } = data;
+    const { id, new_id, name, description, invite_link, display_url, url } = data; // url for submissions
 
-    if (!id) {
-        return new Response(JSON.stringify({ error: 'Missing ID' }), { status: 400 });
+    if (!id) return new Response(JSON.stringify({ error: 'Missing ID' }), { status: 400 });
+
+    const table = type === 'submissions' ? 'submissions' : 'websites';
+
+    // 如果修改了 ID
+    if (new_id && new_id != id) {
+        // 检查新 ID 是否存在
+        const { results } = await env.DB.prepare(`SELECT id FROM ${table} WHERE id = ?`).bind(new_id).all();
+        if (results.length > 0) {
+            return new Response(JSON.stringify({ error: `ID ${new_id} already exists` }), { status: 409 });
+        }
     }
 
-    await env.DB.prepare(
-        "UPDATE websites SET name = ?, description = ?, invite_link = ?, display_url = ? WHERE id = ?"
-    ).bind(name, description, invite_link, display_url, id).run();
+    const targetId = new_id || id;
+
+    if (type === 'websites') {
+        // 更新 websites
+        await env.DB.prepare(
+            "UPDATE websites SET id = ?, name = ?, description = ?, invite_link = ?, display_url = ? WHERE id = ?"
+        ).bind(targetId, name, description, invite_link, display_url, id).run();
+
+        // 如果 ID 变了，需要级联更新关联表
+        if (new_id && new_id != id) {
+            await env.DB.prepare("UPDATE likes SET card_id = ? WHERE card_id = ?").bind(new_id, id).run();
+            await env.DB.prepare("UPDATE comments SET card_id = ? WHERE card_id = ?").bind(new_id, id).run();
+        }
+    } else {
+        // 更新 submissions
+        // submissions 表字段: id, name, url, invite_link, description, ip, created_at
+        // 注意：submissions 表通常只有 url，没有 display_url/invite_link 的区分，或者 url 就是 display_url
+        // 根据 schema.sql: name, url, invite_link, description
+        const targetUrl = url || display_url;
+        await env.DB.prepare(
+            "UPDATE submissions SET id = ?, name = ?, description = ?, invite_link = ?, url = ? WHERE id = ?"
+        ).bind(targetId, name, description, invite_link, targetUrl, id).run();
+    }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
 
-// 删除网站
-async function handleDelete(url, env) {
-    const id = url.searchParams.get('id');
+// 删除 (支持批量)
+async function handleDelete(url, env, type) {
+    const idParam = url.searchParams.get('id'); // 单个 ID
+    const idsParam = url.searchParams.get('ids'); // 多个 ID，逗号分隔
 
-    if (!id) {
-        return new Response(JSON.stringify({ error: 'Missing ID' }), { status: 400 });
+    let ids = [];
+    if (idsParam) {
+        ids = idsParam.split(',').map(i => i.trim()).filter(i => i);
+    } else if (idParam) {
+        ids = [idParam];
     }
 
-    await env.DB.prepare("DELETE FROM websites WHERE id = ?").bind(id).run();
+    if (ids.length === 0) {
+        return new Response(JSON.stringify({ error: 'Missing ID(s)' }), { status: 400 });
+    }
 
-    // 同时删除相关的点赞和评论数据，保持干净
-    await env.DB.prepare("DELETE FROM likes WHERE card_id = ?").bind(id).run();
-    await env.DB.prepare("DELETE FROM comments WHERE card_id = ?").bind(id).run();
-    // site_status 表已废弃，无需删除
+    const table = type === 'submissions' ? 'submissions' : 'websites';
+
+    // 构建批量删除语句: DELETE FROM table WHERE id IN (?, ?, ?)
+    const placeholders = ids.map(() => '?').join(',');
+    const stmt = env.DB.prepare(`DELETE FROM ${table} WHERE id IN (${placeholders})`).bind(...ids);
+    await stmt.run();
+
+    // 如果是 websites，还需要删除关联数据
+    if (type === 'websites') {
+        const likesStmt = env.DB.prepare(`DELETE FROM likes WHERE card_id IN (${placeholders})`).bind(...ids);
+        const commentsStmt = env.DB.prepare(`DELETE FROM comments WHERE card_id IN (${placeholders})`).bind(...ids);
+        await likesStmt.run();
+        await commentsStmt.run();
+    }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
 }

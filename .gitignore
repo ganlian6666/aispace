@@ -3,7 +3,6 @@ node_modules/
 .vscode/
 *.log
 wrangler.toml
-reset sql.txt
-1.txt
+*.txt
 *.md
 .dev.vars
