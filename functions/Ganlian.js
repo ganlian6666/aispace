@@ -331,8 +331,10 @@
       const thead = document.getElementById('table-header');
       const tbody = document.getElementById('site-list');
       
+      const allSelected = sites.length > 0 && sites.every(s => selectedIds.has(s.id));
+
       // Render Header
-      let headerHtml = \`<th class="checkbox-col"><input type="checkbox" onchange="toggleSelectAll(this)"></th>
+      let headerHtml = \`<th class="checkbox-col"><input type="checkbox" onchange="toggleSelectAll(this)" \${allSelected ? 'checked' : ''}></th>
                         <th style="width:60px">ID</th>
                         <th>名称</th>\`;
       

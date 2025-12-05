@@ -4,5 +4,5 @@ node_modules/
 *.log
 wrangler.toml
 *.txt
-*.md
+
 .dev.vars
