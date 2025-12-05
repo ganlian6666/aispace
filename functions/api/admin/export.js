@@ -18,7 +18,7 @@ export async function onRequestGet(context) {
         } else {
             // 导出用户提交：重命名列以匹配 websites 表结构，方便直接导入
             // 默认把 url 同时作为 display_url 和 invite_link
-            query = "SELECT id, name, description, url as invite_link, url as display_url FROM submissions ORDER BY created_at DESC";
+            query = "SELECT id, name, description, invite_link as invite_link, url as display_url FROM submissions ORDER BY created_at DESC";
         }
 
         const { results } = await env.DB.prepare(query).all();
@@ -27,19 +27,10 @@ export async function onRequestGet(context) {
             return new Response('No data found', { status: 200 });
         }
 
-        // Convert to CSV
-        const headers = Object.keys(results[0]).join(',');
-        const rows = results.map(row =>
-            Object.values(row).map(value => `"${value}"`).join(',')
-        ).join('\n');
-
-        const bom = '\uFEFF';
-        const csv = bom + headers + '\n' + rows;
-
-        return new Response(csv, {
+        return new Response(JSON.stringify(results, null, 2), {
             headers: {
-                'Content-Type': 'text/csv; charset=utf-8',
-                'Content-Disposition': `attachment; filename="${type}_export.csv"`
+                'Content-Type': 'application/json; charset=utf-8',
+                'Content-Disposition': `attachment; filename="${type}_export.json"`
             }
         });
     } catch (err) {

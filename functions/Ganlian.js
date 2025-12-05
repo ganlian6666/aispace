@@ -125,7 +125,7 @@
           </div>
 
           <!-- 导入按钮 -->
-          <input type="file" id="import-file" accept=".csv" style="display:none" onchange="handleFileSelect(this)">
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleFileSelect(this)">
           <button onclick="triggerImport()" style="background:#475569">导入</button>
 
           <button onclick="openModal()">+ 添加新网站</button>
@@ -321,13 +321,23 @@
         btn.disabled = true;
 
         try {
+            // 读取文件内容
+            const text = await selectedImportFile.text();
+            // 验证是否为有效 JSON
+            try {
+                JSON.parse(text);
+            } catch (e) {
+                alert('文件格式错误：必须是有效的 JSON 格式');
+                return;
+            }
+
             const res = await fetch(\`\${API_URL}?overwrite=\${overwrite}\`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'text/csv',
+                    'Content-Type': 'application/json',
                     'X-Admin-Key': getKey()
                 },
-                body: selectedImportFile
+                body: text
             });
 
             if (res.ok) {

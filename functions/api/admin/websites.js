@@ -65,77 +65,51 @@ async function handleList(env) {
     return new Response(JSON.stringify(results), { status: 200 });
 }
 
-// 添加新网站 (支持 JSON 单个添加 和 CSV 批量导入)
+// 添加新网站 (支持 JSON 单个添加 和 JSON 批量导入)
 async function handleAdd(request, env) {
-    const contentType = request.headers.get('content-type') || '';
+    const data = await request.json();
 
-    // 1. 处理 CSV 批量导入
-    if (contentType.includes('text/csv') || contentType.includes('application/csv')) {
-        const csvText = await request.text();
+    // 1. 处理 JSON 批量导入 (识别数组)
+    if (Array.isArray(data)) {
         const overwrite = new URL(request.url).searchParams.get('overwrite') === 'true';
-
-        // 简单 CSV 解析 (假设没有换行符在字段内)
-        const lines = csvText.split('\n').filter(l => l.trim());
-        if (lines.length < 2) return new Response(JSON.stringify({ error: 'Empty CSV' }), { status: 400 });
-
-        // 解析表头 (移除 BOM)
-        const headers = lines[0].replace(/^\uFEFF/, '').split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-
-        // 映射列名到索引
-        const colMap = {};
-        headers.forEach((h, i) => colMap[h] = i);
-
-        // 必需字段
-        if (colMap['name'] === undefined || colMap['display_url'] === undefined) {
-            return new Response(JSON.stringify({ error: 'Missing required columns: name, display_url' }), { status: 400 });
-        }
-
         let successCount = 0;
+
         const stmtInsert = env.DB.prepare("INSERT INTO websites (name, description, invite_link, display_url) VALUES (?, ?, ?, ?)");
         const stmtUpdate = env.DB.prepare("UPDATE websites SET name = ?, description = ?, invite_link = ?, display_url = ? WHERE id = ?");
 
-        // 批量处理
-        // 注意：D1 的 batch 大小有限制，这里简单起见逐条执行，或者分批 batch
-        // 为了支持 overwrite 逻辑，逐条处理比较清晰
-        for (let i = 1; i < lines.length; i++) {
-            const row = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, '')); // 简单处理引号
-            if (row.length < headers.length) continue;
+        for (const item of data) {
+            // 简单的数据清洗
+            const id = item.id;
+            const name = item.name;
+            const desc = item.description || '';
+            // 兼容 submissions 表的 url 字段
+            const invite = item.invite_link || item.url || '';
+            const display = item.display_url || item.url || '';
 
-            const id = colMap['id'] !== undefined ? row[colMap['id']] : null;
-            const name = row[colMap['name']];
-            const desc = colMap['description'] !== undefined ? row[colMap['description']] : '';
-            const invite = colMap['invite_link'] !== undefined ? row[colMap['invite_link']] : '';
-            const display = colMap['display_url'];
+            if (!name || (!invite && !display)) continue;
 
             try {
                 if (overwrite && id) {
-                    // 尝试更新
                     const res = await stmtUpdate.bind(name, desc, invite, display, id).run();
                     if (res.meta.changes > 0) {
                         successCount++;
                     } else {
-                        // ID 不存在，转为插入 (忽略 ID，让它自增，或者强制指定 ID？)
-                        // 通常如果 ID 不存在，UPDATE 会返回 0 changes。
-                        // 用户说“根据ID号去覆盖”，如果ID不存在，应该当作新数据插入吗？
-                        // 为了避免 ID 冲突，如果 ID 不存在，最好让数据库自增 ID。
+                        // ID 不存在，转为插入
                         await stmtInsert.bind(name, desc, invite, display).run();
                         successCount++;
                     }
                 } else {
-                    // 直接插入
                     await stmtInsert.bind(name, desc, invite, display).run();
                     successCount++;
                 }
             } catch (e) {
-                console.error(`Import error at line ${i}:`, e);
+                console.error(`Import error:`, e);
             }
         }
-
         return new Response(JSON.stringify({ success: true, count: successCount }), { status: 200 });
     }
 
     // 2. 处理 JSON 单个添加 (原有逻辑)
-    const data = await request.json();
     const { name, description, invite_link, display_url } = data;
 
     if (!name || !invite_link || !display_url) {
@@ -178,7 +152,7 @@ async function handleDelete(url, env) {
     // 同时删除相关的点赞和评论数据，保持干净
     await env.DB.prepare("DELETE FROM likes WHERE card_id = ?").bind(id).run();
     await env.DB.prepare("DELETE FROM comments WHERE card_id = ?").bind(id).run();
-    await env.DB.prepare("DELETE FROM site_status WHERE card_id = ?").bind(id).run();
+    // site_status 表已废弃，无需删除
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
