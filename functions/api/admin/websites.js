@@ -75,6 +75,7 @@ async function handleAdd(request, env) {
         let successCount = 0;
 
         const stmtInsert = env.DB.prepare("INSERT INTO websites (name, description, invite_link, display_url) VALUES (?, ?, ?, ?)");
+        const stmtInsertWithId = env.DB.prepare("INSERT INTO websites (id, name, description, invite_link, display_url) VALUES (?, ?, ?, ?, ?)");
         const stmtUpdate = env.DB.prepare("UPDATE websites SET name = ?, description = ?, invite_link = ?, display_url = ? WHERE id = ?");
 
         for (const item of data) {
@@ -89,21 +90,32 @@ async function handleAdd(request, env) {
             if (!name || (!invite && !display)) continue;
 
             try {
-                if (overwrite && id) {
-                    const res = await stmtUpdate.bind(name, desc, invite, display, id).run();
-                    if (res.meta.changes > 0) {
-                        successCount++;
+                if (id) {
+                    // 如果有 ID，优先尝试用 ID 操作
+                    if (overwrite) {
+                        // 尝试更新
+                        const res = await stmtUpdate.bind(name, desc, invite, display, id).run();
+                        if (res.meta.changes > 0) {
+                            successCount++;
+                        } else {
+                            // 更新失败（ID不存在），则强制插入该 ID
+                            await stmtInsertWithId.bind(id, name, desc, invite, display).run();
+                            successCount++;
+                        }
                     } else {
-                        // ID 不存在，转为插入
-                        await stmtInsert.bind(name, desc, invite, display).run();
+                        // 不覆盖，直接尝试插入该 ID
+                        // 如果 ID 已存在会报错，catch 住即可
+                        await stmtInsertWithId.bind(id, name, desc, invite, display).run();
                         successCount++;
                     }
                 } else {
+                    // 没有 ID，走自增插入
                     await stmtInsert.bind(name, desc, invite, display).run();
                     successCount++;
                 }
             } catch (e) {
-                console.error(`Import error:`, e);
+                console.error(`Import error for ${name}:`, e);
+                // 如果是 ID 冲突且 overwrite=false，这里会报错，符合预期
             }
         }
         return new Response(JSON.stringify({ success: true, count: successCount }), { status: 200 });
