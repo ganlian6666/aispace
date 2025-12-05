@@ -114,7 +114,20 @@
     <div id="admin-panel">
       <div class="toolbar">
         <h1>网站管理</h1>
-        <div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <!-- 导出下拉菜单 -->
+          <div style="position:relative; display:inline-block;">
+            <button onclick="toggleExportMenu()" style="background:#475569">导出 ▼</button>
+            <div id="export-menu" style="display:none; position:absolute; right:0; top:100%; background:var(--panel); border:1px solid var(--border); border-radius:6px; min-width:120px; z-index:10; box-shadow:0 4px 12px rgba(0,0,0,0.5);">
+              <div onclick="exportData('submissions')" style="padding:10px; cursor:pointer; border-bottom:1px solid var(--border);">用户提交</div>
+              <div onclick="exportData('websites')" style="padding:10px; cursor:pointer;">主页网站</div>
+            </div>
+          </div>
+
+          <!-- 导入按钮 -->
+          <input type="file" id="import-file" accept=".csv" style="display:none" onchange="handleFileSelect(this)">
+          <button onclick="triggerImport()" style="background:#475569">导入</button>
+
           <button onclick="openModal()">+ 添加新网站</button>
           <button onclick="logout()" style="background:transparent; border:1px solid var(--border);">退出</button>
         </div>
@@ -161,8 +174,29 @@
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-        <button onclick="closeModal()" style="background:transparent; border:1px solid var(--border);">取消</button>
+        <button onclick="closeModal('editModal')" style="background:transparent; border:1px solid var(--border);">取消</button>
         <button onclick="saveSite()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Confirm Modal -->
+  <div class="modal-backdrop" id="importModal">
+    <div class="modal">
+      <h2>确认导入</h2>
+      <p>您选择了文件: <span id="import-filename" style="color:var(--primary)"></span></p>
+      <p style="color:var(--text-muted); font-size:14px;">注意：导入操作将批量添加或更新网站数据。</p>
+      
+      <div style="margin:20px 0; background:rgba(0,0,0,0.2); padding:10px; border-radius:6px;">
+        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="import-overwrite" style="width:auto; margin:0;">
+          <span>覆盖现有数据 (根据 ID 匹配)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button onclick="closeModal('importModal')" style="background:transparent; border:1px solid var(--border);">取消</button>
+        <button onclick="confirmImport()">确定导入</button>
       </div>
     </div>
   </div>
@@ -170,6 +204,7 @@
   <script>
     let sites = [];
     const API_URL = '/api/admin/websites';
+    let selectedImportFile = null;
 
     // Auth Logic
     // 内存变量，刷新页面即丢失
@@ -204,7 +239,6 @@
 
         if (res.status === 401) {
           alert('密码错误');
-          localStorage.removeItem('admin_key');
           return;
         }
 
@@ -242,6 +276,78 @@
       \`).join('');
     }
 
+    // Export Logic
+    function toggleExportMenu() {
+        const menu = document.getElementById('export-menu');
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    // Close menu when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('button')) {
+            const menu = document.getElementById('export-menu');
+            if (menu && menu.style.display === 'block') {
+                menu.style.display = 'none';
+            }
+        }
+    }
+
+    function exportData(type) {
+        // 使用当前登录的密码进行验证
+        const key = getKey();
+        if (!key) return alert('请先登录');
+        window.location.href = \`/api/admin/export?type=\${type}&key=\${key}\`;
+    }
+
+    // Import Logic
+    function triggerImport() {
+        document.getElementById('import-file').click();
+    }
+
+    function handleFileSelect(input) {
+        if (input.files && input.files[0]) {
+            selectedImportFile = input.files[0];
+            document.getElementById('import-filename').textContent = selectedImportFile.name;
+            document.getElementById('importModal').style.display = 'flex';
+        }
+    }
+
+    async function confirmImport() {
+        if (!selectedImportFile) return;
+        
+        const overwrite = document.getElementById('import-overwrite').checked;
+        const btn = document.querySelector('#importModal button:last-child');
+        btn.textContent = '导入中...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(\`\${API_URL}?overwrite=\${overwrite}\`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/csv',
+                    'X-Admin-Key': getKey()
+                },
+                body: selectedImportFile
+            });
+
+            if (res.ok) {
+                const result = await res.json();
+                alert(\`导入成功！处理了 \${result.count} 条数据。\`);
+                closeModal('importModal');
+                loadSites();
+            } else {
+                const err = await res.json();
+                alert('导入失败: ' + err.error);
+            }
+        } catch (e) {
+            alert('网络错误');
+        } finally {
+            btn.textContent = '确定导入';
+            btn.disabled = false;
+            document.getElementById('import-file').value = ''; // Reset input
+        }
+    }
+
     // Edit Logic
     function openModal() {
       document.getElementById('editModal').style.display = 'flex';
@@ -254,8 +360,8 @@
       document.getElementById('modalTitle').textContent = '添加网站';
     }
 
-    function closeModal() {
-      document.getElementById('editModal').style.display = 'none';
+    function closeModal(modalId = 'editModal') {
+      document.getElementById(modalId).style.display = 'none';
     }
 
     function editSite(id) {
@@ -299,7 +405,7 @@
         });
 
         if (res.ok) {
-          closeModal();
+          closeModal('editModal');
           loadSites();
         } else {
           const err = await res.json();
