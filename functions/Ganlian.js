@@ -317,7 +317,7 @@
       if (!confirm('纭畾瑕佸垹闄よ繖涓綉绔欏悧锛熺浉鍏崇偣璧炲拰璇勮涔熶細琚垹闄わ紒')) return;
 
       try {
-        const res = await fetch(${API_URL}?id=, {
+        const res = await fetch(`${API_URL}?id=${id}`, {
           method: 'DELETE',
           headers: { 'X-Admin-Key': getKey() }
         });
@@ -336,7 +336,7 @@
     function exportCSV() {
       const key = getKey();
       if (!key) return alert('璇峰厛鐧诲綍');
-      window.open(/api/export?key=, '_blank');
+      window.open(`/api/export?key=${encodeURIComponent(key)}`, '_blank');
     }
 
     // Import Logic
@@ -387,7 +387,7 @@
           } catch (e) { console.error(e); }
         }
         
-        alert(导入完成！成功添加  个网站);
+        alert(`导入完成！成功添加 ${successCount} 个网站`);
         loadSites();
         input.value = '';
       };
