@@ -131,7 +131,8 @@ export async function onRequestGet(context) {
         </div>
       </div>
       <nav>
-        <a href="index.html" class="active">API中转汇聚</a>
+        <a href="/" class="active">API中转汇聚</a>
+        <a href="/news">AI 前沿动态</a>
         <a href="vpn.html">VPN</a>
         <a href="guide.html">配置指南</a>
       </nav>

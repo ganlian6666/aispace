@@ -48,6 +48,21 @@ CREATE TABLE IF NOT EXISTS login_attempts (
   last_attempt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 新闻表 (AI News)
+CREATE TABLE IF NOT EXISTS news (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    summary TEXT,
+    source TEXT NOT NULL, -- 'TechCrunch' or '36Kr'
+    url TEXT NOT NULL,
+    published_at DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(url) -- 防止重复插入
+);
+
+-- 索引，加速按时间排序
+CREATE INDEX IF NOT EXISTS idx_news_published_at ON news(published_at DESC);
+
 -- 初始化数据 (迁移原来的 6 个网站)
 INSERT OR IGNORE INTO websites (id, name, description, invite_link, display_url) VALUES
 (1, 'Evolai - 注册送积分 + 3天Plus 会话', '全链路监控保证可用性，通过专属网关访问低延迟接口。', 'https://www.evolai.cn/?inviteCode=PDGD2EDT', 'https://www.evolai.cn/'),
