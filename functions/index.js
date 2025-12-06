@@ -172,13 +172,15 @@ export async function onRequestGet(context) {
     .hero p { color: var(--text-muted); margin: 8px 0 0; max-width: 500px; }
     
     .submit-wrapper {
-      display: flex; align-items: center;
-      margin-top: 55px; /* Restore original vertical spacing */
+      display: flex; align-items: flex-end; /* Align text to bottom */
+      margin-top: 55px;
     }
     .submit-hint {
       font-size: 14px;
-      color: rgba(255, 255, 255, 0.6); /* Simple, muted style */
+      color: rgba(255, 255, 255, 0.6);
       margin-right: 12px;
+      margin-bottom: 4px; /* Fine-tune vertical alignment */
+      line-height: 1; /* Ensure line-height doesn't mess up alignment */
     }
     @media (max-width: 768px) {
       .submit-wrapper { width: 100%; justify-content: flex-end; margin-top: 20px; }
