@@ -170,7 +170,19 @@ export async function onRequestGet(context) {
     }
     .hero h1 { margin: 0; font-size: clamp(26px, 3vw, 34px); }
     .hero p { color: var(--text-muted); margin: 8px 0 0; max-width: 500px; }
-    .hero .btn-primary { margin-top: 55px; }
+    /* .hero .btn-primary { margin-top: 55px; } Removed to fix alignment */
+    .submit-hint {
+      font-size: 15px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #ff8d4b, #f552ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-right: 15px;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 768px) {
+      .submit-wrapper { width: 100%; justify-content: flex-end; margin-top: 10px; }
+    }
     .btn-primary {
       background: #2563eb; color: white; border: none; padding: 10px 20px;
       border-radius: 8px; font-weight: 600; cursor: pointer; display: flex;
@@ -313,13 +325,16 @@ export async function onRequestGet(context) {
         <h1>不定期分享优质API接口</h1>
         <p>每一条 API 都经过人工检测，基本支持claude code，codex和国内优质AI模型，请放心使用！</p>
       </div>
-      <button class="btn-primary" onclick="openModal('submitModal')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        提交网站
-      </button>
+      <div class="submit-wrapper" style="display:flex; align-items:center;">
+        <span class="submit-hint">欢迎分享稳定高效的中转站</span>
+        <button class="btn-primary" onclick="openModal('submitModal')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          提交网站
+        </button>
+      </div>
     </section>
 
     <div class="card-grid">
