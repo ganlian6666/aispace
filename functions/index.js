@@ -170,18 +170,18 @@ export async function onRequestGet(context) {
     }
     .hero h1 { margin: 0; font-size: clamp(26px, 3vw, 34px); }
     .hero p { color: var(--text-muted); margin: 8px 0 0; max-width: 500px; }
-    /* .hero .btn-primary { margin-top: 55px; } Removed to fix alignment */
+    
+    .submit-wrapper {
+      display: flex; align-items: center;
+      margin-top: 55px; /* Restore original vertical spacing */
+    }
     .submit-hint {
-      font-size: 15px;
-      font-weight: 600;
-      background: linear-gradient(90deg, #ff8d4b, #f552ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-right: 15px;
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6); /* Simple, muted style */
+      margin-right: 12px;
     }
     @media (max-width: 768px) {
-      .submit-wrapper { width: 100%; justify-content: flex-end; margin-top: 10px; }
+      .submit-wrapper { width: 100%; justify-content: flex-end; margin-top: 20px; }
     }
     .btn-primary {
       background: #2563eb; color: white; border: none; padding: 10px 20px;
