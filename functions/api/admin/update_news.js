@@ -82,7 +82,13 @@ export async function onRequest(context) {
                         item.summary = summaryResp.translated_text || item.summary;
                     }
                 } catch (aiErr) {
-                    console.error('AI Translation failed:', aiErr);
+                    console.error(`AI Translation failed for "${item.title}":`, aiErr);
+                    // 尝试打印更详细的错误信息，如果是对象的话
+                    if (aiErr && typeof aiErr === 'object') {
+                        try {
+                            console.error('Error details:', JSON.stringify(aiErr));
+                        } catch (e) { }
+                    }
                     // 失败了就保留原文
                 }
             }
@@ -137,6 +143,7 @@ export async function onRequest(context) {
 }
 
 // 简单的 RSS 解析器 (Regex based)
+// 简单的 RSS 解析器 (Regex based)
 function parseRSS(xml, source) {
     const items = [];
     // 匹配 <item>...</item>
@@ -147,21 +154,43 @@ function parseRSS(xml, source) {
         const itemContent = match[1];
 
         // 提取 Title
-        const titleMatch = itemContent.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || itemContent.match(/<title>(.*?)<\/title>/);
-        const title = titleMatch ? decodeHTML(titleMatch[1]) : 'No Title';
+        // 优先匹配 CDATA，然后是普通标签
+        let title = 'No Title';
+        const titleCdataMatch = itemContent.match(/<title>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/title>/);
+        const titleSimpleMatch = itemContent.match(/<title>([\s\S]*?)<\/title>/);
+
+        if (titleCdataMatch) {
+            title = titleCdataMatch[1].trim();
+        } else if (titleSimpleMatch) {
+            title = decodeHTML(titleSimpleMatch[1].trim());
+        }
 
         // 提取 Link
-        const linkMatch = itemContent.match(/<link>(.*?)<\/link>/);
-        const link = linkMatch ? linkMatch[1].trim() : '';
+        // 同样优先匹配 CDATA (有些 RSS 会把 link 也放 CDATA)
+        let link = '';
+        const linkCdataMatch = itemContent.match(/<link>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/link>/);
+        const linkSimpleMatch = itemContent.match(/<link>([\s\S]*?)<\/link>/);
+
+        if (linkCdataMatch) {
+            link = linkCdataMatch[1].trim();
+        } else if (linkSimpleMatch) {
+            link = linkSimpleMatch[1].trim();
+        }
 
         // 提取 PubDate
         const dateMatch = itemContent.match(/<pubDate>(.*?)<\/pubDate>/);
         const pubDate = dateMatch ? new Date(dateMatch[1]) : new Date();
 
         // 提取 Description/Summary
-        // 很多 RSS description 包含 HTML，我们需要去除 HTML 标签
-        const descMatch = itemContent.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/) || itemContent.match(/<description>(.*?)<\/description>/);
-        let summary = descMatch ? descMatch[1] : '';
+        let summary = '';
+        const descCdataMatch = itemContent.match(/<description>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/description>/);
+        const descSimpleMatch = itemContent.match(/<description>([\s\S]*?)<\/description>/);
+
+        if (descCdataMatch) {
+            summary = descCdataMatch[1];
+        } else if (descSimpleMatch) {
+            summary = descSimpleMatch[1];
+        }
 
         // 去除 HTML 标签
         summary = summary.replace(/<[^>]+>/g, '');
