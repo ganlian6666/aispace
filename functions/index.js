@@ -347,7 +347,7 @@ export async function onRequestGet(context) {
     <div class="modal">
       <h2>提交新的中转站</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
-        分享你的中转站，让更多人发现和使用。提交后需要审核验证。
+        欢迎分享你的中转站，提交后需要审核验证，通过的会将你的邀请链接挂到主页上！
       </p>
       <form id="submitForm" onsubmit="submitWebsite(event)">
         <div class="form-group">
