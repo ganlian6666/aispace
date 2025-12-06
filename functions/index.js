@@ -172,16 +172,13 @@ export async function onRequestGet(context) {
     .hero p { color: var(--text-muted); margin: 8px 0 0; max-width: 500px; }
     
     .submit-wrapper {
-      display: flex; align-items: flex-end;
-      margin-top: 55px;
+      display: flex; align-items: center;
+      margin-top: 55px; /* Restore original vertical spacing */
     }
     .submit-hint {
       font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.6); /* Simple, muted style */
       margin-right: 12px;
-      margin-bottom: 0; /* Strictly align with bottom */
-      line-height: 1.5; /* Better line height for text */
-      padding-bottom: 2px; /* Micro-adjustment for visual balance */
     }
     @media (max-width: 768px) {
       .submit-wrapper { width: 100%; justify-content: flex-end; margin-top: 20px; }
@@ -329,7 +326,7 @@ export async function onRequestGet(context) {
         <p>每一条 API 都经过人工检测，基本支持claude code，codex和国内优质AI模型，请放心使用！</p>
       </div>
       <div class="submit-wrapper" style="display:flex; align-items:center;">
-        <span class="submit-hint">欢迎分享稳定高效的中转站</span>
+        <span class="submit-hint">欢迎分享稳定高效的中转站!</span>
         <button class="btn-primary" onclick="openModal('submitModal')">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
