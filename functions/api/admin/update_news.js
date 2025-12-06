@@ -36,20 +36,20 @@ export async function onRequest(context) {
             const krText = await krRes.text();
             let krItems = parseRSS(krText, '36Kr');
 
-            // 过滤 AI 相关关键词 (更严格，优先匹配标题)
+            // 过滤 AI 相关关键词 (严格模式：只匹配标题)
             krItems = krItems.filter(item => {
                 const title = item.title.toLowerCase();
-                const summary = item.summary.toLowerCase();
 
                 // 必须匹配的关键词组
-                const keywords = ['ai', '人工智能', '模型', 'gpt', '大语言', '算法', '神经网络', 'deepmind', 'openai', 'anthropic'];
+                const keywords = [
+                    'ai', '人工智能', '模型', 'gpt', '大语言', '神经网络',
+                    'deepmind', 'openai', 'anthropic', 'deepseek', 'gemini',
+                    'codex', 'claude', '强化学习', 'sutton', 'karpathy', 'ilya',
+                    'llm', 'transformer'
+                ];
 
-                // 标题匹配权重高
+                // 只检查标题
                 if (keywords.some(k => title.includes(k))) return true;
-
-                // 摘要匹配需要更严格（比如出现多次，或者配合其他词），这里简单起见，
-                // 如果标题没命中，摘要里必须包含核心词
-                if (keywords.some(k => summary.includes(k))) return true;
 
                 return false;
             });
