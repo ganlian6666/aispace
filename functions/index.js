@@ -360,7 +360,7 @@ export async function onRequestGet(context) {
         </div>
         <div class="form-group">
           <label>邀请链接</label>
-          <input type="url" name="invite_link" class="form-control" placeholder="例如: https://example.com/invite?code=abc">
+          <input type="url" name="invite_link" class="form-control" placeholder="例如: https://chatgpt.com/invite?code=abc">
         </div>
         <div class="form-group">
           <label>简单描述</label>
