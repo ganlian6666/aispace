@@ -577,6 +577,10 @@
 
     if (getKey()) {
       loadSites();
+    } else {
+      // Auto focus password input
+      const pwd = document.getElementById('password');
+      if (pwd) pwd.focus();
     }
   </script>
 </body>
