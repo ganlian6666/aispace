@@ -36,70 +36,47 @@ export async function onRequest(context) {
             const krText = await krRes.text();
             let krItems = parseRSS(krText, '36Kr');
 
-            // 过滤 AI 相关关键词
+            // 过滤 AI 相关关键词 (更严格，优先匹配标题)
             krItems = krItems.filter(item => {
-                const text = (item.title + item.summary).toLowerCase();
-                return text.includes('ai') ||
-                    text.includes('人工智能') ||
-                    text.includes('模型') ||
-                    text.includes('gpt') ||
-                    text.includes('大语言');
+                const title = item.title.toLowerCase();
+                const summary = item.summary.toLowerCase();
+
+                // 必须匹配的关键词组
+                const keywords = ['ai', '人工智能', '模型', 'gpt', '大语言', '算法', '神经网络', 'deepmind', 'openai', 'anthropic'];
+
+                // 标题匹配权重高
+                if (keywords.some(k => title.includes(k))) return true;
+
+                // 摘要匹配需要更严格（比如出现多次，或者配合其他词），这里简单起见，
+                // 如果标题没命中，摘要里必须包含核心词
+                if (keywords.some(k => summary.includes(k))) return true;
+
+                return false;
             });
             newsItems.push(...krItems);
         } catch (e) {
             console.error('Failed to fetch 36Kr:', e);
         }
 
-        // 3. Process & Translate
+        // 3. Process (Sort & Clean)
         // 按时间倒序
         newsItems.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
 
-        // 取前 15 条进行处理（避免翻译太多）
+        // 取前 15 条
         const topNews = newsItems.slice(0, 15);
         const processedNews = [];
 
         for (const item of topNews) {
-            // 如果是英文 (TechCrunch)，且有 AI 环境，则翻译
-            if (item.source === 'TechCrunch' && env.AI) {
-                try {
-                    // 翻译标题
-                    const titleResp = await env.AI.run('@cf/meta/m2m100-1.2b', {
-                        text: item.title,
-                        source_lang: 'en',
-                        target_lang: 'zh'
-                    });
-                    item.title = titleResp.translated_text || item.title;
-
-                    // 翻译摘要 (如果有)
-                    if (item.summary) {
-                        // 截断一下摘要，防止太长耗费 token 或翻译超时
-                        const summaryText = item.summary.substring(0, 200);
-                        const summaryResp = await env.AI.run('@cf/meta/m2m100-1.2b', {
-                            text: summaryText,
-                            source_lang: 'en',
-                            target_lang: 'zh'
-                        });
-                        item.summary = summaryResp.translated_text || item.summary;
-                    }
-                } catch (aiErr) {
-                    console.error(`AI Translation failed for "${item.title}":`, aiErr);
-                    // 尝试打印更详细的错误信息，如果是对象的话
-                    if (aiErr && typeof aiErr === 'object') {
-                        try {
-                            console.error('Error details:', JSON.stringify(aiErr));
-                        } catch (e) { }
-                    }
-                    // 失败了就保留原文
-                }
+            // 暴力清洗 URL: 去除 CDATA 标记和可能的空白
+            if (item.url) {
+                item.url = item.url.replace(/<!\[CDATA\[/g, '').replace(/\]\]>/g, '').trim();
             }
+
+            // 不再进行 AI 翻译，直接使用原文
             processedNews.push(item);
         }
 
         // 4. Save to DB
-        // 我们只保留最新的 10 条在数据库里？或者保留历史记录但只取前 10？
-        // 策略：插入新数据，忽略重复 (url UNIQUE)。
-        // 然后删除旧数据，只保留最新的 50 条，以免数据库膨胀。
-
         const stmtInsert = env.DB.prepare(`
       INSERT OR IGNORE INTO news (title, summary, source, url, published_at)
       VALUES (?, ?, ?, ?, ?)
