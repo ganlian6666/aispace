@@ -1,16 +1,35 @@
 export async function onRequest(context) {
     const { env } = context;
-    const apiKey = env.ADMIN_PASSWORD; // 简单复用管理员密码作为鉴权，或者你可以设置新的 SECRET
+    // 获取客户端 IP
+    const clientIP = context.request.headers.get('CF-Connecting-IP') || 'unknown';
 
-    // 简单的鉴权，防止被恶意频繁触发
+    // 检查频率限制 (每小时 1 次)
+    // 如果是 Cron Trigger (key=ADMIN_PASSWORD) 或 Scheduler Worker (带 key)，则跳过限制
     const url = new URL(context.request.url);
     const key = url.searchParams.get('key');
+    const isAuthorized = env.ADMIN_PASSWORD && key === env.ADMIN_PASSWORD;
 
-    // 如果是 Cron Trigger 自动触发，通常不需要 key，但在 Pages 中我们通常通过 URL 触发
-    // 这里为了演示方便，如果提供了 key 且匹配 ADMIN_PASSWORD，或者在本地开发环境，则允许执行
-    // 注意：实际生产中建议使用 Cloudflare Access 或更严格的验证
-    if (env.ADMIN_PASSWORD && key !== env.ADMIN_PASSWORD) {
-        return new Response('Unauthorized', { status: 401 });
+    if (!isAuthorized) {
+        // 检查数据库中的记录
+        const limitRecord = await env.DB.prepare('SELECT last_updated FROM rate_limits WHERE ip = ?').bind(clientIP).first();
+
+        if (limitRecord) {
+            const lastUpdated = new Date(limitRecord.last_updated);
+            const now = new Date();
+            const diffMs = now - lastUpdated;
+            const diffMins = Math.floor(diffMs / 60000);
+
+            if (diffMins < 60) {
+                return new Response(JSON.stringify({
+                    error: 'Too Many Requests',
+                    message: `请等待 ${60 - diffMins} 分钟后再刷新。`,
+                    remaining_minutes: 60 - diffMins
+                }), {
+                    status: 429,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+        }
     }
 
     try {
@@ -102,7 +121,7 @@ export async function onRequest(context) {
       )
     `).run();
 
-        return new Response(JSON.stringify({
+        const response = new Response(JSON.stringify({
             status: 'success',
             fetched: newsItems.length,
             processed: processedNews.length,
@@ -111,6 +130,16 @@ export async function onRequest(context) {
             headers: { 'Content-Type': 'application/json' }
         });
 
+        // 更新频率限制记录 (仅当非管理员触发时)
+        if (!isAuthorized) {
+            await env.DB.prepare(`
+                INSERT INTO rate_limits (ip, last_updated) VALUES (?, datetime('now'))
+                ON CONFLICT(ip) DO UPDATE SET last_updated = datetime('now')
+            `).bind(clientIP).run();
+        }
+
+        return response;
+
     } catch (e) {
         return new Response(JSON.stringify({ error: e.message, stack: e.stack }), {
             status: 500,
@@ -118,6 +147,8 @@ export async function onRequest(context) {
         });
     }
 }
+
+
 
 // 简单的 RSS 解析器 (Regex based)
 // 简单的 RSS 解析器 (Regex based)

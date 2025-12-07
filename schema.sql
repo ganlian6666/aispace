@@ -63,6 +63,12 @@ CREATE TABLE IF NOT EXISTS news (
 -- 索引，加速按时间排序
 CREATE INDEX IF NOT EXISTS idx_news_published_at ON news(published_at DESC);
 
+-- 频率限制表 (用于限制 IP 刷新频率)
+CREATE TABLE IF NOT EXISTS rate_limits (
+    ip TEXT PRIMARY KEY,
+    last_updated DATETIME
+);
+
 -- 初始化数据 (迁移原来的 6 个网站)
 INSERT OR IGNORE INTO websites (id, name, description, invite_link, display_url) VALUES
 (1, 'Evolai - 注册送积分 + 3天Plus 会话', '全链路监控保证可用性，通过专属网关访问低延迟接口。', 'https://www.evolai.cn/?inviteCode=PDGD2EDT', 'https://www.evolai.cn/'),

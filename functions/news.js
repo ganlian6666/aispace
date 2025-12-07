@@ -92,8 +92,10 @@ export async function onRequestGet(context) {
 
     <div class="news-container">
         <div class="news-header">
-            <h1>AI 前沿动态</h1>
-            <p>汇聚 TechCrunch 与 36Kr 的最新 AI 资讯，实时翻译，全球同步。</p>
+            <div>
+                <h1>AI 前沿动态</h1>
+                <p>汇聚 TechCrunch 与 36Kr 的最新 AI 资讯，实时翻译，全球同步。</p>
+            </div>
             <button class="refresh-btn" onclick="triggerUpdate(this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M23 4v6h-6M1 20v-6h6"></path>
@@ -112,39 +114,26 @@ export async function onRequestGet(context) {
         if (btn.classList.contains('loading')) return;
         
         btn.classList.add('loading');
-        btn.innerHTML = '正在获取最新资讯...';
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '正在获取...';
         
         try {
-            // 提示：这里需要管理员密码，实际场景中可能需要弹窗输入，或者后端验证
-            // 为了简化体验，我们假设用户知道密码或者我们在 URL 里带上
-            // 这里先尝试直接请求，如果后端有鉴权，会返回 401
+            const res = await fetch('/api/admin/update_news');
+            const data = await res.json();
             
-            const password = prompt("请输入管理员密码以更新新闻库：");
-            if (!password) {
-                btn.classList.remove('loading');
-                btn.innerHTML = '刷新资讯';
-                return;
-            }
-
-            const res = await fetch('/api/admin/update_news?key=' + password);
             if (res.ok) {
-                const data = await res.json();
                 alert(\`更新成功！获取了 \${data.fetched} 条，新增 \${data.inserted} 条。\`);
                 window.location.reload();
+            } else if (res.status === 429) {
+                alert(data.message || '刷新太频繁，请稍后再试。');
             } else {
-                alert('更新失败，可能是密码错误或网络问题。');
+                alert('更新失败：' + (data.error || '未知错误'));
             }
         } catch (e) {
             alert('网络错误');
         } finally {
             btn.classList.remove('loading');
-            btn.innerHTML = \`
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px;">
-                    <path d="M23 4v6h-6M1 20v-6h6"></path>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-                刷新资讯
-            \`;
+            btn.innerHTML = originalText;
         }
     }
   </script>
