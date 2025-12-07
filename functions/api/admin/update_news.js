@@ -2,33 +2,15 @@ export async function onRequest(context) {
     const { env } = context;
     const apiKey = env.ADMIN_PASSWORD; // 简单复用管理员密码作为鉴权，或者你可以设置新的 SECRET
 
-    // IP Rate Limiting (1 hour per IP)
-    const clientIP = context.request.headers.get('CF-Connecting-IP') || 'unknown';
+    // 简单的鉴权，防止被恶意频繁触发
+    const url = new URL(context.request.url);
+    const key = url.searchParams.get('key');
 
-    // Allow scheduler (bypass rate limit if key matches)
-    const isScheduler = env.ADMIN_PASSWORD && key === env.ADMIN_PASSWORD;
-
-    if (!isScheduler) {
-        const now = Date.now();
-        const oneHour = 60 * 60 * 1000;
-
-        const stmtGet = env.DB.prepare('SELECT last_update FROM rate_limits WHERE ip = ?');
-        const record = await stmtGet.bind(clientIP).first();
-
-        if (record && (now - record.last_update < oneHour)) {
-            const waitMin = Math.ceil((oneHour - (now - record.last_update)) / 60000);
-            return new Response(JSON.stringify({
-                error: `Too many requests. Please wait ${waitMin} minutes.`
-            }), {
-                status: 429,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
-        // Update rate limit record
-        await env.DB.prepare('INSERT OR REPLACE INTO rate_limits (ip, last_update) VALUES (?, ?)')
-            .bind(clientIP, now)
-            .run();
+    // 如果是 Cron Trigger 自动触发，通常不需要 key，但在 Pages 中我们通常通过 URL 触发
+    // 这里为了演示方便，如果提供了 key 且匹配 ADMIN_PASSWORD，或者在本地开发环境，则允许执行
+    // 注意：实际生产中建议使用 Cloudflare Access 或更严格的验证
+    if (env.ADMIN_PASSWORD && key !== env.ADMIN_PASSWORD) {
+        return new Response('Unauthorized', { status: 401 });
     }
 
     try {
