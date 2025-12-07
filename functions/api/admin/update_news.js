@@ -22,7 +22,7 @@ export async function onRequest(context) {
             if (diffMins < 60) {
                 return new Response(JSON.stringify({
                     error: 'Too Many Requests',
-                    message: `请等待 ${60 - diffMins} 分钟后再刷新。`,
+                    message: `已经是最新信息啦，请不要频繁刷新，谢谢！`,
                     remaining_minutes: 60 - diffMins
                 }), {
                     status: 429,
