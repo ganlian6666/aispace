@@ -39,7 +39,9 @@ export async function onRequest(context) {
         try {
             const tcRes = await fetch('https://techcrunch.com/category/artificial-intelligence/feed/');
             const tcText = await tcRes.text();
-            const tcItems = parseRSS(tcText, 'TechCrunch');
+            let tcItems = parseRSS(tcText, 'TechCrunch');
+            // 同样应用关键词过滤，确保相关性
+            tcItems = filterNewsItems(tcItems);
             newsItems.push(...tcItems);
         } catch (e) {
             console.error('Failed to fetch TechCrunch:', e);
@@ -55,23 +57,8 @@ export async function onRequest(context) {
             const krText = await krRes.text();
             let krItems = parseRSS(krText, '36Kr');
 
-            // 过滤 AI 相关关键词 (严格模式：只匹配标题)
-            krItems = krItems.filter(item => {
-                const title = item.title.toLowerCase();
-
-                // 必须匹配的关键词组
-                const keywords = [
-                    'ai', '人工智能', '模型', 'gpt', '大语言', '神经网络',
-                    'deepmind', 'openai', 'anthropic', 'deepseek', 'gemini',
-                    'codex', 'claude', '强化学习', 'sutton', 'karpathy', 'ilya',
-                    'llm', 'transformer'
-                ];
-
-                // 只检查标题
-                if (keywords.some(k => title.includes(k))) return true;
-
-                return false;
-            });
+            // 过滤 AI 相关关键词
+            krItems = filterNewsItems(krItems);
             newsItems.push(...krItems);
         } catch (e) {
             console.error('Failed to fetch 36Kr:', e);
@@ -230,4 +217,20 @@ function decodeHTML(html) {
         '&nbsp;': ' '
     };
     return html.replace(/&amp;|&lt;|&gt;|&quot;|&#39;|&nbsp;/g, m => map[m]);
+}
+
+function filterNewsItems(items) {
+    // 必须匹配的关键词组
+    const keywords = [
+        'ai', '人工智能', '模型', 'gpt', '大语言', '神经网络',
+        'deepmind', 'openai', 'anthropic', 'deepseek', 'gemini',
+        'codex', 'claude', '强化学习', 'sutton', 'karpathy', 'ilya',
+        'llm', 'transformer'
+    ];
+
+    return items.filter(item => {
+        const title = item.title.toLowerCase();
+        // 只检查标题
+        return keywords.some(k => title.includes(k));
+    });
 }
