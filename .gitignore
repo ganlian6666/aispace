@@ -2,6 +2,7 @@ node_modules/
 .wrangler/
 .vscode/
 *.log
+
 wrangler.toml
 *.txt
 .dev.vars
