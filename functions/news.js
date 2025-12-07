@@ -1,25 +1,25 @@
 export async function onRequestGet(context) {
-    const { env } = context;
+  const { env } = context;
 
-    // 1. 从数据库获取新闻数据
-    let news = [];
-    try {
-        // 获取最新的 10 条新闻
-        const { results } = await env.DB.prepare("SELECT * FROM news ORDER BY published_at DESC LIMIT 10").all();
-        news = results || [];
-    } catch (e) {
-        console.error("DB Error:", e);
-    }
+  // 1. 从数据库获取新闻数据
+  let news = [];
+  try {
+    // 获取最新的 10 条新闻
+    const { results } = await env.DB.prepare("SELECT * FROM news ORDER BY published_at DESC LIMIT 10").all();
+    news = results || [];
+  } catch (e) {
+    console.error("DB Error:", e);
+  }
 
-    // 2. 格式化日期
-    news.forEach(item => {
-        const date = new Date(item.published_at);
-        // 格式化为: "12月07日 14:30"
-        item.formatted_date = `${date.getMonth() + 1}月${date.getDate()}日 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    });
+  // 2. 格式化日期
+  news.forEach(item => {
+    const date = new Date(item.published_at);
+    // 格式化为: "12月07日 14:30"
+    item.formatted_date = `${date.getMonth() + 1}月${date.getDate()}日 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  });
 
-    // 3. 生成 HTML
-    const newsCardsHtml = news.map(item => `
+  // 3. 生成 HTML
+  const newsCardsHtml = news.map(item => `
       <article class="news-card">
         <div class="news-source source-${item.source.toLowerCase()}">${item.source}</div>
         <div class="news-date">
@@ -44,7 +44,7 @@ export async function onRequestGet(context) {
       </article>
   `).join('');
 
-    const html = `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
@@ -90,70 +90,115 @@ export async function onRequestGet(context) {
       </div>
     </header>
 
-    <div class="news-container">
-        <div class="news-header">
-            <h1>AI 前沿动态</h1>
-            <p>汇聚 TechCrunch 与 36Kr 的最新 AI 资讯，实时翻译，全球同步。</p>
-            <button class="refresh-btn" onclick="triggerUpdate(this)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 4v6h-6M1 20v-6h6"></path>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-                刷新资讯
-            </button>
-        </div>
+    const container = document.querySelector('.news-container');
+    // Keep the header, clear the cards
+    const header = container.querySelector('.news-header');
+    container.innerHTML = '';
+    container.appendChild(header);
 
-        ${news.length > 0 ? newsCardsHtml : '<div style="text-align:center; padding:40px; color:var(--text-muted)">暂无新闻，请点击刷新按钮获取最新资讯。</div>'}
-    </div>
-  </div>
+    news.forEach((item, index) => {
+        const date = new Date(item.published_at).toLocaleString('zh-CN', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
 
-  <script>
-    async function triggerUpdate(btn) {
-        if (btn.classList.contains('loading')) return;
+        const card = document.createElement('article');
+        card.className = 'news-card';
         
+        // Add refresh button to the first card
+        let refreshBtnHtml = '';
+        if (index === 0) {
+            refreshBtnHtml = `
+    < button id = "card-refresh-btn" class="card-refresh-btn" title = "刷新资讯" onclick = "triggerUpdate(this)" >
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 1 20.49 15"></path>
+                    </svg>
+                    <span>刷新</span>
+                </button >
+    `;
+        }
+
+        card.innerHTML = `
+    < div class="news-header-row" >
+      <div class="news-meta">
+        <span class="news-source source-${item.source.toLowerCase()}">${item.source}</span>
+        <span class="news-time">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ${date}
+        </span>
+      </div>
+                ${ refreshBtnHtml }
+            </div >
+            <h3 class="news-title">
+                <a href="${item.url}" target="_blank">${item.title}</a>
+            </h3>
+            <p class="news-summary">${item.summary || ''}</p>
+            <div class="news-footer">
+                <a href="${item.url}" target="_blank" class="read-more">
+                    阅读全文 
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+            </div>
+  `;
+        container.appendChild(card);
+    });
+}
+
+async function triggerUpdate(btn) {
+    if (btn) {
         btn.classList.add('loading');
-        btn.innerHTML = '正在获取最新资讯...';
-        
-        try {
-            // 提示：这里需要管理员密码，实际场景中可能需要弹窗输入，或者后端验证
-            // 为了简化体验，我们假设用户知道密码或者我们在 URL 里带上
-            // 这里先尝试直接请求，如果后端有鉴权，会返回 401
-            
-            const password = prompt("请输入管理员密码以更新新闻库：");
-            if (!password) {
-                btn.classList.remove('loading');
-                btn.innerHTML = '刷新资讯';
-                return;
-            }
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '刷新中...';
+    }
 
-            const res = await fetch('/api/admin/update_news?key=' + password);
-            if (res.ok) {
-                const data = await res.json();
-                alert(\`更新成功！获取了 \${data.fetched} 条，新增 \${data.inserted} 条。\`);
-                window.location.reload();
-            } else {
-                alert('更新失败，可能是密码错误或网络问题。');
-            }
-        } catch (e) {
-            alert('网络错误');
-        } finally {
+    try {
+        const response = await fetch('/api/admin/update_news');
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`刷新成功！新增 ${ data.inserted } 条资讯`);
+            // Reload page to show new data
+            window.location.reload();
+        } else if (response.status === 429) {
+            alert(data.error || '刷新太频繁，请稍后再试');
+        } else {
+            alert('刷新失败: ' + (data.error || '未知错误'));
+        }
+    } catch (error) {
+        console.error('Error refreshing news:', error);
+        alert('刷新失败，请检查网络');
+    } finally {
+        if (btn) {
             btn.classList.remove('loading');
-            btn.innerHTML = \`
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px;">
-                    <path d="M23 4v6h-6M1 20v-6h6"></path>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                </svg>
-                刷新资讯
-            \`;
+            btn.disabled = false;
+            btn.innerHTML = `
+    < svg viewBox = "0 0 24 24" width = "16" height = "16" stroke = "currentColor" stroke - width="2" fill = "none" >
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 1 20.49 15"></path>
+                </svg >
+    <span>刷新</span>
+  `;
         }
     }
-  </script>
+}
 </body>
 </html>`;
 
-    return new Response(html, {
-        headers: {
-            'content-type': 'text/html;charset=UTF-8',
-        },
-    });
+  return new Response(html, {
+    headers: {
+      'content-type': 'text/html;charset=UTF-8',
+    },
+  });
 }
