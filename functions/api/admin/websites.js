@@ -51,9 +51,19 @@ export async function onRequest(context) {
 }
 
 // 获取列表
+// 获取列表
 async function handleList(env, type) {
-    const table = type === 'submissions' ? 'submissions' : 'websites';
-    const { results } = await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id DESC`).all();
+    let table = 'websites';
+    let orderBy = 'id DESC';
+
+    if (type === 'submissions') {
+        table = 'submissions';
+    } else if (type === 'news') {
+        table = 'news';
+        orderBy = 'published_at DESC';
+    }
+
+    const { results } = await env.DB.prepare(`SELECT * FROM ${table} ORDER BY ${orderBy}`).all();
     return new Response(JSON.stringify(results), { status: 200 });
 }
 
@@ -148,15 +158,18 @@ async function handleUpdate(request, env, type) {
             await env.DB.prepare("UPDATE likes SET card_id = ? WHERE card_id = ?").bind(new_id, id).run();
             await env.DB.prepare("UPDATE comments SET card_id = ? WHERE card_id = ?").bind(new_id, id).run();
         }
-    } else {
+    } else if (type === 'submissions') {
         // 更新 submissions
-        // submissions 表字段: id, name, url, invite_link, description, ip, created_at
-        // 注意：submissions 表通常只有 url，没有 display_url/invite_link 的区分，或者 url 就是 display_url
-        // 根据 schema.sql: name, url, invite_link, description
         const targetUrl = url || display_url;
         await env.DB.prepare(
             "UPDATE submissions SET id = ?, name = ?, description = ?, invite_link = ?, url = ? WHERE id = ?"
         ).bind(targetId, name, description, invite_link, targetUrl, id).run();
+    } else if (type === 'news') {
+        // 更新 news (简单支持)
+        const targetUrl = url || display_url;
+        await env.DB.prepare(
+            "UPDATE news SET id = ?, title = ?, summary = ?, url = ? WHERE id = ?"
+        ).bind(targetId, name, description, targetUrl, id).run();
     }
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
@@ -178,7 +191,9 @@ async function handleDelete(url, env, type) {
         return new Response(JSON.stringify({ error: 'Missing ID(s)' }), { status: 400 });
     }
 
-    const table = type === 'submissions' ? 'submissions' : 'websites';
+    let table = 'websites';
+    if (type === 'submissions') table = 'submissions';
+    if (type === 'news') table = 'news';
 
     // 构建批量删除语句: DELETE FROM table WHERE id IN (?, ?, ?)
     const placeholders = ids.map(() => '?').join(',');

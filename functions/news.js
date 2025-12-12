@@ -4,22 +4,25 @@ export async function onRequestGet(context) {
   // 1. 从数据库获取新闻数据
   let news = [];
   try {
-    // 获取最新的 10 条新闻
-    const { results } = await env.DB.prepare("SELECT * FROM news ORDER BY published_at DESC LIMIT 10").all();
+    // 获取最新的 15 条新闻 (Page 1)
+    const { results } = await env.DB.prepare("SELECT * FROM news ORDER BY published_at DESC LIMIT 15").all();
     news = results || [];
   } catch (e) {
     console.error("DB Error:", e);
   }
 
-  // 2. 格式化日期
+  // 2. 格式化日期 helper
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return `${date.getMonth() + 1}月${date.getDate()}日 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  };
+
   news.forEach(item => {
-    const date = new Date(item.published_at);
-    // 格式化为: "12月07日 14:30"
-    item.formatted_date = `${date.getMonth() + 1}月${date.getDate()}日 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    item.formatted_date = formatDate(item.published_at);
   });
 
-  // 3. 生成 HTML
-  const newsCardsHtml = news.map(item => `
+  // 3. 生成 HTML Helper
+  const renderCard = (item) => `
       <article class="news-card">
         <div class="news-source source-${item.source.toLowerCase()}">${item.source}</div>
         <div class="news-date">
@@ -35,14 +38,16 @@ export async function onRequestGet(context) {
         <p class="news-summary">${item.summary}</p>
         <div class="news-footer">
             <a href="${item.url}" target="_blank" class="read-more">
-                阅读全文 
+                阅读原文 
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
             </a>
         </div>
       </article>
-  `).join('');
+  `;
+
+  const newsCardsHtml = news.map(renderCard).join('');
 
   const html = `<!DOCTYPE html>
 <html lang="zh">
@@ -77,8 +82,8 @@ export async function onRequestGet(context) {
       <nav>
         <a href="/">API中转汇聚</a>
         <a href="/news" class="active">AI 前沿动态</a>
-        <a href="/vpn.html">VPN</a>
-        <a href="/guide.html">配置指南</a>
+        <a href="/vpn">VPN</a>
+        <a href="/guide">配置指南</a>
       </nav>
       <div class="github-link">
         <a href="https://github.com/ganlian6666/aispace" target="_blank" rel="noopener noreferrer">
@@ -105,11 +110,19 @@ export async function onRequestGet(context) {
             </button>
         </div>
 
-        ${news.length > 0 ? newsCardsHtml : '<div style="text-align:center; padding:40px; color:var(--text-muted)">暂无新闻，请点击刷新按钮获取最新资讯。</div>'}
+        <div id="news-list">
+            ${news.length > 0 ? newsCardsHtml : '<div style="text-align:center; padding:40px; color:var(--text-muted)">暂无新闻，请点击刷新按钮获取最新资讯。</div>'}
+        </div>
+
+        <div style="text-align:center; margin-top:30px;">
+           <button id="btn-load-more" onclick="loadMore()" class="refresh-btn" style="width:auto; padding:10px 30px; ${news.length < 15 ? 'display:none;' : ''}">查看更早的新闻</button>
+        </div>
     </div>
   </div>
 
   <script>
+    let currentPage = 1;
+
     async function triggerUpdate(btn) {
         if (btn.classList.contains('loading')) return;
         
@@ -136,6 +149,60 @@ export async function onRequestGet(context) {
             btn.innerHTML = originalText;
         }
     }
+
+    async function loadMore() {
+        currentPage++;
+        const btn = document.getElementById('btn-load-more');
+        btn.innerText = '加载中...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(\`/api/news?page=\${currentPage}\`);
+            if (!res.ok) throw new Error('Load failed');
+            const newItems = await res.json();
+
+            if (newItems.length > 0) {
+                const list = document.getElementById('news-list');
+                const html = newItems.map(item => \`
+      <article class="news-card">
+        <div class="news-source source-\${item.source.toLowerCase()}">\${item.source}</div>
+        <div class="news-date">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            \${item.formatted_date}
+        </div>
+        <h3 class="news-title">
+            <a href="\${item.url}" target="_blank">\${item.title}</a>
+        </h3>
+        <p class="news-summary">\${item.summary}</p>
+        <div class="news-footer">
+            <a href="\${item.url}" target="_blank" class="read-more">
+                阅读原文 
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+      </article>\`).join('');
+                list.insertAdjacentHTML('beforeend', html);
+            }
+
+            // Hide button if we reached end or page 3 (max 45 items = 3 pages of 15)
+            if (newItems.length < 15 || currentPage >= 3) {
+                btn.style.display = 'none';
+            } else {
+                btn.innerText = '查看更早的新闻';
+                btn.disabled = false;
+            }
+
+        } catch (e) {
+            alert('加载失败');
+            btn.innerText = '查看更早的新闻';
+            btn.disabled = false;
+        }
+    }
   </script>
 </body>
 </html>`;
@@ -146,3 +213,4 @@ export async function onRequestGet(context) {
     },
   });
 }
+

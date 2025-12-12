@@ -1,0 +1,330 @@
+:root {
+    color-scheme: dark;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    --bg: #040912;
+    --panel: rgba(15, 23, 42, 0.85);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --card: rgba(8, 10, 25, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --accent-glow: #45e0ff;
+    --accent-warm: #ffbd4a;
+    --text-muted: rgba(230, 241, 255, 0.65);
+    --orange: #ff6b1a;
+    --orange-light: #ff8d4b;
+    --code-bg: rgba(0, 0, 0, 0.4);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1c2b62, transparent 55%),
+        radial-gradient(circle at 20% 10%, #0b5cfd, transparent 35%),
+        radial-gradient(circle at 80% 0%, #40e0ff, transparent 45%),
+        var(--bg);
+    color: #f8fbff;
+}
+
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 24px clamp(16px, 4vw, 40px) 64px;
+    gap: 20px;
+}
+
+header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    background: rgba(8, 12, 32, 0.7);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    padding: 16px 24px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 20px 50px rgba(4, 8, 24, 0.8);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-self: start;
+}
+
+.brand svg {
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ff8d4b, #f266ff);
+    padding: 8px;
+    box-shadow: 0 8px 25px rgba(255, 100, 200, 0.35);
+}
+
+.brand strong {
+    font-size: 20px;
+    letter-spacing: 0.5px;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    justify-self: center;
+}
+
+nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover,
+nav a.active {
+    background: rgba(69, 224, 255, 0.12);
+    color: #fff;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 20px 28px;
+    border: 1px solid var(--panel-border);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: clamp(26px, 3vw, 34px);
+}
+
+.hero p {
+    color: var(--text-muted);
+    margin: 8px 0 0;
+    max-width: 600px;
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 系统标签切换 */
+.os-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.os-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.os-tab:hover {
+    border-color: var(--accent-glow);
+    color: #fff;
+}
+
+.os-tab.active {
+    background: linear-gradient(135deg, var(--accent-glow), #a267ff);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #03040b;
+    font-weight: 600;
+}
+
+.os-tab svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.os-content {
+    display: none;
+}
+
+.os-content.active {
+    display: block;
+}
+
+/* 教程卡片 */
+.guide-section {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 15px 35px rgba(3, 6, 16, 0.8);
+}
+
+.guide-section h2 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    color: var(--accent-glow);
+}
+
+.guide-section h3 {
+    margin: 24px 0 12px 0;
+    font-size: 18px;
+    color: var(--orange-light);
+}
+
+.guide-section h4 {
+    margin: 20px 0 10px 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+.guide-section p {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin: 12px 0;
+}
+
+.guide-section ul,
+.guide-section ol {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.8;
+    padding-left: 24px;
+}
+
+.guide-section li {
+    margin: 8px 0;
+}
+
+/* 代码块 */
+.code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    overflow-x: auto;
+    position: relative;
+}
+
+.code-block code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: #e4ecff;
+    line-height: 1.6;
+    white-space: pre;
+}
+
+.code-block .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.code-block .copy-btn:hover {
+    background: rgba(69, 224, 255, 0.2);
+    color: #fff;
+}
+
+.code-label {
+    display: inline-block;
+    background: rgba(69, 224, 255, 0.15);
+    color: var(--accent-glow);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* 提示框 */
+.tip-box {
+    background: rgba(69, 224, 255, 0.1);
+    border: 1px solid rgba(69, 224, 255, 0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+}
+
+.tip-box.warning {
+    background: rgba(255, 189, 74, 0.1);
+    border-color: rgba(255, 189, 74, 0.3);
+}
+
+.tip-box strong {
+    color: var(--accent-glow);
+}
+
+.tip-box.warning strong {
+    color: var(--accent-warm);
+}
+
+/* 步骤列表 */
+.step-list {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+}
+
+.step-list li {
+    counter-increment: step;
+    padding-left: 40px;
+    position: relative;
+    margin: 16px 0;
+}
+
+.step-list li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+
+@media (max-width: 640px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .guide-section {
+        padding: 20px;
+    }
+}

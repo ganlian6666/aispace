@@ -100,11 +100,11 @@ export async function onRequest(context) {
             if (res.meta.changes > 0) insertedCount++;
         }
 
-        // 清理旧数据 (保留最新的 50 条)
+        // 清理旧数据 (保留最新的 45 条)
         await env.DB.prepare(`
       DELETE FROM news 
       WHERE id NOT IN (
-        SELECT id FROM news ORDER BY published_at DESC LIMIT 50
+        SELECT id FROM news ORDER BY published_at DESC LIMIT 45
       )
     `).run();
 

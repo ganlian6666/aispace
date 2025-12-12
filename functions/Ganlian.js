@@ -29,6 +29,7 @@
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('websites')" id="tab-websites">主页网站</button>
         <button class="tab-btn" onclick="switchTab('submissions')" id="tab-submissions">用户提交</button>
+        <button class="tab-btn" onclick="switchTab('news')" id="tab-news">新闻</button>
       </div>
 
       <div class="toolbar">
@@ -56,7 +57,7 @@
           <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleFileSelect(this)">
           <button onclick="triggerImport()" class="btn-outline">导入</button>
 
-          <button onclick="openModal()">+ 添加新网站</button>
+          <button onclick="openModal()" id="btn-add">+ 添加新网站</button>
         </div>
       </div>
 
@@ -131,7 +132,7 @@
 
   <script>
     let sites = [];
-    let currentTab = 'websites';
+    let currentTab = 'websites'; // websites | submissions | news
     let selectedIds = new Set();
     const API_URL = '/api/admin/websites';
     let selectedImportFile = null;
@@ -163,8 +164,12 @@
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
       
-      // Toggle "Add to Main" bulk button visibility
-      document.getElementById('btn-bulk-add').style.display = tab === 'submissions' ? 'inline-block' : 'none';
+      // Toggle buttons
+      const btnAdd = document.getElementById('btn-add');
+      if (btnAdd) btnAdd.style.display = tab === 'news' ? 'none' : 'inline-block';
+      
+      const bulkAdd = document.getElementById('btn-bulk-add');
+      if (bulkAdd) bulkAdd.style.display = tab === 'submissions' ? 'inline-block' : 'none';
 
       loadSites();
     }
@@ -202,17 +207,24 @@
 
       // Render Header
       let headerHtml = \`<th class="checkbox-col"><input type="checkbox" onchange="toggleSelectAll(this)" \${allSelected ? 'checked' : ''}></th>
-                        <th style="width:60px">ID</th>
-                        <th>名称</th>\`;
+                        <th style="width:60px">ID</th>\`;
       
-      if (currentTab === 'websites') {
-        headerHtml += \`<th>显示链接</th>
-                       <th>状态</th>
-                       <th style="width:140px">操作</th>\`;
+      if (currentTab === 'news') {
+           headerHtml += \`<th>标题</th>
+                          <th>来源</th>
+                          <th>发布时间</th>
+                          <th style="width:140px">操作</th>\`;
       } else {
-        headerHtml += \`<th>提交链接</th>
-                       <th>IP / 时间</th>
-                       <th style="width:200px">操作</th>\`;
+           headerHtml += \`<th>名称</th>\`;
+           if (currentTab === 'websites') {
+             headerHtml += \`<th>显示链接</th>
+                            <th>状态</th>
+                            <th style="width:140px">操作</th>\`;
+           } else {
+             headerHtml += \`<th>提交链接</th>
+                            <th>IP / 时间</th>
+                            <th style="width:200px">操作</th>\`;
+           }
       }
       thead.innerHTML = headerHtml;
 
@@ -224,37 +236,52 @@
             <td class="checkbox-col">
               <input type="checkbox" value="\${site.id}" \${isSelected ? 'checked' : ''} onchange="toggleSelect(this, \${site.id})">
             </td>
-            <td>\${site.id}</td>
+            <td>\${site.id}</td>\`;
+
+        if (currentTab === 'news') {
+             const dateStr = new Date(site.published_at).toLocaleString();
+             rowHtml += \`
+            <td>
+              <div style="font-weight:600"><a href="\${site.url}" target="_blank" style="color:#e2e8f0;text-decoration:none">\${site.title}</a></div>
+            </td>
+            <td>\${site.source}</td>
+            <td style="font-size:12px;color:#94a3b8">\${dateStr}</td>
+            <td>
+              <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
+            </td>\`;
+        } else {
+            rowHtml += \`
             <td>
               <div style="font-weight:600">\${site.name}</div>
               <div style="font-size:12px; color:#94a3b8; max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${site.description || ''}</div>
             </td>\`;
 
-        if (currentTab === 'websites') {
-          rowHtml += \`
-            <td><a href="\${site.display_url}" target="_blank" style="color:#3b82f6">\${site.display_url}</a></td>
-            <td>
-              <span style="color: \${site.status === 'online' ? '#4ade80' : '#ef4444'}">
-                \${site.status === 'online' ? '在线' : '离线'}
-              </span>
-            </td>
-            <td>
-              <button class="btn-sm" onclick="editSite(\${site.id})">编辑</button>
-              <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
-            </td>\`;
-        } else {
-          // Submissions
-          rowHtml += \`
-            <td><a href="\${site.url}" target="_blank" style="color:#3b82f6">\${site.url}</a></td>
-            <td>
-              <div style="font-size:12px">\${site.ip || 'Unknown'}</div>
-              <div style="font-size:12px; color:#94a3b8">\${new Date(site.created_at).toLocaleString()}</div>
-            </td>
-            <td>
-              <button class="btn-sm btn-success" onclick="addToMain(\${site.id})">加入主页</button>
-              <button class="btn-sm" onclick="editSite(\${site.id})">编辑</button>
-              <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
-            </td>\`;
+            if (currentTab === 'websites') {
+              rowHtml += \`
+                <td><a href="\${site.display_url}" target="_blank" style="color:#3b82f6">\${site.display_url}</a></td>
+                <td>
+                  <span style="color: \${site.status === 'online' ? '#4ade80' : '#ef4444'}">
+                    \${site.status === 'online' ? '在线' : '离线'}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-sm" onclick="editSite(\${site.id})">编辑</button>
+                  <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
+                </td>\`;
+            } else {
+              // Submissions
+              rowHtml += \`
+                <td><a href="\${site.url}" target="_blank" style="color:#3b82f6">\${site.url}</a></td>
+                <td>
+                  <div style="font-size:12px">\${site.ip || 'Unknown'}</div>
+                  <div style="font-size:12px; color:#94a3b8">\${new Date(site.created_at).toLocaleString()}</div>
+                </td>
+                <td>
+                  <button class="btn-sm btn-success" onclick="addToMain(\${site.id})">加入主页</button>
+                  <button class="btn-sm" onclick="editSite(\${site.id})">编辑</button>
+                  <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
+                </td>\`;
+            }
         }
         rowHtml += \`</tr>\`;
         return rowHtml;
