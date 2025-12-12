@@ -205,17 +205,18 @@
       
       const allSelected = sites.length > 0 && sites.every(s => selectedIds.has(s.id));
 
-      // Render Header
-      let headerHtml = \`<th class="checkbox-col"><input type="checkbox" onchange="toggleSelectAll(this)" \${allSelected ? 'checked' : ''}></th>
-                        <th style="width:60px">ID</th>\`;
+      // Render Header - Modified for News Index
+      let headerHtml = \`<th class="checkbox-col"><input type="checkbox" onchange="toggleSelectAll(this)" \${allSelected ? 'checked' : ''}></th>\`;
       
       if (currentTab === 'news') {
-           headerHtml += \`<th>标题</th>
+           headerHtml += \`<th style="width:60px">序号</th>
+                          <th>标题</th>
                           <th>来源</th>
                           <th>发布时间</th>
                           <th style="width:140px">操作</th>\`;
       } else {
-           headerHtml += \`<th>名称</th>\`;
+           headerHtml += \`<th style="width:60px">ID</th>
+                          <th>名称</th>\`;
            if (currentTab === 'websites') {
              headerHtml += \`<th>显示链接</th>
                             <th>状态</th>
@@ -228,19 +229,20 @@
       }
       thead.innerHTML = headerHtml;
 
-      // Render Body
-      tbody.innerHTML = sites.map(site => {
+      // Render Body - Modified for News Index
+      tbody.innerHTML = sites.map((site, index) => {
         const isSelected = selectedIds.has(site.id);
         let rowHtml = \`
           <tr class="\${isSelected ? 'selected' : ''}">
             <td class="checkbox-col">
               <input type="checkbox" value="\${site.id}" \${isSelected ? 'checked' : ''} onchange="toggleSelect(this, \${site.id})">
-            </td>
-            <td>\${site.id}</td>\`;
+            </td>\`;
 
         if (currentTab === 'news') {
              const dateStr = new Date(site.published_at).toLocaleString();
+             // SHOW INDEX (+1) instead of ID
              rowHtml += \`
+            <td>\${index + 1}</td>
             <td>
               <div style="font-weight:600"><a href="\${site.url}" target="_blank" style="color:#e2e8f0;text-decoration:none">\${site.title}</a></div>
             </td>
@@ -250,7 +252,8 @@
               <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
             </td>\`;
         } else {
-            rowHtml += \`
+            // SHOW ID for other tabs
+            rowHtml += \`<td>\${site.id}</td>
             <td>
               <div style="font-weight:600">\${site.name}</div>
               <div style="font-size:12px; color:#94a3b8; max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${site.description || ''}</div>

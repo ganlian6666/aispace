@@ -102,11 +102,11 @@ export async function onRequest(context) {
 
         // 清理旧数据 (保留最新的 45 条)
         await env.DB.prepare(`
-      DELETE FROM news 
-      WHERE id NOT IN (
-        SELECT id FROM news ORDER BY published_at DESC LIMIT 45
-      )
-    `).run();
+        DELETE FROM news 
+        WHERE id NOT IN (
+            SELECT id FROM news ORDER BY published_at DESC LIMIT 45
+        )
+        `).run();
 
         const response = new Response(JSON.stringify({
             status: 'success',
