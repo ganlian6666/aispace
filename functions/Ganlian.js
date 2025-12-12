@@ -30,6 +30,7 @@
         <button class="tab-btn active" onclick="switchTab('websites')" id="tab-websites">主页网站</button>
         <button class="tab-btn" onclick="switchTab('submissions')" id="tab-submissions">用户提交</button>
         <button class="tab-btn" onclick="switchTab('news')" id="tab-news">新闻</button>
+        <button class="tab-btn" onclick="switchTab('feedback')" id="tab-feedback">用户反馈</button>
       </div>
 
       <div class="toolbar">
@@ -179,8 +180,13 @@
       const key = getKey();
       if (!key) return;
 
+      let url = \`\${API_URL}?type=\${currentTab}\`;
+      if (currentTab === 'feedback') {
+          url = '/api/admin/feedback';
+      }
+
       try {
-        const res = await fetch(\`\${API_URL}?type=\${currentTab}\`, {
+        const res = await fetch(url, {
           headers: { 'X-Admin-Key': key }
         });
 
@@ -214,6 +220,12 @@
                           <th>来源</th>
                           <th>发布时间</th>
                           <th style="width:140px">操作</th>\`;
+      } else if (currentTab === 'feedback') {
+           headerHtml += \`<th style="width:60px">ID</th>
+                          <th>内容</th>
+                          <th>联系方式</th>
+                          <th>IP / 时间</th>
+                          <th style="width:80px">操作</th>\`;
       } else {
            headerHtml += \`<th style="width:60px">ID</th>
                           <th>名称</th>\`;
@@ -248,6 +260,20 @@
             </td>
             <td>\${site.source}</td>
             <td style="font-size:12px;color:#94a3b8">\${dateStr}</td>
+            <td>
+              <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
+            </td>\`;
+        } else if (currentTab === 'feedback') {
+            rowHtml += \`
+            <td>\${site.id}</td>
+            <td>
+              <div style="font-weight:600; white-space:pre-wrap; max-width:400px;">\${site.content}</div>
+            </td>
+            <td>\${site.contact || '-'}</td>
+            <td>
+              <div style="font-size:12px">\${site.ip || 'Unknown'}</div>
+              <div style="font-size:12px; color:#94a3b8">\${new Date(site.created_at).toLocaleString()}</div>
+            </td>
             <td>
               <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
             </td>\`;
@@ -324,8 +350,14 @@
       if (!confirm(\`确定要删除选中的 \${selectedIds.size} 项吗？\`)) return;
       
       const ids = Array.from(selectedIds).join(',');
+      
+      let url = \`\${API_URL}?type=\${currentTab}&ids=\${ids}\`;
+      if (currentTab === 'feedback') {
+          url = \`/api/admin/feedback?id=\${ids}\`;
+      }
+
       try {
-        const res = await fetch(\`\${API_URL}?type=\${currentTab}&ids=\${ids}\`, {
+        const res = await fetch(url, {
           method: 'DELETE',
           headers: { 'X-Admin-Key': getKey() }
         });
@@ -589,8 +621,13 @@
     async function deleteSite(id) {
       if (!confirm('确定要删除这个网站吗？')) return;
 
+      let url = \`\${API_URL}?type=\${currentTab}&id=\${id}\`;
+      if (currentTab === 'feedback') {
+          url = \`/api/admin/feedback?id=\${id}\`;
+      }
+
       try {
-        const res = await fetch(\`\${API_URL}?type=\${currentTab}&id=\${id}\`, {
+        const res = await fetch(url, {
           method: 'DELETE',
           headers: { 'X-Admin-Key': getKey() }
         });

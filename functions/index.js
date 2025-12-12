@@ -192,9 +192,36 @@ export async function onRequestGet(context) {
           <label>简单描述</label>
           <textarea name="description" class="form-control" rows="3" placeholder="简单介绍一下..."></textarea>
         </div>
+        <div class="modal-footer" style="justify-content: space-between;">
+          <button type="button" class="btn-secondary" style="border-style: dashed;" onclick="openFeedbackModal()">反馈建议</button>
+          <div style="display: flex; gap: 12px;">
+             <button type="button" class="btn-secondary" onclick="closeModal('submitModal')">取消</button>
+             <button type="submit" class="btn-primary">提交</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div class="modal-backdrop" id="feedbackModal">
+    <div class="modal">
+      <h2>意见反馈</h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+        无论是 Bug 报告还是功能建议，我们都非常欢迎！
+      </p>
+      <form id="feedbackForm" onsubmit="submitFeedback(event)">
+        <div class="form-group">
+          <label>反馈内容 *</label>
+          <textarea name="content" class="form-control" rows="4" placeholder="请详细描述您的建议或遇到的问题..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>联系方式 (选填)</label>
+          <input type="text" name="contact" class="form-control" placeholder="邮箱或微信号，方便我们联系您">
+        </div>
         <div class="modal-footer">
-          <button type="button" class="btn-secondary" onclick="closeModal('submitModal')">取消</button>
-          <button type="submit" class="btn-primary">提交</button>
+          <button type="button" class="btn-secondary" onclick="closeModal('feedbackModal')">取消</button>
+          <button type="submit" class="btn-primary">发送反馈</button>
         </div>
       </form>
     </div>
@@ -335,6 +362,46 @@ export async function onRequestGet(context) {
       } finally {
         btn.disabled = false;
         btn.textContent = '提交';
+      }
+    }
+
+    // Feedback Logic
+    function openFeedbackModal() {
+      // Close submit modal if open, optional but cleaner
+      closeModal('submitModal');
+      openModal('feedbackModal');
+    }
+
+    async function submitFeedback(event) {
+      event.preventDefault();
+      const form = event.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const btn = form.querySelector('button[type="submit"]');
+      
+      btn.disabled = true;
+      btn.textContent = '发送中...';
+
+      try {
+        const res = await fetch('/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+          alert('感谢您的反馈！我们会认真查看。');
+          closeModal('feedbackModal');
+          form.reset();
+        } else {
+          const err = await res.json();
+          alert('提交失败: ' + (err.error || '未知错误'));
+        }
+      } catch (e) {
+        alert('网络错误，请稍后重试');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '发送反馈';
       }
     }
 

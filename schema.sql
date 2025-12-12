@@ -69,6 +69,16 @@ CREATE TABLE IF NOT EXISTS rate_limits (
     last_updated DATETIME
 );
 
+-- 7. 用户反馈表
+CREATE TABLE IF NOT EXISTS feedback (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    contact TEXT,
+    ip TEXT,
+    status TEXT DEFAULT 'pending', -- pending, processed
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 初始化数据 (迁移原来的 6 个网站)
 INSERT OR IGNORE INTO websites (id, name, description, invite_link, display_url) VALUES
 (1, 'Evolai - 注册送积分 + 3天Plus 会话', '全链路监控保证可用性，通过专属网关访问低延迟接口。', 'https://www.evolai.cn/?inviteCode=PDGD2EDT', 'https://www.evolai.cn/'),
