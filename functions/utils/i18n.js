@@ -110,12 +110,36 @@ export const translations = {
         btn_copy: "复制",
         btn_copied_text: "已复制",
 
-        // Guide Content Headers
+        // Guide Content Headers & Steps
         guide_step_env: "一、环境准备",
         guide_step_claude: "二、配置 Claude Code 使用第三方 API",
         guide_step_codex: "三、配置 Codex CLI 使用第三方 API",
         guide_step_verify: "四、验证配置",
-        guide_step_troubleshoot: "四、常见问题排查"
+        guide_step_troubleshoot: "四、常见问题排查",
+
+        // Detailed Steps (New)
+        guide_step_1_node: "1. 安装 Node.js",
+        guide_step_1_homebrew: "1. 安装 Homebrew（如未安装）",
+        guide_step_2_node: "2. 安装 Node.js",
+        guide_step_2_cli: "2. 安装 Claude Code CLI",
+        guide_step_3_cli: "3. 安装 Claude Code 和 Codex CLI",
+        guide_step_3_codex: "3. 安装 Codex CLI",
+
+        guide_desc_node_check: "首先确保你的系统已安装 Node.js (建议 v18 或更高版本)：",
+        guide_desc_node_source: "使用 NodeSource 仓库安装最新版 Node.js：",
+        guide_desc_mac_brew: "使用 Homebrew 安装",
+
+        guide_method_1_env: "方法一：使用环境变量配置",
+        guide_method_2_perm: "方法二：永久配置环境变量",
+        guide_method_1_temp: "方法一：临时配置（当前终端会话有效）",
+        guide_method_2_perm_rec: "方法二：永久配置（推荐）",
+        guide_method_3_systemd: "方法三：使用 systemd 用户环境变量（适用于桌面环境）",
+
+        guide_text_open_ps: "打开 PowerShell 或命令提示符，设置环境变量：",
+        guide_text_edit_profile: "编辑你的 shell 配置文件：",
+        guide_text_append: "在文件末尾添加以下内容：",
+        guide_text_save_apply: "保存后执行以下命令使配置生效：",
+        guide_tip_persist: "提示：建议将环境变量添加到系统的永久配置中，避免每次重启后需要重新设置。"
     },
 
     // English
@@ -229,20 +253,39 @@ export const translations = {
         btn_copy: "Copy",
         btn_copied_text: "Copied",
 
-        // Guide Content Headers
+        // Guide Content Headers & Steps
         guide_step_env: "I. Environment Prep",
         guide_step_claude: "II. Configure Claude Code",
         guide_step_codex: "III. Configure Codex CLI",
         guide_step_verify: "IV. Verify Configuration",
-        guide_step_troubleshoot: "IV. Troubleshooting"
+        guide_step_troubleshoot: "IV. Troubleshooting",
+
+        // Detailed Steps (New)
+        guide_step_1_node: "1. Install Node.js",
+        guide_step_1_homebrew: "1. Install Homebrew (if missing)",
+        guide_step_2_node: "2. Install Node.js",
+        guide_step_2_cli: "2. Install Claude Code CLI",
+        guide_step_3_cli: "3. Install Claude Code & Codex CLI",
+        guide_step_3_codex: "3. Install Codex CLI",
+
+        guide_desc_node_check: "Ensure Node.js is installed (v18+ recommended):",
+        guide_desc_node_source: "Install latest Node.js via NodeSource:",
+        guide_desc_mac_brew: "Install via Homebrew",
+
+        guide_method_1_env: "Method 1: Use Environment Variables",
+        guide_method_2_perm: "Method 2: Permanent Configuration",
+        guide_method_1_temp: "Method 1: Temporary (Session only)",
+        guide_method_2_perm_rec: "Method 2: Permanent (Recommended)",
+        guide_method_3_systemd: "Method 3: Systemd User Service (Desktop)",
+
+        guide_text_open_ps: "Open PowerShell or Command Prompt:",
+        guide_text_edit_profile: "Edit your shell profile:",
+        guide_text_append: "Append the following:",
+        guide_text_save_apply: "Save and reload configuration:",
+        guide_tip_persist: "Tip: Add to permanent config to avoid resetting on reboot."
     }
 };
 
-/**
- * Parses the Accept-Language header and returns the matched locale (zh or en).
- * @param {string|null} header - The Accept-Language header value.
- * @returns {string} 'zh' or 'en'
- */
 /**
  * Parses headers to determine the locale. Priority: Cookie > Accept-Language.
  * @param {string|null} acceptLanguage - The Accept-Language header value.

@@ -783,12 +783,32 @@ var translations = {
     guide_security_4: "\u5728\u5171\u4EAB\u8BBE\u5907\u4E0A\u4F7F\u7528\u5B8C\u6BD5\u540E\u6E05\u9664\u73AF\u5883\u53D8\u91CF",
     btn_copy: "\u590D\u5236",
     btn_copied_text: "\u5DF2\u590D\u5236",
-    // Guide Content Headers
+    // Guide Content Headers & Steps
     guide_step_env: "\u4E00\u3001\u73AF\u5883\u51C6\u5907",
     guide_step_claude: "\u4E8C\u3001\u914D\u7F6E Claude Code \u4F7F\u7528\u7B2C\u4E09\u65B9 API",
     guide_step_codex: "\u4E09\u3001\u914D\u7F6E Codex CLI \u4F7F\u7528\u7B2C\u4E09\u65B9 API",
     guide_step_verify: "\u56DB\u3001\u9A8C\u8BC1\u914D\u7F6E",
-    guide_step_troubleshoot: "\u56DB\u3001\u5E38\u89C1\u95EE\u9898\u6392\u67E5"
+    guide_step_troubleshoot: "\u56DB\u3001\u5E38\u89C1\u95EE\u9898\u6392\u67E5",
+    // Detailed Steps (New)
+    guide_step_1_node: "1. \u5B89\u88C5 Node.js",
+    guide_step_1_homebrew: "1. \u5B89\u88C5 Homebrew\uFF08\u5982\u672A\u5B89\u88C5\uFF09",
+    guide_step_2_node: "2. \u5B89\u88C5 Node.js",
+    guide_step_2_cli: "2. \u5B89\u88C5 Claude Code CLI",
+    guide_step_3_cli: "3. \u5B89\u88C5 Claude Code \u548C Codex CLI",
+    guide_step_3_codex: "3. \u5B89\u88C5 Codex CLI",
+    guide_desc_node_check: "\u9996\u5148\u786E\u4FDD\u4F60\u7684\u7CFB\u7EDF\u5DF2\u5B89\u88C5 Node.js (\u5EFA\u8BAE v18 \u6216\u66F4\u9AD8\u7248\u672C)\uFF1A",
+    guide_desc_node_source: "\u4F7F\u7528 NodeSource \u4ED3\u5E93\u5B89\u88C5\u6700\u65B0\u7248 Node.js\uFF1A",
+    guide_desc_mac_brew: "\u4F7F\u7528 Homebrew \u5B89\u88C5",
+    guide_method_1_env: "\u65B9\u6CD5\u4E00\uFF1A\u4F7F\u7528\u73AF\u5883\u53D8\u91CF\u914D\u7F6E",
+    guide_method_2_perm: "\u65B9\u6CD5\u4E8C\uFF1A\u6C38\u4E45\u914D\u7F6E\u73AF\u5883\u53D8\u91CF",
+    guide_method_1_temp: "\u65B9\u6CD5\u4E00\uFF1A\u4E34\u65F6\u914D\u7F6E\uFF08\u5F53\u524D\u7EC8\u7AEF\u4F1A\u8BDD\u6709\u6548\uFF09",
+    guide_method_2_perm_rec: "\u65B9\u6CD5\u4E8C\uFF1A\u6C38\u4E45\u914D\u7F6E\uFF08\u63A8\u8350\uFF09",
+    guide_method_3_systemd: "\u65B9\u6CD5\u4E09\uFF1A\u4F7F\u7528 systemd \u7528\u6237\u73AF\u5883\u53D8\u91CF\uFF08\u9002\u7528\u4E8E\u684C\u9762\u73AF\u5883\uFF09",
+    guide_text_open_ps: "\u6253\u5F00 PowerShell \u6216\u547D\u4EE4\u63D0\u793A\u7B26\uFF0C\u8BBE\u7F6E\u73AF\u5883\u53D8\u91CF\uFF1A",
+    guide_text_edit_profile: "\u7F16\u8F91\u4F60\u7684 shell \u914D\u7F6E\u6587\u4EF6\uFF1A",
+    guide_text_append: "\u5728\u6587\u4EF6\u672B\u5C3E\u6DFB\u52A0\u4EE5\u4E0B\u5185\u5BB9\uFF1A",
+    guide_text_save_apply: "\u4FDD\u5B58\u540E\u6267\u884C\u4EE5\u4E0B\u547D\u4EE4\u4F7F\u914D\u7F6E\u751F\u6548\uFF1A",
+    guide_tip_persist: "\u63D0\u793A\uFF1A\u5EFA\u8BAE\u5C06\u73AF\u5883\u53D8\u91CF\u6DFB\u52A0\u5230\u7CFB\u7EDF\u7684\u6C38\u4E45\u914D\u7F6E\u4E2D\uFF0C\u907F\u514D\u6BCF\u6B21\u91CD\u542F\u540E\u9700\u8981\u91CD\u65B0\u8BBE\u7F6E\u3002"
   },
   // English
   en: {
@@ -896,12 +916,32 @@ var translations = {
     guide_security_4: "Clear env vars after using shared devices",
     btn_copy: "Copy",
     btn_copied_text: "Copied",
-    // Guide Content Headers
+    // Guide Content Headers & Steps
     guide_step_env: "I. Environment Prep",
     guide_step_claude: "II. Configure Claude Code",
     guide_step_codex: "III. Configure Codex CLI",
     guide_step_verify: "IV. Verify Configuration",
-    guide_step_troubleshoot: "IV. Troubleshooting"
+    guide_step_troubleshoot: "IV. Troubleshooting",
+    // Detailed Steps (New)
+    guide_step_1_node: "1. Install Node.js",
+    guide_step_1_homebrew: "1. Install Homebrew (if missing)",
+    guide_step_2_node: "2. Install Node.js",
+    guide_step_2_cli: "2. Install Claude Code CLI",
+    guide_step_3_cli: "3. Install Claude Code & Codex CLI",
+    guide_step_3_codex: "3. Install Codex CLI",
+    guide_desc_node_check: "Ensure Node.js is installed (v18+ recommended):",
+    guide_desc_node_source: "Install latest Node.js via NodeSource:",
+    guide_desc_mac_brew: "Install via Homebrew",
+    guide_method_1_env: "Method 1: Use Environment Variables",
+    guide_method_2_perm: "Method 2: Permanent Configuration",
+    guide_method_1_temp: "Method 1: Temporary (Session only)",
+    guide_method_2_perm_rec: "Method 2: Permanent (Recommended)",
+    guide_method_3_systemd: "Method 3: Systemd User Service (Desktop)",
+    guide_text_open_ps: "Open PowerShell or Command Prompt:",
+    guide_text_edit_profile: "Edit your shell profile:",
+    guide_text_append: "Append the following:",
+    guide_text_save_apply: "Save and reload configuration:",
+    guide_tip_persist: "Tip: Add to permanent config to avoid resetting on reboot."
   }
 };
 function getLocale(acceptLanguage, cookieHeader) {
@@ -1020,28 +1060,18 @@ async function onRequestGet7(context) {
     </section>
 
     <div class="content-wrapper">
-      <!-- ... (Content skipped for brevity, assumed unchanged layout logic) ... -->
-      <!-- \u7CFB\u7EDF\u6807\u7B7E -->
+      <!-- Sistema Tabs -->
       <div class="os-tabs">
         <button class="os-tab active" data-os="windows">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M3 12V6.75l6-1.32v6.48L3 12zm7-7.65l8-1.75v9.4H10V4.35zm8 18.25l-8-1.35v-6.5h8v7.85zm-15-1.4V15l6-.09v6.43l-6-1.14z" />
-          </svg>
+          <svg viewBox="0 0 24 24"><path d="M3 12V6.75l6-1.32v6.48L3 12zm7-7.65l8-1.75v9.4H10V4.35zm8 18.25l-8-1.35v-6.5h8v7.85zm-15-1.4V15l6-.09v6.43l-6-1.14z" /></svg>
           Windows
         </button>
         <button class="os-tab" data-os="mac">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-          </svg>
+          <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" /></svg>
           macOS
         </button>
         <button class="os-tab" data-os="linux">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0 .054-.01.12-.013.18-.012.126-.039.243-.078.352-.053.162-.124.334-.206.458a.711.711 0 01-.256.282.41.41 0 01-.184.063h-.013c-.166 0-.31-.066-.453-.179-.142-.121-.252-.273-.324-.449-.071-.181-.11-.386-.123-.597-.007-.063-.008-.122-.01-.186.006-.099.026-.197.049-.297.017-.085.041-.169.072-.252a.863.863 0 01.213-.328.552.552 0 01.124-.088.498.498 0 01-.001 0zm-2.197.16h.039a.56.56 0 01.135.031.649.649 0 01.185.098.737.737 0 01.199.248c.089.164.15.347.18.535.009.067.015.16.014.229-.007.226-.07.436-.175.608a.76.76 0 01-.166.206.631.631 0 01-.178.109.5.5 0 01-.146.032h-.032c-.153 0-.287-.047-.405-.134a.863.863 0 01-.276-.344c-.074-.162-.113-.343-.124-.531l-.001-.098c0-.039.002-.073.008-.107a1.202 1.202 0 01.104-.435.66.66 0 01.235-.295.464.464 0 01.275-.094h-.001zm4.59 4.778a.253.253 0 01.022.019c.298.329.525.618.694.858.169.24.298.429.379.597.14.354.14.588-.022.701a.27.27 0 01-.131.052c-.082 0-.186-.049-.319-.178-.166-.162-.36-.417-.585-.715a17.16 17.16 0 01-.639-.901c-.076-.123-.128-.236-.134-.32-.006-.071.014-.137.062-.178a.138.138 0 01.086-.027c.054 0 .123.023.207.075.083.051.178.124.285.217zm-2.886.179c.194 0 .325.099.327.28.007.181-.107.34-.324.482-.114.078-.254.137-.415.172a1.453 1.453 0 01-.305.028c-.093 0-.18-.011-.262-.032a.833.833 0 01-.195-.079.393.393 0 01-.13-.109.25.25 0 01-.045-.15.259.259 0 01.018-.097.218.218 0 01.052-.073c.026-.022.051-.044.085-.055a.484.484 0 01.127-.024c.047 0 .089.011.127.025.04.014.073.035.102.055a.413.413 0 00.113.054c.038.01.081.017.128.017h.002a.556.556 0 00.22-.039c.08-.03.141-.074.166-.142.03-.074.019-.17-.034-.272a1.008 1.008 0 00-.2-.284.92.92 0 00-.27-.183.53.53 0 00-.234-.061.388.388 0 00-.152.035.405.405 0 00-.138.107l-.03.041a.246.246 0 01-.206.103.235.235 0 01-.17-.072.238.238 0 01-.067-.185.358.358 0 01.049-.163c.03-.056.066-.106.11-.149.091-.089.198-.156.317-.198a1.055 1.055 0 01.367-.063zm-.847 1.985l-.001.002v-.002zm6.215.216a.267.267 0 01.099.019c.063.024.131.066.19.128.059.063.108.145.136.255.028.109.028.253-.02.411-.104.341-.378.593-.64.826-.26.232-.512.439-.67.673-.17.268-.211.51-.167.766.044.244.159.478.302.714.142.236.31.468.43.752.12.283.178.644.047 1.037l-.001.002.002.005c.082.249.079.53-.028.785-.106.256-.306.491-.597.666-.59.351-1.457.447-2.383.142a.393.393 0 01-.132-.072.396.396 0 01-.092-.118.406.406 0 01-.037-.15.402.402 0 01.018-.156.414.414 0 01.185-.234.4.4 0 01.145-.054.38.38 0 01.15.005c.747.246 1.406.206 1.83-.064.213-.132.362-.319.43-.527.069-.209.051-.45-.071-.699l-.004-.007c-.098-.209-.224-.413-.346-.614-.123-.201-.248-.406-.328-.651-.079-.245-.105-.544-.012-.903.092-.36.307-.679.545-.95.238-.272.494-.502.659-.75l.002-.002a.328.328 0 01.033-.039c.074-.079.181-.129.303-.132z" />
-          </svg>
+          <svg viewBox="0 0 24 24"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0 .054-.01.12-.013.18-.012.126-.039.243-.078.352-.053.162-.124.334-.206.458a.711.711 0 01-.256.282.41.41 0 01-.184.063h-.013c-.166 0-.31-.066-.453-.179-.142-.121-.252-.273-.324-.449-.071-.181-.11-.386-.123-.597-.007-.063-.008-.122-.01-.186.006-.099.026-.197.049-.297.017-.085.041-.169.072-.252a.863.863 0 01.213-.328.552.552 0 01.124-.088.498.498 0 01-.001 0zm-2.197.16h.039a.56.56 0 01.135.031.649.649 0 01.185.098.737.737 0 01.199.248c.089.164.15.347.18.535.009.067.015.16.014.229-.007.226-.07.436-.175.608a.76.76 0 01-.166.206.631.631 0 01-.178.109.5.5 0 01-.146.032h-.032c-.153 0-.287-.047-.405-.134a.863.863 0 01-.276-.344c-.074-.162-.113-.343-.124-.531l-.001-.098c0-.039.002-.073.008-.107a1.202 1.202 0 01.104-.435.66.66 0 01.235-.295.464.464 0 01.275-.094h-.001zm4.59 4.778a.253.253 0 01.022.019c.298.329.525.618.694.858.169.24.298.429.379.597.14.354.14.588-.022.701a.27.27 0 01-.131.052c-.082 0-.186-.049-.319-.178-.166-.162-.36-.417-.585-.715a17.16 17.16 0 01-.639-.901c-.076-.123-.128-.236-.134-.32-.006-.071.014-.137.062-.178a.138.138 0 01.086-.027c.054 0 .123.023.207.075.083.051.178.124.285.217zm-2.886.179c.194 0 .325.099.327.28.007.181-.107.34-.324.482-.114.078-.254.137-.415.172a1.453 1.453 0 01-.305.028c-.093 0-.18-.011-.262-.032a.833.833 0 01-.195-.079.393.393 0 01-.13-.109.25.25 0 01-.045-.15.259.259 0 01.018-.097.218.218 0 01.052-.073c.026-.022.051-.044.085-.055a.484.484 0 01.127-.024c.047 0 .089.011.127.025.04.014.073.035.102.055a.413.413 0 00.113.054c.038.01.081.017.128.017h.002a.556.556 0 00.22-.039c.08-.03.141-.074.166-.142.03-.074.019-.17-.034-.272a1.008 1.008 0 00-.2-.284.92.92 0 00-.27-.183.53.53 0 00-.234-.061.388.388 0 00-.152.035.405.405 0 00-.138.107l-.03.041a.246.246 0 01-.206.103.235.235 0 01-.17-.072.238.238 0 01-.067-.185.358.358 0 01.049-.163c.03-.056.066-.106.11-.149.091-.089.198-.156.317-.198a1.055 1.055 0 01.367-.063zm-.847 1.985l-.001.002v-.002zm6.215.216a.267.267 0 01.099.019c.063.024.131.066.19.128.059.063.108.145.136.255.028.109.028.253-.02.411-.104.341-.378.593-.64.826-.26.232-.512.439-.67.673-.17.268-.211.51-.167.766.044.244.159.478.302.714.142.236.31.468.43.752.12.283.178.644.047 1.037l-.001.002.002.005c.082.249.079.53-.028.785-.106.256-.306.491-.597.666-.59.351-1.457.447-2.383.142a.393.393 0 01-.132-.072.396.396 0 01-.092-.118.406.406 0 01-.037-.15.402.402 0 01.018-.156.414.414 0 01.185-.234.4.4 0 01.145-.054.38.38 0 01.15.005c.747.246 1.406.206 1.83-.064.213-.132.362-.319.43-.527.069-.209.051-.45-.071-.699l-.004-.007c-.098-.209-.224-.413-.346-.614-.123-.201-.248-.406-.328-.651-.079-.245-.105-.544-.012-.903.092-.36.307-.679.545-.95.238-.272.494-.502.659-.75l.002-.002a.328.328 0 01.033-.039c.074-.079.181-.129.303-.132z" /></svg>
           Linux
         </button>
       </div>
@@ -1053,8 +1083,8 @@ async function onRequestGet7(context) {
           <p>${T("guide_win_desc")}</p>
 
           <h3>${T("guide_step_env")}</h3>
-          <h4>1. \u5B89\u88C5 Node.js</h4>
-          <p>\u9996\u5148\u786E\u4FDD\u4F60\u7684\u7CFB\u7EDF\u5DF2\u5B89\u88C5 Node.js (\u5EFA\u8BAE v18 \u6216\u66F4\u9AD8\u7248\u672C)\uFF1A</p>
+          <h4>${T("guide_step_1_node")}</h4>
+          <p>${T("guide_desc_node_check")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u68C0\u67E5 Node.js \u7248\u672C
@@ -1063,14 +1093,14 @@ node --version
 # \u5982\u672A\u5B89\u88C5\uFF0C\u8BF7\u4ECE\u5B98\u7F51\u4E0B\u8F7D: https://nodejs.org/</code>
           </div>
 
-          <h4>2. \u5B89\u88C5 Claude Code CLI</h4>
+          <h4>${T("guide_step_2_cli")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u4F7F\u7528 npm \u5168\u5C40\u5B89\u88C5
 npm install -g @anthropic-ai/claude-code</code>
           </div>
 
-          <h4>3. \u5B89\u88C5 Codex CLI</h4>
+          <h4>${T("guide_step_3_codex")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u4F7F\u7528 npm \u5168\u5C40\u5B89\u88C5
@@ -1079,8 +1109,8 @@ npm install -g @openai/codex</code>
 
           <h3>${T("guide_step_claude")}</h3>
 
-          <h4>\u65B9\u6CD5\u4E00\uFF1A\u4F7F\u7528\u73AF\u5883\u53D8\u91CF\u914D\u7F6E</h4>
-          <p>\u6253\u5F00 PowerShell \u6216\u547D\u4EE4\u63D0\u793A\u7B26\uFF0C\u8BBE\u7F6E\u73AF\u5883\u53D8\u91CF\uFF1A</p>
+          <h4>${T("guide_method_1_env")}</h4>
+          <p>${T("guide_text_open_ps")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u8BBE\u7F6E API \u57FA\u7840\u5730\u5740\uFF08\u66FF\u6362\u4E3A\u4F60\u7684\u4E2D\u8F6C\u670D\u52A1\u5730\u5740\uFF09
@@ -1093,7 +1123,7 @@ set ANTHROPIC_API_KEY=sk-your-api-key-here
 claude</code>
           </div>
 
-          <h4>\u65B9\u6CD5\u4E8C\uFF1A\u6C38\u4E45\u914D\u7F6E\u73AF\u5883\u53D8\u91CF</h4>
+          <h4>${T("guide_method_2_perm")}</h4>
           <ol class="step-list">
             <li>\u53F3\u952E\u70B9\u51FB"\u6B64\u7535\u8111" \u2192 "\u5C5E\u6027" \u2192 "\u9AD8\u7EA7\u7CFB\u7EDF\u8BBE\u7F6E"</li>
             <li>\u70B9\u51FB"\u73AF\u5883\u53D8\u91CF"\u6309\u94AE</li>
@@ -1124,7 +1154,7 @@ codex</code>
           </div>
 
           <div class="tip-box">
-            <strong>\u63D0\u793A\uFF1A</strong> \u5EFA\u8BAE\u5C06\u73AF\u5883\u53D8\u91CF\u6DFB\u52A0\u5230\u7CFB\u7EDF\u7684\u6C38\u4E45\u914D\u7F6E\u4E2D\uFF0C\u907F\u514D\u6BCF\u6B21\u91CD\u542F\u540E\u9700\u8981\u91CD\u65B0\u8BBE\u7F6E\u3002
+            <strong>${T("guide_tip_persist")}</strong>
           </div>
 
           <h3>${T("guide_step_verify")}</h3>
@@ -1148,16 +1178,16 @@ codex "Write a hello world in Python"</code>
           <p>${T("guide_mac_desc")}</p>
 
           <h3>${T("guide_step_env")}</h3>
-          <h4>1. \u5B89\u88C5 Homebrew\uFF08\u5982\u672A\u5B89\u88C5\uFF09</h4>
+          <h4>${T("guide_step_1_homebrew")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code>
           </div>
 
-          <h4>2. \u5B89\u88C5 Node.js</h4>
+          <h4>${T("guide_step_2_node")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u4F7F\u7528 Homebrew \u5B89\u88C5
+            <code># ${T("guide_desc_mac_brew")}
 brew install node
 
 # \u9A8C\u8BC1\u5B89\u88C5
@@ -1165,7 +1195,7 @@ node --version
 npm --version</code>
           </div>
 
-          <h4>3. \u5B89\u88C5 Claude Code \u548C Codex CLI</h4>
+          <h4>${T("guide_step_3_cli")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u5B89\u88C5 Claude Code
@@ -1177,7 +1207,7 @@ npm install -g @openai/codex</code>
 
           <h3>${T("guide_step_claude")}</h3>
 
-          <h4>\u65B9\u6CD5\u4E00\uFF1A\u4E34\u65F6\u914D\u7F6E\uFF08\u5F53\u524D\u7EC8\u7AEF\u4F1A\u8BDD\u6709\u6548\uFF09</h4>
+          <h4>${T("guide_method_1_temp")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u8BBE\u7F6E API \u57FA\u7840\u5730\u5740
@@ -1190,8 +1220,8 @@ export ANTHROPIC_API_KEY="sk-your-api-key-here"
 claude</code>
           </div>
 
-          <h4>\u65B9\u6CD5\u4E8C\uFF1A\u6C38\u4E45\u914D\u7F6E\uFF08\u63A8\u8350\uFF09</h4>
-          <p>\u7F16\u8F91\u4F60\u7684 shell \u914D\u7F6E\u6587\u4EF6\uFF1A</p>
+          <h4>${T("guide_method_2_perm_rec")}</h4>
+          <p>${T("guide_text_edit_profile")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u5982\u679C\u4F7F\u7528 zsh\uFF08macOS \u9ED8\u8BA4\uFF09
@@ -1200,7 +1230,7 @@ nano ~/.zshrc
 # \u5982\u679C\u4F7F\u7528 bash
 nano ~/.bash_profile</code>
           </div>
-          <p>\u5728\u6587\u4EF6\u672B\u5C3E\u6DFB\u52A0\u4EE5\u4E0B\u5185\u5BB9\uFF1A</p>
+          <p>${T("guide_text_append")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># Claude Code API \u914D\u7F6E
@@ -1211,7 +1241,7 @@ export ANTHROPIC_API_KEY="sk-your-api-key-here"
 export OPENAI_BASE_URL="https://your-api-proxy.com/v1"
 export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
-          <p>\u4FDD\u5B58\u540E\u6267\u884C\u4EE5\u4E0B\u547D\u4EE4\u4F7F\u914D\u7F6E\u751F\u6548\uFF1A</p>
+          <p>${T("guide_text_save_apply")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u91CD\u65B0\u52A0\u8F7D\u914D\u7F6E
@@ -1233,7 +1263,7 @@ codex "Write a hello world in Python"</code>
           </div>
 
           <div class="tip-box warning">
-            <strong>\u6CE8\u610F\uFF1A</strong> \u8BF7\u59A5\u5584\u4FDD\u7BA1\u4F60\u7684 API \u5BC6\u94A5\uFF0C\u4E0D\u8981\u5C06\u5176\u63D0\u4EA4\u5230\u516C\u5F00\u7684\u4EE3\u7801\u4ED3\u5E93\u4E2D\u3002
+            <strong>\u6CE8\u610F\uFF1A</strong> ${T("guide_security_1")}
           </div>
         </div>
       </div>
@@ -1245,8 +1275,8 @@ codex "Write a hello world in Python"</code>
           <p>${T("guide_linux_desc")}</p>
 
           <h3>${T("guide_step_env")}</h3>
-          <h4>1. \u5B89\u88C5 Node.js</h4>
-          <p>\u4F7F\u7528 NodeSource \u4ED3\u5E93\u5B89\u88C5\u6700\u65B0\u7248 Node.js\uFF1A</p>
+          <h4>${T("guide_step_1_node")}</h4>
+          <p>${T("guide_desc_node_source")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># Ubuntu/Debian
@@ -1265,7 +1295,7 @@ node --version
 npm --version</code>
           </div>
 
-          <h4>2. \u5B89\u88C5 Claude Code \u548C Codex CLI</h4>
+          <h4>${T("guide_step_3_cli")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u5B89\u88C5 Claude Code
@@ -1277,7 +1307,7 @@ sudo npm install -g @openai/codex</code>
 
           <h3>${T("guide_step_claude")}</h3>
 
-          <h4>\u65B9\u6CD5\u4E00\uFF1A\u4E34\u65F6\u914D\u7F6E</h4>
+          <h4>${T("guide_method_1_temp")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u8BBE\u7F6E\u73AF\u5883\u53D8\u91CF\u5E76\u542F\u52A8
@@ -1286,8 +1316,8 @@ export ANTHROPIC_API_KEY="sk-your-api-key-here"
 claude</code>
           </div>
 
-          <h4>\u65B9\u6CD5\u4E8C\uFF1A\u6C38\u4E45\u914D\u7F6E</h4>
-          <p>\u7F16\u8F91 ~/.bashrc \u6216 ~/.zshrc \u6587\u4EF6\uFF1A</p>
+          <h4>${T("guide_method_2_perm")}</h4>
+          <p>${T("guide_text_edit_profile")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u4F7F\u7528\u4F60\u559C\u6B22\u7684\u7F16\u8F91\u5668
@@ -1295,7 +1325,7 @@ vim ~/.bashrc
 # \u6216
 nano ~/.bashrc</code>
           </div>
-          <p>\u5728\u6587\u4EF6\u672B\u5C3E\u6DFB\u52A0\uFF1A</p>
+          <p>${T("guide_text_append")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># ===== API \u914D\u7F6E =====
@@ -1307,20 +1337,20 @@ export ANTHROPIC_API_KEY="sk-your-api-key-here"
 export OPENAI_BASE_URL="https://your-api-proxy.com/v1"
 export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
-          <p>\u4F7F\u914D\u7F6E\u751F\u6548\uFF1A</p>
+          <p>${T("guide_text_save_apply")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code>source ~/.bashrc</code>
           </div>
 
-          <h4>\u65B9\u6CD5\u4E09\uFF1A\u4F7F\u7528 systemd \u7528\u6237\u73AF\u5883\u53D8\u91CF\uFF08\u9002\u7528\u4E8E\u684C\u9762\u73AF\u5883\uFF09</h4>
+          <h4>${T("guide_method_3_systemd")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code># \u521B\u5EFA\u6216\u7F16\u8F91\u73AF\u5883\u53D8\u91CF\u6587\u4EF6
 mkdir -p ~/.config/environment.d
 nano ~/.config/environment.d/api.conf</code>
           </div>
-          <p>\u6DFB\u52A0\u4EE5\u4E0B\u5185\u5BB9\uFF1A</p>
+          <p>${T("guide_text_append")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
             <code>ANTHROPIC_BASE_URL=https://your-api-proxy.com
@@ -3251,7 +3281,7 @@ async function onRequestGet10(context) {
 }
 __name(onRequestGet10, "onRequestGet");
 
-// ../.wrangler/tmp/pages-JKyP6x/functionsRoutes-0.8004224837107077.mjs
+// ../.wrangler/tmp/pages-ceDPBB/functionsRoutes-0.7532077009034488.mjs
 var routes = [
   {
     routePath: "/api/admin/export",
