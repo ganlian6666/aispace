@@ -1,75 +1,64 @@
-export async function onRequestGet(context) {
-  const { env } = context;
+import { getLocale, t } from './utils/i18n.js';
 
-  // 1. 从数据库获取站点数据
+export async function onRequestGet(context) {
+  const { env, request } = context;
+
+  // 0. Language Detection
+  const locale = getLocale(request.headers.get('Accept-Language'));
+  const T = (key, vars) => t(locale, key, vars);
+
+  // 1. Get sites from DB
   let sites = [];
   let likesMap = {};
   let commentsMap = {};
 
   try {
-    // 获取所有网站信息
     const { results: siteResults } = await env.DB.prepare("SELECT * FROM websites").all();
     sites = siteResults || [];
 
-    // 获取点赞数据
     const { results: likeResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM likes GROUP BY card_id").all();
-    likeResults.forEach(r => {
-      likesMap[r.card_id] = r.count;
-    });
+    likeResults.forEach(r => { likesMap[r.card_id] = r.count; });
 
-    // 获取评论数据
     const { results: commentResults } = await env.DB.prepare("SELECT card_id, count(*) as count FROM comments GROUP BY card_id").all();
-    commentResults.forEach(r => {
-      commentsMap[r.card_id] = r.count;
-    });
+    commentResults.forEach(r => { commentsMap[r.card_id] = r.count; });
 
-    // 格式化 last_checked 日期
     sites.forEach(site => {
       if (site.last_checked) {
         const date = new Date(site.last_checked);
         site.formatted_date = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
       } else {
-        site.formatted_date = '从未检测';
+        site.formatted_date = T('text_never_checked');
       }
     });
 
   } catch (e) {
     console.error("DB Error:", e);
-    // 如果数据库挂了，sites 为空，页面会显示空白，但不会报错崩掉
   }
 
-  // 2. 排序：状态(在线优先) -> 点赞数倒序 -> ID 正序
+  // 2. Sort
   sites.sort((a, b) => {
-    // 状态权重：online = 1, 其他(offline/checking) = 0
-    // 注意：新添加的网站 status 可能是 null，视为 0
     const statusA = (a.status === 'online') ? 1 : 0;
     const statusB = (b.status === 'online') ? 1 : 0;
+    if (statusA !== statusB) return statusB - statusA;
 
-    // 如果状态不同，在线的排前面
-    if (statusA !== statusB) {
-      return statusB - statusA;
-    }
-
-    // 如果状态相同，按点赞数倒序
     const likeA = likesMap[a.id] || 0;
     const likeB = likesMap[b.id] || 0;
     if (likeB !== likeA) return likeB - likeA;
 
-    // 最后按 ID 排序
     return a.id - b.id;
   });
 
-  // 4. 生成 HTML
+  // 4. Generate HTML
   const cardsHtml = sites.map(site => `
       <article class="card" data-card-id="${site.id}">
         <div class="card-head">
           <h3>${site.name}</h3>
-          <div class="status"><div>检测中</div></div>
+          <div class="status"><div>${T('status_checking')}</div></div>
         </div>
         <p>${site.description}</p>
         <div class="link-block">
           <a href="${site.invite_link}" target="_blank">${site.display_url}</a>
-          <button type="button" onclick="copyLink(this)">邀请链接 · 复制</button>
+          <button type="button" onclick="copyLink(this)">${T('btn_invite_copy')}</button>
         </div>
         <div class="card-footer">
           <div class="card-actions">
@@ -82,18 +71,18 @@ export async function onRequestGet(context) {
               <span class="comment-count">${commentsMap[site.id] || 0}</span>
             </button>
           </div>
-          <div>最后检测 ${site.formatted_date}</div>
+          <div>${T('text_last_checked')} ${site.formatted_date}</div>
         </div>
         <div class="comments-section" id="comments-${site.id}">
           <div class="comment-list"></div>
           <div class="comment-form">
             <div class="nickname-display" style="display:none; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; color:var(--text-muted);">
-                <span>当前昵称: <b class="current-nickname"></b></span>
-                <button onclick="openNicknameModal()" style="background:none; border:none; color:var(--accent-glow); cursor:pointer; padding:0; font-size:12px;">[修改]</button>
+                <span>${T('nickname_current')}: <b class="current-nickname"></b></span>
+                <button onclick="openNicknameModal()" style="background:none; border:none; color:var(--accent-glow); cursor:pointer; padding:0; font-size:12px;">${T('btn_modify')}</button>
             </div>
             <div style="display:flex; gap:8px;">
-                <input type="text" class="comment-input" placeholder="输入评论..." onkeypress="if(event.key==='Enter') postComment(${site.id})">
-                <button class="comment-submit" onclick="postComment(${site.id})">发送</button>
+                <input type="text" class="comment-input" placeholder="${T('comment_placeholder')}" onkeypress="if(event.key==='Enter') postComment(${site.id})">
+                <button class="comment-submit" onclick="postComment(${site.id})">${T('btn_send')}</button>
             </div>
           </div>
         </div>
@@ -101,16 +90,15 @@ export async function onRequestGet(context) {
   `).join('');
 
   const html = `<!DOCTYPE html>
-<html lang="zh">
+<html lang="${locale}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API中转汇聚 · 自由空间</title>
+  <title>${T('home_title')}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css">
-</head>
 </head>
 <body>
   <div class="app-shell">
@@ -126,39 +114,39 @@ export async function onRequestGet(context) {
           </defs>
         </svg>
         <div>
-          <strong>自由空间</strong>
-          <p style="margin: 0; font-size: 12px; color: var(--text-muted);">自由AI空间·开放分享平台</p>
+          <strong>${T('brand_name')}</strong>
+          <p style="margin: 0; font-size: 12px; color: var(--text-muted);">${T('brand_subtitle')}</p>
         </div>
       </div>
       <nav>
-        <a href="/" class="active">API中转汇聚</a>
-        <a href="/news">AI 前沿动态</a>
-        <a href="vpn.html">VPN</a>
-        <a href="guide.html">配置指南</a>
+        <a href="/" class="active">${T('nav_home')}</a>
+        <a href="/news">${T('nav_news')}</a>
+        <a href="/vpn">${T('nav_vpn')}</a>
+        <a href="/guide">${T('nav_guide')}</a>
       </nav>
       <div class="github-link">
         <a href="https://github.com/ganlian6666/aispace" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
           </svg>
-          <span>GitHub</span>
+          <span>${T('github_text')}</span>
         </a>
       </div>
     </header>
 
     <section class="hero">
       <div>
-        <h1>不定期分享优质API接口</h1>
-        <p>每一条 API 都经过人工检测，基本支持claude code，codex和国内优质AI模型，请放心使用！</p>
+        <h1>${T('hero_title')}</h1>
+        <p>${T('hero_subtitle')}</p>
       </div>
       <div class="submit-wrapper" style="display:flex; align-items:center;">
-        <span class="submit-hint">欢迎分享稳定高效的中转站!</span>
+        <span class="submit-hint">${T('submit_hint')}</span>
         <button class="btn-primary" onclick="openModal('submitModal')">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
-          提交网站
+          ${T('btn_submit')}
         </button>
       </div>
     </section>
@@ -171,32 +159,32 @@ export async function onRequestGet(context) {
   <!-- Submission Modal -->
   <div class="modal-backdrop" id="submitModal">
     <div class="modal">
-      <h2>提交新的中转站</h2>
+      <h2>${T('modal_submit_title')}</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
-        欢迎分享你的中转站，提交后需要审核验证，通过的会将你的邀请链接挂到主页上！
+        ${T('modal_submit_desc')}
       </p>
       <form id="submitForm" onsubmit="submitWebsite(event)">
         <div class="form-group">
-          <label>中转站名称 *</label>
-          <input type="text" name="name" class="form-control" placeholder="例如: OpenAI官方API" required>
+          <label>${T('label_name')}</label>
+          <input type="text" name="name" class="form-control" placeholder="${T('placeholder_name')}" required>
         </div>
         <div class="form-group">
-          <label>网站地址 *</label>
-          <input type="url" name="url" class="form-control" placeholder="例如: https://chatgpt.com/" required>
+          <label>${T('label_url')}</label>
+          <input type="url" name="url" class="form-control" placeholder="${T('placeholder_url')}" required>
         </div>
         <div class="form-group">
-          <label>邀请链接</label>
-          <input type="url" name="invite_link" class="form-control" placeholder="例如: https://chatgpt.com/invite?code=abc">
+          <label>${T('label_invite')}</label>
+          <input type="url" name="invite_link" class="form-control" placeholder="${T('placeholder_invite')}">
         </div>
         <div class="form-group">
-          <label>简单描述</label>
-          <textarea name="description" class="form-control" rows="3" placeholder="简单介绍一下..."></textarea>
+          <label>${T('label_desc')}</label>
+          <textarea name="description" class="form-control" rows="3" placeholder="${T('placeholder_desc')}"></textarea>
         </div>
         <div class="modal-footer" style="justify-content: space-between;">
-          <button type="button" class="btn-secondary" style="border-style: dashed;" onclick="openFeedbackModal()">反馈建议</button>
+          <button type="button" class="btn-secondary" style="border-style: dashed;" onclick="openFeedbackModal()">${T('btn_feedback')}</button>
           <div style="display: flex; gap: 12px;">
-             <button type="button" class="btn-secondary" onclick="closeModal('submitModal')">取消</button>
-             <button type="submit" class="btn-primary">提交</button>
+             <button type="button" class="btn-secondary" onclick="closeModal('submitModal')">${T('btn_cancel')}</button>
+             <button type="submit" class="btn-primary">${T('btn_submit_confirm')}</button>
           </div>
         </div>
       </form>
@@ -206,22 +194,22 @@ export async function onRequestGet(context) {
   <!-- Feedback Modal -->
   <div class="modal-backdrop" id="feedbackModal">
     <div class="modal">
-      <h2>意见反馈</h2>
+      <h2>${T('modal_feedback_title')}</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
-        无论是 Bug 报告还是功能建议，我们都非常欢迎！
+        ${T('modal_feedback_desc')}
       </p>
       <form id="feedbackForm" onsubmit="submitFeedback(event)">
         <div class="form-group">
-          <label>反馈内容 *</label>
-          <textarea name="content" class="form-control" rows="4" placeholder="请详细描述您的建议或遇到的问题..." required></textarea>
+          <label>${T('label_feedback_content')}</label>
+          <textarea name="content" class="form-control" rows="4" placeholder="${T('placeholder_feedback_content')}" required></textarea>
         </div>
         <div class="form-group">
-          <label>联系方式 (选填)</label>
-          <input type="text" name="contact" class="form-control" placeholder="邮箱或微信号，方便我们联系您">
+          <label>${T('label_contact')}</label>
+          <input type="text" name="contact" class="form-control" placeholder="${T('placeholder_contact')}">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-secondary" onclick="closeModal('feedbackModal')">取消</button>
-          <button type="submit" class="btn-primary">发送反馈</button>
+          <button type="button" class="btn-secondary" onclick="closeModal('feedbackModal')">${T('btn_cancel')}</button>
+          <button type="submit" class="btn-primary">${T('btn_send_feedback')}</button>
         </div>
       </form>
     </div>
@@ -230,19 +218,19 @@ export async function onRequestGet(context) {
   <!-- Nickname Modal -->
   <div class="modal-backdrop" id="nicknameModal">
     <div class="modal">
-      <h2>设置昵称</h2>
+      <h2>${T('modal_nickname_title')}</h2>
       <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
-        请设置一个昵称以便发表评论。设置后将自动保存。
+        ${T('modal_nickname_desc')}
       </p>
       <div class="form-group">
-        <label>昵称 *</label>
-        <input type="text" id="nicknameInput" class="form-control" placeholder="例如: 匿名用户" maxlength="20" onkeypress="if(event.key==='Enter') saveNickname()">
+        <label>${T('label_nickname')}</label>
+        <input type="text" id="nicknameInput" class="form-control" placeholder="${T('placeholder_nickname')}" maxlength="20" onkeypress="if(event.key==='Enter') saveNickname()">
       </div>
       <div class="modal-footer" style="justify-content: space-between;">
-        <button type="button" class="btn-secondary" style="border-style: dashed;" onclick="setAnonymous()">匿名访问</button>
+        <button type="button" class="btn-secondary" style="border-style: dashed;" onclick="setAnonymous()">${T('btn_anonymous')}</button>
         <div style="display: flex; gap: 12px;">
-            <button type="button" class="btn-secondary" onclick="closeModal('nicknameModal')">取消</button>
-            <button type="button" class="btn-primary" onclick="saveNickname()">保存</button>
+            <button type="button" class="btn-secondary" onclick="closeModal('nicknameModal')">${T('btn_cancel')}</button>
+            <button type="button" class="btn-primary" onclick="saveNickname()">${T('btn_save')}</button>
         </div>
       </div>
     </div>
@@ -257,7 +245,7 @@ export async function onRequestGet(context) {
       const link = linkBlock.querySelector('a').href;
       navigator.clipboard.writeText(link).then(() => {
         const originalText = button.textContent;
-        button.textContent = '已复制!';
+        button.textContent = '${T('btn_copied')}';
         button.style.background = 'rgba(69, 224, 255, 0.3)';
         setTimeout(() => {
           button.textContent = originalText;
@@ -270,8 +258,8 @@ export async function onRequestGet(context) {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        button.textContent = '已复制!';
-        setTimeout(() => { button.textContent = '邀请链接 · 复制'; }, 1500);
+        button.textContent = '${T('btn_copied')}';
+        setTimeout(() => { button.textContent = '${T('btn_invite_copy')}'; }, 1500);
       });
     }
 
@@ -319,7 +307,7 @@ export async function onRequestGet(context) {
       const input = document.getElementById('nicknameInput');
       const name = input.value.trim();
       if (!name) {
-        alert('请输入昵称');
+        alert('${T('alert_nickname_required')}');
         return;
       }
       localStorage.setItem('user_nickname', name);
@@ -342,7 +330,7 @@ export async function onRequestGet(context) {
       const data = Object.fromEntries(formData.entries());
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = '提交中...';
+      btn.textContent = '${T('loading')}';
       try {
         const res = await fetch('/api/submit', {
           method: 'POST',
@@ -350,18 +338,18 @@ export async function onRequestGet(context) {
           body: JSON.stringify(data)
         });
         if (res.ok) {
-          alert('提交成功！感谢您的分享。');
+          alert('${T('alert_submit_success')}');
           closeModal('submitModal');
           form.reset();
         } else {
           const err = await res.json();
-          alert('提交失败: ' + (err.error || '未知错误'));
+          alert('${T('alert_submit_fail')}: ' + (err.error || '${T('alert_network_error')}'));
         }
       } catch (e) {
-        alert('网络错误，请稍后重试');
+        alert('${T('alert_network_error')}');
       } finally {
         btn.disabled = false;
-        btn.textContent = '提交';
+        btn.textContent = '${T('btn_submit_confirm')}';
       }
     }
 
@@ -380,7 +368,7 @@ export async function onRequestGet(context) {
       const btn = form.querySelector('button[type="submit"]');
       
       btn.disabled = true;
-      btn.textContent = '发送中...';
+      btn.textContent = '${T('loading')}';
 
       try {
         const res = await fetch('/api/feedback', {
@@ -390,18 +378,18 @@ export async function onRequestGet(context) {
         });
         
         if (res.ok) {
-          alert('感谢您的反馈！我们会认真查看。');
+          alert('${T('alert_feedback_success')}');
           closeModal('feedbackModal');
           form.reset();
         } else {
           const err = await res.json();
-          alert('提交失败: ' + (err.error || '未知错误'));
+          alert('${T('alert_submit_fail')}: ' + (err.error || 'Unknown Error'));
         }
       } catch (e) {
-        alert('网络错误，请稍后重试');
+        alert('${T('alert_network_error')}');
       } finally {
         btn.disabled = false;
-        btn.textContent = '发送反馈';
+        btn.textContent = '${T('btn_send_feedback')}';
       }
     }
 
@@ -422,7 +410,7 @@ export async function onRequestGet(context) {
         } else {
           const err = await res.json();
           if (res.status === 429) {
-            alert('您今天点赞太频繁了，请明天再来！');
+            alert('${T('alert_like_limit')}');
           } else {
             console.error(err);
           }
@@ -454,13 +442,13 @@ export async function onRequestGet(context) {
 
     async function loadComments(cardId) {
       const list = document.querySelector(\`#comments-\${cardId} .comment-list\`);
-      list.innerHTML = '<div style="padding:8px;text-align:center;color:var(--text-muted)">加载中...</div>';
+      list.innerHTML = '<div style="padding:8px;text-align:center;color:var(--text-muted)">${T('loading')}</div>';
       try {
         const res = await fetch(\`/api/comments?card_id=\${cardId}\`);
         const comments = await res.json();
         list.innerHTML = '';
         if (comments.length === 0) {
-          list.innerHTML = '<div style="padding:8px;text-align:center;color:var(--text-muted)">暂无评论，快来抢沙发！</div>';
+          list.innerHTML = '<div style="padding:8px;text-align:center;color:var(--text-muted)">${T('no_comments')}</div>';
           return;
         }
         comments.forEach(c => {
@@ -468,7 +456,7 @@ export async function onRequestGet(context) {
           div.className = 'comment-item';
           div.innerHTML = \`
             <div class="comment-header">
-              <span>\${c.nickname || '匿名用户'}</span>
+              <span>\${c.nickname || 'Anonymous'}</span>
               <span>\${new Date(c.created_at).toLocaleDateString()}</span>
             </div>
             <div>\${c.content}</div>
@@ -476,7 +464,7 @@ export async function onRequestGet(context) {
           list.appendChild(div);
         });
       } catch (e) {
-        list.innerHTML = '<div style="padding:8px;text-align:center;color:red">加载失败</div>';
+        list.innerHTML = '<div style="padding:8px;text-align:center;color:red">Load failed</div>';
       }
     }
 
@@ -510,13 +498,13 @@ export async function onRequestGet(context) {
         } else {
           const err = await res.json();
           if (res.status === 429) {
-            alert('您今天评论太多了，休息一下吧！');
+            alert('${T('alert_comment_limit')}');
           } else {
-            alert('评论失败: ' + err.error);
+            alert('Error: ' + err.error);
           }
         }
       } catch (e) {
-        alert('网络错误');
+        alert('${T('alert_network_error')}');
       }
     }
 

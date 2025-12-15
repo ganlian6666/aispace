@@ -1,10 +1,18 @@
+import { getLocale, t } from './utils/i18n.js';
+
 export async function onRequestGet(context) {
-    const html = `<!DOCTYPE html>
-<html lang="zh">
+  const { request } = context;
+  const locale = getLocale(request.headers.get('Accept-Language'));
+  const T = (key, vars) => t(locale, key, vars);
+
+  // Note: Guide content is long, so we have many T() calls here.
+
+  const html = \`<!DOCTYPE html>
+<html lang="\${locale}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>配置指南 · 自由空间</title>
+  <title>\${T('guide_page_title')}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -27,32 +35,32 @@ export async function onRequestGet(context) {
           </defs>
         </svg>
         <div>
-          <strong>自由空间</strong>
+          <strong>\${T('brand_name')}</strong>
           <p style="margin: 0; font-size: 12px; color: var(--text-muted);">
-            自由AI空间·开放分享平台
+            \${T('brand_subtitle')}
           </p>
         </div>
       </div>
       <nav>
-        <a href="/">API中转汇聚</a>
-        <a href="/news">AI 前沿动态</a>
-        <a href="/vpn">VPN</a>
-        <a href="/guide" class="active">配置指南</a>
+        <a href="/">\${T('nav_home')}</a>
+        <a href="/news">\${T('nav_news')}</a>
+        <a href="/vpn">\${T('nav_vpn')}</a>
+        <a href="/guide" class="active">\${T('nav_guide')}</a>
       </nav>
       <div class="github-link" style="margin-left:auto;">
         <a href="https://github.com/ganlian6666/aispace" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
           <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px; height:20px; fill:currentColor;">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
           </svg>
-          <span style="font-size:14px;">GitHub</span>
+          <span style="font-size:14px;">\${T('github_text')}</span>
         </a>
       </div>
     </header>
 
     <section class="hero">
       <div>
-        <h1>API 配置指南</h1>
-        <p>全面的 Claude Code 和 Codex CLI 配置教程，帮助你快速接入第三方 API 中转服务。</p>
+        <h1>\${T('guide_hero_title')}</h1>
+        <p>\${T('guide_hero_desc')}</p>
       </div>
     </section>
 
@@ -85,14 +93,14 @@ export async function onRequestGet(context) {
       <!-- Windows 教程 -->
       <div class="os-content active" id="windows">
         <div class="guide-section">
-          <h2>Windows 系统配置教程</h2>
-          <p>本教程将指导你在 Windows 系统上配置 Claude Code 和 Codex CLI 使用第三方 API 中转服务。</p>
+          <h2>\${T('guide_win_title')}</h2>
+          <p>\${T('guide_win_desc')}</p>
 
-          <h3>一、环境准备</h3>
+          <h3>\${T('guide_step_env')}</h3>
           <h4>1. 安装 Node.js</h4>
           <p>首先确保你的系统已安装 Node.js (建议 v18 或更高版本)：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 检查 Node.js 版本
 node --version
 
@@ -101,24 +109,24 @@ node --version
 
           <h4>2. 安装 Claude Code CLI</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 使用 npm 全局安装
 npm install -g @anthropic-ai/claude-code</code>
           </div>
 
           <h4>3. 安装 Codex CLI</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 使用 npm 全局安装
 npm install -g @openai/codex</code>
           </div>
 
-          <h3>二、配置 Claude Code 使用第三方 API</h3>
+          <h3>\${T('guide_step_claude')}</h3>
 
           <h4>方法一：使用环境变量配置</h4>
           <p>打开 PowerShell 或命令提示符，设置环境变量：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 设置 API 基础地址（替换为你的中转服务地址）
 set ANTHROPIC_BASE_URL=https://your-api-proxy.com
 
@@ -146,9 +154,9 @@ claude</code>
             <li>点击"确定"保存，重启终端生效</li>
           </ol>
 
-          <h3>三、配置 Codex CLI 使用第三方 API</h3>
+          <h3>\${T('guide_step_codex')}</h3>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 设置 OpenAI API 基础地址
 set OPENAI_BASE_URL=https://your-api-proxy.com/v1
 
@@ -163,9 +171,9 @@ codex</code>
             <strong>提示：</strong> 建议将环境变量添加到系统的永久配置中，避免每次重启后需要重新设置。
           </div>
 
-          <h3>四、验证配置</h3>
+          <h3>\${T('guide_step_verify')}</h3>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 测试 Claude Code
 claude --version
 claude "Hello, this is a test"
@@ -180,19 +188,19 @@ codex "Write a hello world in Python"</code>
       <!-- macOS 教程 -->
       <div class="os-content" id="mac">
         <div class="guide-section">
-          <h2>macOS 系统配置教程</h2>
-          <p>本教程将指导你在 macOS 系统上配置 Claude Code 和 Codex CLI 使用第三方 API 中转服务。</p>
+          <h2>\${T('guide_mac_title')}</h2>
+          <p>\${T('guide_mac_desc')}</p>
 
-          <h3>一、环境准备</h3>
+          <h3>\${T('guide_step_env')}</h3>
           <h4>1. 安装 Homebrew（如未安装）</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code>
           </div>
 
           <h4>2. 安装 Node.js</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 使用 Homebrew 安装
 brew install node
 
@@ -203,7 +211,7 @@ npm --version</code>
 
           <h4>3. 安装 Claude Code 和 Codex CLI</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 安装 Claude Code
 npm install -g @anthropic-ai/claude-code
 
@@ -211,11 +219,11 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @openai/codex</code>
           </div>
 
-          <h3>二、配置 Claude Code 使用第三方 API</h3>
+          <h3>\${T('guide_step_claude')}</h3>
 
           <h4>方法一：临时配置（当前终端会话有效）</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 设置 API 基础地址
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 
@@ -229,7 +237,7 @@ claude</code>
           <h4>方法二：永久配置（推荐）</h4>
           <p>编辑你的 shell 配置文件：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 如果使用 zsh（macOS 默认）
 nano ~/.zshrc
 
@@ -238,7 +246,7 @@ nano ~/.bash_profile</code>
           </div>
           <p>在文件末尾添加以下内容：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># Claude Code API 配置
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
@@ -249,14 +257,14 @@ export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
           <p>保存后执行以下命令使配置生效：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 重新加载配置
 source ~/.zshrc  # 或 source ~/.bash_profile</code>
           </div>
 
-          <h3>三、验证配置</h3>
+          <h3>\${T('guide_step_verify')}</h3>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 检查环境变量是否设置成功
 echo $ANTHROPIC_BASE_URL
 echo $ANTHROPIC_API_KEY
@@ -277,14 +285,14 @@ codex "Write a hello world in Python"</code>
       <!-- Linux 教程 -->
       <div class="os-content" id="linux">
         <div class="guide-section">
-          <h2>Linux 系统配置教程</h2>
-          <p>本教程将指导你在 Linux 系统上配置 Claude Code 和 Codex CLI 使用第三方 API 中转服务。</p>
+          <h2>\${T('guide_linux_title')}</h2>
+          <p>\${T('guide_linux_desc')}</p>
 
-          <h3>一、环境准备</h3>
+          <h3>\${T('guide_step_env')}</h3>
           <h4>1. 安装 Node.js</h4>
           <p>使用 NodeSource 仓库安装最新版 Node.js：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># Ubuntu/Debian
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -303,7 +311,7 @@ npm --version</code>
 
           <h4>2. 安装 Claude Code 和 Codex CLI</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 安装 Claude Code
 sudo npm install -g @anthropic-ai/claude-code
 
@@ -311,11 +319,11 @@ sudo npm install -g @anthropic-ai/claude-code
 sudo npm install -g @openai/codex</code>
           </div>
 
-          <h3>二、配置 Claude Code 使用第三方 API</h3>
+          <h3>\${T('guide_step_claude')}</h3>
 
           <h4>方法一：临时配置</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 设置环境变量并启动
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
@@ -325,7 +333,7 @@ claude</code>
           <h4>方法二：永久配置</h4>
           <p>编辑 ~/.bashrc 或 ~/.zshrc 文件：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 使用你喜欢的编辑器
 vim ~/.bashrc
 # 或
@@ -333,7 +341,7 @@ nano ~/.bashrc</code>
           </div>
           <p>在文件末尾添加：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># ===== API 配置 =====
 # Claude Code
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
@@ -345,29 +353,29 @@ export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
           <p>使配置生效：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code>source ~/.bashrc</code>
           </div>
 
           <h4>方法三：使用 systemd 用户环境变量（适用于桌面环境）</h4>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 创建或编辑环境变量文件
 mkdir -p ~/.config/environment.d
 nano ~/.config/environment.d/api.conf</code>
           </div>
           <p>添加以下内容：</p>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code>ANTHROPIC_BASE_URL=https://your-api-proxy.com
 ANTHROPIC_API_KEY=sk-your-api-key-here
 OPENAI_BASE_URL=https://your-api-proxy.com/v1
 OPENAI_API_KEY=sk-your-api-key-here</code>
           </div>
 
-          <h3>三、验证配置</h3>
+          <h3>\${T('guide_step_verify')}</h3>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 验证环境变量
 env | grep -E "(ANTHROPIC|OPENAI)"
 
@@ -384,9 +392,9 @@ codex "Write a hello world in Python"</code>
             <strong>提示：</strong> 如果遇到权限问题，可以考虑使用 nvm (Node Version Manager) 来管理 Node.js，这样可以避免使用 sudo 安装全局包。
           </div>
 
-          <h3>四、常见问题排查</h3>
+          <h3>\${T('guide_step_troubleshoot')}</h3>
           <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">复制</button>
+            <button class="copy-btn" onclick="copyCode(this)">\${T('btn_copy')}</button>
             <code># 检查网络连接
 curl -I https://your-api-proxy.com/v1
 
@@ -402,15 +410,15 @@ export http_proxy=http://127.0.0.1:7890</code>
 
       <!-- 通用说明 -->
       <div class="guide-section">
-        <h2>通用配置说明</h2>
+        <h2>\${T('guide_common_title')}</h2>
 
-        <h3>支持的环境变量</h3>
+        <h3>\${T('guide_env_vars')}</h3>
         <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
           <thead>
             <tr style="background: rgba(255,255,255,0.05);">
-              <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border);">工具</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border);">环境变量</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border);">说明</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border);">\${T('guide_table_tool')}</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border);">\${T('guide_table_env')}</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border);">\${T('guide_table_desc')}</th>
             </tr>
           </thead>
           <tbody>
@@ -444,12 +452,12 @@ export http_proxy=http://127.0.0.1:7890</code>
         </table>
 
         <div class="tip-box warning">
-          <strong>安全提醒：</strong>
+          <strong>\${T('guide_tip_security')}：</strong>
           <ul>
-            <li>不要将 API 密钥提交到公开的代码仓库</li>
-            <li>定期轮换你的 API 密钥</li>
-            <li>使用环境变量而非硬编码密钥</li>
-            <li>在共享设备上使用完毕后清除环境变量</li>
+            <li>\${T('guide_security_1')}</li>
+            <li>\${T('guide_security_2')}</li>
+            <li>\${T('guide_security_3')}</li>
+            <li>\${T('guide_security_4')}</li>
           </ul>
         </div>
       </div>
@@ -476,15 +484,15 @@ export http_proxy=http://127.0.0.1:7890</code>
       const codeBlock = button.parentElement;
       const code = codeBlock.querySelector('code').textContent;
       navigator.clipboard.writeText(code).then(() => {
-        button.textContent = '已复制';
+        button.textContent = '\${T('btn_copied_text')}';
         setTimeout(() => {
-          button.textContent = '复制';
+          button.textContent = '\${T('btn_copy')}';
         }, 2000);
       });
     }
   </script>
 </body>
-</html>`;
+</html>\`;
 
     return new Response(html, {
         headers: { 'content-type': 'text/html;charset=UTF-8' }
