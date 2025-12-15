@@ -808,7 +808,15 @@ var translations = {
     guide_text_edit_profile: "\u7F16\u8F91\u4F60\u7684 shell \u914D\u7F6E\u6587\u4EF6\uFF1A",
     guide_text_append: "\u5728\u6587\u4EF6\u672B\u5C3E\u6DFB\u52A0\u4EE5\u4E0B\u5185\u5BB9\uFF1A",
     guide_text_save_apply: "\u4FDD\u5B58\u540E\u6267\u884C\u4EE5\u4E0B\u547D\u4EE4\u4F7F\u914D\u7F6E\u751F\u6548\uFF1A",
-    guide_tip_persist: "\u63D0\u793A\uFF1A\u5EFA\u8BAE\u5C06\u73AF\u5883\u53D8\u91CF\u6DFB\u52A0\u5230\u7CFB\u7EDF\u7684\u6C38\u4E45\u914D\u7F6E\u4E2D\uFF0C\u907F\u514D\u6BCF\u6B21\u91CD\u542F\u540E\u9700\u8981\u91CD\u65B0\u8BBE\u7F6E\u3002"
+    guide_tip_persist: "\u63D0\u793A\uFF1A\u5EFA\u8BAE\u5C06\u73AF\u5883\u53D8\u91CF\u6DFB\u52A0\u5230\u7CFB\u7EDF\u7684\u6C38\u4E45\u914D\u7F6E\u4E2D\uFF0C\u907F\u514D\u6BCF\u6B21\u91CD\u542F\u540E\u9700\u8981\u91CD\u65B0\u8BBE\u7F6E\u3002",
+    // Windows Specific Steps
+    guide_win_step_1: '\u53F3\u952E\u70B9\u51FB"\u6B64\u7535\u8111" \u2192 "\u5C5E\u6027" \u2192 "\u9AD8\u7EA7\u7CFB\u7EDF\u8BBE\u7F6E"',
+    guide_win_step_2: '\u70B9\u51FB"\u73AF\u5883\u53D8\u91CF"\u6309\u94AE',
+    guide_win_step_3: '\u5728"\u7528\u6237\u53D8\u91CF"\u4E2D\u70B9\u51FB"\u65B0\u5EFA"',
+    guide_win_step_4: "\u6DFB\u52A0\u4EE5\u4E0B\u53D8\u91CF\uFF1A",
+    guide_win_step_5: '\u70B9\u51FB"\u786E\u5B9A"\u4FDD\u5B58\uFF0C\u91CD\u542F\u7EC8\u7AEF\u751F\u6548',
+    guide_var_name: "\u53D8\u91CF\u540D",
+    guide_var_value: "\u53D8\u91CF\u503C"
   },
   // English
   en: {
@@ -941,7 +949,15 @@ var translations = {
     guide_text_edit_profile: "Edit your shell profile:",
     guide_text_append: "Append the following:",
     guide_text_save_apply: "Save and reload configuration:",
-    guide_tip_persist: "Tip: Add to permanent config to avoid resetting on reboot."
+    guide_tip_persist: "Tip: Add to permanent config to avoid resetting on reboot.",
+    // Windows Specific Steps
+    guide_win_step_1: "Right-click 'This PC' \u2192 'Properties' \u2192 'Advanced system settings'",
+    guide_win_step_2: "Click 'Environment Variables'",
+    guide_win_step_3: "Click 'New' under 'User variables'",
+    guide_win_step_4: "Add the following variables:",
+    guide_win_step_5: "Click 'OK' to save, restart terminal to take effect",
+    guide_var_name: "Variable Name",
+    guide_var_value: "Variable Value"
   }
 };
 function getLocale(acceptLanguage, cookieHeader) {
@@ -1125,19 +1141,19 @@ claude</code>
 
           <h4>${T("guide_method_2_perm")}</h4>
           <ol class="step-list">
-            <li>\u53F3\u952E\u70B9\u51FB"\u6B64\u7535\u8111" \u2192 "\u5C5E\u6027" \u2192 "\u9AD8\u7EA7\u7CFB\u7EDF\u8BBE\u7F6E"</li>
-            <li>\u70B9\u51FB"\u73AF\u5883\u53D8\u91CF"\u6309\u94AE</li>
-            <li>\u5728"\u7528\u6237\u53D8\u91CF"\u4E2D\u70B9\u51FB"\u65B0\u5EFA"</li>
-            <li>\u6DFB\u52A0\u4EE5\u4E0B\u53D8\u91CF\uFF1A
+            <li>${T("guide_win_step_1")}</li>
+            <li>${T("guide_win_step_2")}</li>
+            <li>${T("guide_win_step_3")}</li>
+            <li>${T("guide_win_step_4")}
               <div class="code-block">
-                <code>\u53D8\u91CF\u540D: ANTHROPIC_BASE_URL
-\u53D8\u91CF\u503C: https://your-api-proxy.com
+                <code>${T("guide_var_name")}: ANTHROPIC_BASE_URL
+${T("guide_var_value")}: https://your-api-proxy.com
 
-\u53D8\u91CF\u540D: ANTHROPIC_API_KEY
-\u53D8\u91CF\u503C: sk-your-api-key-here</code>
+${T("guide_var_name")}: ANTHROPIC_API_KEY
+${T("guide_var_value")}: sk-your-api-key-here</code>
               </div>
             </li>
-            <li>\u70B9\u51FB"\u786E\u5B9A"\u4FDD\u5B58\uFF0C\u91CD\u542F\u7EC8\u7AEF\u751F\u6548</li>
+            <li>${T("guide_win_step_5")}</li>
           </ol>
 
           <h3>${T("guide_step_codex")}</h3>
@@ -3281,7 +3297,7 @@ async function onRequestGet10(context) {
 }
 __name(onRequestGet10, "onRequestGet");
 
-// ../.wrangler/tmp/pages-ceDPBB/functionsRoutes-0.7532077009034488.mjs
+// ../.wrangler/tmp/pages-Hh8XQT/functionsRoutes-0.17892695987170715.mjs
 var routes = [
   {
     routePath: "/api/admin/export",

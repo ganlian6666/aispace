@@ -139,7 +139,16 @@ export const translations = {
         guide_text_edit_profile: "编辑你的 shell 配置文件：",
         guide_text_append: "在文件末尾添加以下内容：",
         guide_text_save_apply: "保存后执行以下命令使配置生效：",
-        guide_tip_persist: "提示：建议将环境变量添加到系统的永久配置中，避免每次重启后需要重新设置。"
+        guide_tip_persist: "提示：建议将环境变量添加到系统的永久配置中，避免每次重启后需要重新设置。",
+
+        // Windows Specific Steps
+        guide_win_step_1: "右键点击\"此电脑\" → \"属性\" → \"高级系统设置\"",
+        guide_win_step_2: "点击\"环境变量\"按钮",
+        guide_win_step_3: "在\"用户变量\"中点击\"新建\"",
+        guide_win_step_4: "添加以下变量：",
+        guide_win_step_5: "点击\"确定\"保存，重启终端生效",
+        guide_var_name: "变量名",
+        guide_var_value: "变量值"
     },
 
     // English
@@ -282,7 +291,16 @@ export const translations = {
         guide_text_edit_profile: "Edit your shell profile:",
         guide_text_append: "Append the following:",
         guide_text_save_apply: "Save and reload configuration:",
-        guide_tip_persist: "Tip: Add to permanent config to avoid resetting on reboot."
+        guide_tip_persist: "Tip: Add to permanent config to avoid resetting on reboot.",
+
+        // Windows Specific Steps
+        guide_win_step_1: "Right-click 'This PC' → 'Properties' → 'Advanced system settings'",
+        guide_win_step_2: "Click 'Environment Variables'",
+        guide_win_step_3: "Click 'New' under 'User variables'",
+        guide_win_step_4: "Add the following variables:",
+        guide_win_step_5: "Click 'OK' to save, restart terminal to take effect",
+        guide_var_name: "Variable Name",
+        guide_var_value: "Variable Value"
     }
 };
 

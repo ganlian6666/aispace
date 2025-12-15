@@ -159,19 +159,19 @@ claude</code>
 
           <h4>${T('guide_method_2_perm')}</h4>
           <ol class="step-list">
-            <li>右键点击"此电脑" → "属性" → "高级系统设置"</li>
-            <li>点击"环境变量"按钮</li>
-            <li>在"用户变量"中点击"新建"</li>
-            <li>添加以下变量：
+            <li>${T('guide_win_step_1')}</li>
+            <li>${T('guide_win_step_2')}</li>
+            <li>${T('guide_win_step_3')}</li>
+            <li>${T('guide_win_step_4')}
               <div class="code-block">
-                <code>变量名: ANTHROPIC_BASE_URL
-变量值: https://your-api-proxy.com
+                <code>${T('guide_var_name')}: ANTHROPIC_BASE_URL
+${T('guide_var_value')}: https://your-api-proxy.com
 
-变量名: ANTHROPIC_API_KEY
-变量值: sk-your-api-key-here</code>
+${T('guide_var_name')}: ANTHROPIC_API_KEY
+${T('guide_var_value')}: sk-your-api-key-here</code>
               </div>
             </li>
-            <li>点击"确定"保存，重启终端生效</li>
+            <li>${T('guide_win_step_5')}</li>
           </ol>
 
           <h3>${T('guide_step_codex')}</h3>
