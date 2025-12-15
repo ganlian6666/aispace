@@ -243,11 +243,22 @@ export const translations = {
  * @param {string|null} header - The Accept-Language header value.
  * @returns {string} 'zh' or 'en'
  */
-export function getLocale(header) {
-    if (!header) return 'en';
-    // Simple check: if the header contains 'zh', return 'zh', else 'en'
-    // More complex parsing can be added if needed, but this suffices for zh/en split.
-    if (header.toLowerCase().includes('zh')) {
+/**
+ * Parses headers to determine the locale. Priority: Cookie > Accept-Language.
+ * @param {string|null} acceptLanguage - The Accept-Language header value.
+ * @param {string|null} cookieHeader - The Cookie header value.
+ * @returns {string} 'zh' or 'en'
+ */
+export function getLocale(acceptLanguage, cookieHeader) {
+    // 1. Check Cookie
+    if (cookieHeader) {
+        if (cookieHeader.includes('locale=zh')) return 'zh';
+        if (cookieHeader.includes('locale=en')) return 'en';
+    }
+
+    // 2. Check Accept-Language
+    if (!acceptLanguage) return 'en';
+    if (acceptLanguage.toLowerCase().includes('zh')) {
         return 'zh';
     }
     return 'en';
