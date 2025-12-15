@@ -9,7 +9,6 @@ export const translations = {
         nav_vpn: "VPN",
         nav_guide: "配置指南",
         github_text: "GitHub",
-        btn_lang_switch: "English", // Button to switch TO English
 
         // Home (index.js)
         home_title: "API中转汇聚 · 自由空间",
@@ -129,7 +128,6 @@ export const translations = {
         nav_vpn: "VPN",
         nav_guide: "Setup Guide",
         github_text: "GitHub",
-        btn_lang_switch: "中文", // Button to switch TO Chinese
 
         // Home (index.js)
         home_title: "API Hub · AI Space",
@@ -242,27 +240,16 @@ export const translations = {
 
 /**
  * Parses the Accept-Language header and returns the matched locale (zh or en).
- * Priority: Cookie > Header > Default (en)
  * @param {string|null} header - The Accept-Language header value.
- * @param {string|null} [cookieHeader] - The Cookie header value.
  * @returns {string} 'zh' or 'en'
  */
-export function getLocale(header, cookieHeader) {
-    // 1. Check Cookie first
-    if (cookieHeader) {
-        const match = cookieHeader.match(/lang=(zh|en)/);
-        if (match) {
-            return match[1];
-        }
-    }
-
-    // 2. Check Accept-Language header
+export function getLocale(header) {
     if (!header) return 'en';
+    // Simple check: if the header contains 'zh', return 'zh', else 'en'
+    // More complex parsing can be added if needed, but this suffices for zh/en split.
     if (header.toLowerCase().includes('zh')) {
         return 'zh';
     }
-
-    // 3. Default
     return 'en';
 }
 
@@ -277,8 +264,10 @@ export function t(locale, key, vars = {}) {
     const dict = translations[locale] || translations['en'];
     let text = dict[key] || key;
 
+    // Simple variable replacement {varName}
     for (const [k, v] of Object.entries(vars)) {
-        text = text.replace(new RegExp(`{${k}}`, 'g'), v);
-    }
-    return text;
+        text = text.replace(new RegExp(\`{\${k}}\`, 'g'), v);
+  }
+  
+  return text;
 }
