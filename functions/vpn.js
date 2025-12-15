@@ -5,12 +5,12 @@ export async function onRequestGet(context) {
   const locale = getLocale(request.headers.get('Accept-Language'));
   const T = (key, vars) => t(locale, key, vars);
 
-  const html = \`<!DOCTYPE html>
-<html lang="\${locale}">
+  const html = `<!DOCTYPE html>
+<html lang="${locale}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>\${T('vpn_page_title')}</title>
+  <title>${T('vpn_page_title')}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -37,39 +37,39 @@ export async function onRequestGet(context) {
           </defs>
         </svg>
         <div>
-          <strong>\${T('brand_name')}</strong>
+          <strong>${T('brand_name')}</strong>
           <p style="margin: 0; font-size: 12px; color: var(--text-muted);">
-            \${T('brand_subtitle')}
+            ${T('brand_subtitle')}
           </p>
         </div>
       </div>
       <nav>
-        <a href="/">\${T('nav_home')}</a>
-        <a href="/news">\${T('nav_news')}</a>
-        <a href="/vpn" class="active">\${T('nav_vpn')}</a>
-        <a href="/guide">\${T('nav_guide')}</a>
+        <a href="/">${T('nav_home')}</a>
+        <a href="/news">${T('nav_news')}</a>
+        <a href="/vpn" class="active">${T('nav_vpn')}</a>
+        <a href="/guide">${T('nav_guide')}</a>
       </nav>
       <div class="github-link" style="margin-left:auto;">
         <a href="https://github.com/ganlian6666/aispace" target="_blank" rel="noopener noreferrer" style="color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
           <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px; height:20px; fill:currentColor;">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
           </svg>
-          <span style="font-size:14px;">\${T('github_text')}</span>
+          <span style="font-size:14px;">${T('github_text')}</span>
         </a>
       </div>
     </header>
 
     <section class="hero">
       <div>
-        <h1>\${T('vpn_hero_title')}</h1>
-        <p>\${T('vpn_hero_desc')}</p>
+        <h1>${T('vpn_hero_title')}</h1>
+        <p>${T('vpn_hero_desc')}</p>
       </div>
     </section>
 
     <div class="vpn-grid">
       <!-- VPN Card 1 -->
       <article class="vpn-card">
-        <div class="top-badge">\${T('vpn_top_1')}</div>
+        <div class="top-badge">${T('vpn_top_1')}</div>
         <div class="vpn-header">
           <h2 class="vpn-name">飞鸟云</h2>
           <div class="vpn-meta">
@@ -79,11 +79,11 @@ export async function onRequestGet(context) {
               </svg>
               <span>4.8</span>
             </div>
-            <span class="badge speed">\${T('tag_speed')}</span>
-            <span class="badge stable">\${T('tag_stable')}</span>
+            <span class="badge speed">${T('tag_speed')}</span>
+            <span class="badge stable">${T('tag_stable')}</span>
           </div>
           <div class="vpn-price">
-            1RMB<small>\${T('price_suffix')}</small>
+            1RMB<small>${T('price_suffix')}</small>
           </div>
           <p class="vpn-desc">极致性价比，支持支付宝，稳定快速的VPN服务。</p>
         </div>
@@ -93,7 +93,7 @@ export async function onRequestGet(context) {
             <span class="feature-tag">稳定合中国用户</span>
           </div>
           <div class="core-features">
-            <h4>\${T('section_features')}</h4>
+            <h4>${T('section_features')}</h4>
             <ul class="feature-list">
               <li>地区：台湾日本新加坡香港美国</li>
               <li>请知悉无退款服务</li>
@@ -104,7 +104,7 @@ export async function onRequestGet(context) {
             </ul>
           </div>
           <div class="payment-methods">
-            <h5>\${T('section_payment')}</h5>
+            <h5>${T('section_payment')}</h5>
             <div class="method-tags">
               <span class="method-tag">支付宝</span>
               <span class="method-tag">信用卡</span>
@@ -119,7 +119,7 @@ export async function onRequestGet(context) {
         </div>
         <div class="vpn-footer">
           <a href="https://feiniaoyun11.life/#/register?code=2J2dfAIx" target="_blank" class="visit-btn">
-            \${T('btn_visit')}
+            ${T('btn_visit')}
             <svg viewBox="0 0 24 24">
               <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>
             </svg>
@@ -129,7 +129,7 @@ export async function onRequestGet(context) {
 
       <!-- VPN Card 2 -->
       <article class="vpn-card">
-        <div class="top-badge silver">\${T('vpn_top_2')}</div>
+        <div class="top-badge silver">${T('vpn_top_2')}</div>
         <div class="vpn-header">
           <h2 class="vpn-name">流量光</h2>
           <div class="vpn-meta">
@@ -139,11 +139,11 @@ export async function onRequestGet(context) {
               </svg>
               <span>4.7</span>
             </div>
-            <span class="badge speed">\${T('tag_speed')}</span>
-            <span class="badge stable">\${T('tag_stable')}</span>
+            <span class="badge speed">${T('tag_speed')}</span>
+            <span class="badge stable">${T('tag_stable')}</span>
           </div>
           <div class="vpn-price">
-            9.90RMB<small>\${T('price_suffix')}</small>
+            9.90RMB<small>${T('price_suffix')}</small>
           </div>
           <p class="vpn-desc">注重隐私保护的高端VPN服务，在中国表现稳定。</p>
         </div>
@@ -153,7 +153,7 @@ export async function onRequestGet(context) {
             <span class="feature-tag">流媒体解锁</span>
           </div>
           <div class="core-features">
-            <h4>\${T('section_features')}</h4>
+            <h4>${T('section_features')}</h4>
             <ul class="feature-list">
               <li>不限制设备数,不限速</li>
               <li>最高倍率: ×1（直连节点0倍率）</li>
@@ -166,7 +166,7 @@ export async function onRequestGet(context) {
             </ul>
           </div>
           <div class="payment-methods">
-            <h5>\${T('section_payment')}</h5>
+            <h5>${T('section_payment')}</h5>
             <div class="method-tags">
               <span class="method-tag">信用卡</span>
               <span class="method-tag">支付宝</span>
@@ -180,7 +180,7 @@ export async function onRequestGet(context) {
         </div>
         <div class="vpn-footer">
           <a href="https://llg01.com/#/register?code=vuLu4sOe" target="_blank" class="visit-btn">
-            \${T('btn_visit')}
+            ${T('btn_visit')}
             <svg viewBox="0 0 24 24">
               <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>
             </svg>
@@ -190,7 +190,7 @@ export async function onRequestGet(context) {
 
       <!-- VPN Card 3 -->
       <article class="vpn-card">
-        <div class="top-badge">\${T('vpn_top_3')}</div>
+        <div class="top-badge">${T('vpn_top_3')}</div>
         <div class="vpn-header">
           <h2 class="vpn-name">樱花猫</h2>
           <div class="vpn-meta">
@@ -200,11 +200,11 @@ export async function onRequestGet(context) {
               </svg>
               <span>4.9</span>
             </div>
-            <span class="badge speed">\${T('tag_speed')}</span>
-            <span class="badge stable">\${T('tag_stable')}</span>
+            <span class="badge speed">${T('tag_speed')}</span>
+            <span class="badge stable">${T('tag_stable')}</span>
           </div>
           <div class="vpn-price">
-            3.8RMB<small>\${T('price_suffix')}</small>
+            3.8RMB<small>${T('price_suffix')}</small>
           </div>
           <p class="vpn-desc">全球知名的顶级VPN服务，速度快，稳定性强。</p>
         </div>
@@ -214,7 +214,7 @@ export async function onRequestGet(context) {
             <span class="feature-tag">超快速度</span>
           </div>
           <div class="core-features">
-            <h4>\${T('section_features')}</h4>
+            <h4>${T('section_features')}</h4>
             <ul class="feature-list">
               <li>灵活套餐：支持月付、季付、半年付、年付等多种周期</li>
               <li>客服保障：Telegram在线客服和工单系统支持</li>
@@ -224,7 +224,7 @@ export async function onRequestGet(context) {
             </ul>
           </div>
           <div class="payment-methods">
-            <h5>\${T('section_payment')}</h5>
+            <h5>${T('section_payment')}</h5>
             <div class="method-tags">
               <span class="method-tag">信用卡</span>
               <span class="method-tag">支付宝</span>
@@ -239,7 +239,7 @@ export async function onRequestGet(context) {
         </div>
         <div class="vpn-footer">
           <a href="https://sakura-cat3.com/register?code=3X1mwrVL" target="_blank" class="visit-btn">
-            \${T('btn_visit')}
+            ${T('btn_visit')}
             <svg viewBox="0 0 24 24">
               <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7z"/>
             </svg>
@@ -249,9 +249,9 @@ export async function onRequestGet(context) {
     </div>
   </div>
 </body>
-</html>\`;
+</html>`;
 
-    return new Response(html, {
-        headers: { 'content-type': 'text/html;charset=UTF-8' }
-    });
+  return new Response(html, {
+    headers: { 'content-type': 'text/html;charset=UTF-8' }
+  });
 }

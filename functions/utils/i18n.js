@@ -266,8 +266,8 @@ export function t(locale, key, vars = {}) {
 
     // Simple variable replacement {varName}
     for (const [k, v] of Object.entries(vars)) {
-        text = text.replace(new RegExp(\`{\${k}}\`, 'g'), v);
-  }
-  
-  return text;
+        text = text.replace(new RegExp(`{${k}}`, 'g'), v);
+    }
+
+    return text;
 }
