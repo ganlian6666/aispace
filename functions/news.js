@@ -4,7 +4,8 @@ export async function onRequestGet(context) {
   const { env, request } = context;
 
   // 0. Language Detection
-  const locale = getLocale(request.headers.get('Accept-Language'));
+  const cookie = request.headers.get('Cookie');
+  const locale = getLocale(request.headers.get('Accept-Language'), cookie);
   const T = (key, vars) => t(locale, key, vars);
 
   // 1. 从数据库获取新闻数据
@@ -66,6 +67,26 @@ export async function onRequestGet(context) {
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/news.css">
+  <style>
+    .lang-btn {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid var(--card-border);
+        color: var(--text-main);
+        padding: 4px 12px;
+        border-radius: 16px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.2s;
+        margin-left: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .lang-btn:hover {
+        background: rgba(255,255,255,0.2);
+        border-color: var(--accent-glow);
+    }
+  </style>
 </head>
 <body>
   <div class="app-shell">
@@ -91,13 +112,23 @@ export async function onRequestGet(context) {
         <a href="/vpn">${T('nav_vpn')}</a>
         <a href="/guide">${T('nav_guide')}</a>
       </nav>
-      <div class="github-link">
-        <a href="https://github.com/ganlian6666/aispace" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-          </svg>
-          <span>${T('github_text')}</span>
-        </a>
+      <div style="display:flex; align-items:center; margin-left: auto;">
+        <div class="github-link" style="margin-left: 0;">
+            <a href="https://github.com/ganlian6666/aispace" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            <span>${T('github_text')}</span>
+            </a>
+        </div>
+        <button class="lang-btn" onclick="switchLanguage()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            ${locale === 'zh' ? 'English' : '中文'}
+        </button>
       </div>
     </header>
 
@@ -129,31 +160,37 @@ export async function onRequestGet(context) {
   <script>
     let currentPage = 1;
 
+    // Language Switcher Logic
+    function switchLanguage() {
+        const currentLocale = '${locale}';
+        const targetLocale = currentLocale === 'zh' ? 'en' : 'zh';
+        document.cookie = \`locale=\${targetLocale}; path=/; max-age=31536000\`;
+        window.location.reload();
+    }
+
     async function triggerUpdate(btn) {
         if (btn.classList.contains('loading')) return;
         
         btn.classList.add('loading');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '${T('btn_refreshing')}';
+        btn.innerHTML = "${T('btn_refreshing')}";
         
         try {
             const res = await fetch('/api/admin/update_news');
             const data = await res.json();
             
             if (res.ok) {
-                // Replacing variables manually as client-side doesn't have T() with vars easily accessible unless we embed it.
-                // For simplicity, we can pass text from server or just use simple replacement here.
-                let msg = '${T('alert_update_success')}';
+                let msg = "${T('alert_update_success')}";
                 msg = msg.replace('{fetched}', data.fetched).replace('{inserted}', data.inserted);
                 alert(msg);
                 window.location.reload();
             } else if (res.status === 429) {
-                alert(data.message || '${T('alert_rate_limit')}');
+                alert(data.message || "${T('alert_rate_limit')}");
             } else {
                 alert('Update Failed: ' + (data.error || 'Unknown Error'));
             }
         } catch (e) {
-            alert('${T('alert_network_error')}');
+            alert("${T('alert_network_error')}");
         } finally {
             btn.classList.remove('loading');
             btn.innerHTML = originalText;
@@ -163,7 +200,7 @@ export async function onRequestGet(context) {
     async function loadMore() {
         currentPage++;
         const btn = document.getElementById('btn-load-more');
-        btn.innerText = '${T('loading')}';
+        btn.innerText = "${T('loading')}";
         btn.disabled = true;
 
         try {
@@ -203,13 +240,13 @@ export async function onRequestGet(context) {
             if (newItems.length < 15 || currentPage >= 3) {
                 btn.style.display = 'none';
             } else {
-                btn.innerText = '${T('btn_load_more')}';
+                btn.innerText = "${T('btn_load_more')}";
                 btn.disabled = false;
             }
 
         } catch (e) {
             alert('Load Failed');
-            btn.innerText = '${T('btn_load_more')}';
+            btn.innerText = "${T('btn_load_more')}";
             btn.disabled = false;
         }
     }

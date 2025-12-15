@@ -289,7 +289,7 @@ export async function onRequestGet(context) {
       const link = linkBlock.querySelector('a').href;
       navigator.clipboard.writeText(link).then(() => {
         const originalText = button.textContent;
-        button.textContent = '${T('btn_copied')}';
+        button.textContent = "${T('btn_copied')}";
         button.style.background = 'rgba(69, 224, 255, 0.3)';
         setTimeout(() => {
           button.textContent = originalText;
@@ -302,8 +302,8 @@ export async function onRequestGet(context) {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        button.textContent = '${T('btn_copied')}';
-        setTimeout(() => { button.textContent = '${T('btn_invite_copy')}'; }, 1500);
+        button.textContent = "${T('btn_copied')}";
+        setTimeout(() => { button.textContent = "${T('btn_invite_copy')}"; }, 1500);
       });
     }
 
@@ -351,7 +351,7 @@ export async function onRequestGet(context) {
       const input = document.getElementById('nicknameInput');
       const name = input.value.trim();
       if (!name) {
-        alert('${T('alert_nickname_required')}');
+        alert("${T('alert_nickname_required')}");
         return;
       }
       localStorage.setItem('user_nickname', name);
@@ -374,7 +374,7 @@ export async function onRequestGet(context) {
       const data = Object.fromEntries(formData.entries());
       const btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = '${T('loading')}';
+      btn.textContent = "${T('loading')}";
       try {
         const res = await fetch('/api/submit', {
           method: 'POST',
@@ -382,18 +382,18 @@ export async function onRequestGet(context) {
           body: JSON.stringify(data)
         });
         if (res.ok) {
-          alert('${T('alert_submit_success')}');
+          alert("${T('alert_submit_success')}");
           closeModal('submitModal');
           form.reset();
         } else {
           const err = await res.json();
-          alert('${T('alert_submit_fail')}: ' + (err.error || '${T('alert_network_error')}'));
+          alert("${T('alert_submit_fail')}: " + (err.error || "${T('alert_network_error')}"));
         }
       } catch (e) {
-        alert('${T('alert_network_error')}');
+        alert("${T('alert_network_error')}");
       } finally {
         btn.disabled = false;
-        btn.textContent = '${T('btn_submit_confirm')}';
+        btn.textContent = "${T('btn_submit_confirm')}";
       }
     }
 
@@ -412,7 +412,7 @@ export async function onRequestGet(context) {
       const btn = form.querySelector('button[type="submit"]');
       
       btn.disabled = true;
-      btn.textContent = '${T('loading')}';
+      btn.textContent = "${T('loading')}";
 
       try {
         const res = await fetch('/api/feedback', {
@@ -422,18 +422,18 @@ export async function onRequestGet(context) {
         });
         
         if (res.ok) {
-          alert('${T('alert_feedback_success')}');
+          alert("${T('alert_feedback_success')}");
           closeModal('feedbackModal');
           form.reset();
         } else {
           const err = await res.json();
-          alert('${T('alert_submit_fail')}: ' + (err.error || 'Unknown Error'));
+          alert("${T('alert_submit_fail')}: " + (err.error || 'Unknown Error'));
         }
       } catch (e) {
-        alert('${T('alert_network_error')}');
+        alert("${T('alert_network_error')}");
       } finally {
         btn.disabled = false;
-        btn.textContent = '${T('btn_send_feedback')}';
+        btn.textContent = "${T('btn_send_feedback')}";
       }
     }
 
@@ -454,7 +454,7 @@ export async function onRequestGet(context) {
         } else {
           const err = await res.json();
           if (res.status === 429) {
-            alert('${T('alert_like_limit')}');
+            alert("${T('alert_like_limit')}");
           } else {
             console.error(err);
           }
@@ -542,13 +542,13 @@ export async function onRequestGet(context) {
         } else {
           const err = await res.json();
           if (res.status === 429) {
-            alert('${T('alert_comment_limit')}');
+            alert("${T('alert_comment_limit')}");
           } else {
             alert('Error: ' + err.error);
           }
         }
       } catch (e) {
-        alert('${T('alert_network_error')}');
+        alert("${T('alert_network_error')}");
       }
     }
 
