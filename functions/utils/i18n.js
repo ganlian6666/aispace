@@ -182,7 +182,10 @@ export const translations = {
         code_comment_use_proxy: "# 如果使用代理",
         code_comment_verify_install: "# 验证安装",
         guide_desc_api_base: "API 基础地址",
-        guide_desc_api_key: "API 密钥"
+        guide_desc_api_key: "API 密钥",
+        code_comment_mac_zsh: "# 如果使用 zsh（macOS 默认）",
+        code_comment_mac_bash: "# 如果使用 bash",
+        guide_note_label: "注意："
     },
 
     // English
@@ -368,7 +371,10 @@ export const translations = {
         code_comment_use_proxy: "# If using a proxy",
         code_comment_verify_install: "# Verify installation",
         guide_desc_api_base: "API Base URL",
-        guide_desc_api_key: "API Key"
+        guide_desc_api_key: "API Key",
+        code_comment_mac_zsh: "# If using zsh (macOS default)",
+        code_comment_mac_bash: "# If using bash",
+        guide_note_label: "Note:"
     }
 };
 

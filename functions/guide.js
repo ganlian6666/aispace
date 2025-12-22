@@ -224,7 +224,7 @@ codex "Write a hello world in Python"</code>
             <code># ${T('guide_desc_mac_brew')}
 brew install node
 
-# 验证安装
+${T('code_comment_verify_install')}
 node --version
 npm --version</code>
           </div>
@@ -258,10 +258,10 @@ claude</code>
           <p>${T('guide_text_edit_profile')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 如果使用 zsh（macOS 默认）
+            <code>${T('code_comment_mac_zsh')}
 nano ~/.zshrc
 
-# 如果使用 bash
+${T('code_comment_mac_bash')}
 nano ~/.bash_profile</code>
           </div>
           <p>${T('guide_text_append')}</p>
@@ -297,7 +297,7 @@ codex "Write a hello world in Python"</code>
           </div>
 
           <div class="tip-box warning">
-            <strong>注意：</strong> ${T('guide_security_1')}
+            <strong>${T('guide_note_label')}</strong> ${T('guide_security_1')}
           </div>
         </div>
       </div>

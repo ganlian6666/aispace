@@ -849,7 +849,10 @@ var translations = {
     code_comment_use_proxy: "# \u5982\u679C\u4F7F\u7528\u4EE3\u7406",
     code_comment_verify_install: "# \u9A8C\u8BC1\u5B89\u88C5",
     guide_desc_api_base: "API \u57FA\u7840\u5730\u5740",
-    guide_desc_api_key: "API \u5BC6\u94A5"
+    guide_desc_api_key: "API \u5BC6\u94A5",
+    code_comment_mac_zsh: "# \u5982\u679C\u4F7F\u7528 zsh\uFF08macOS \u9ED8\u8BA4\uFF09",
+    code_comment_mac_bash: "# \u5982\u679C\u4F7F\u7528 bash",
+    guide_note_label: "\u6CE8\u610F\uFF1A"
   },
   // English
   en: {
@@ -1023,7 +1026,10 @@ var translations = {
     code_comment_use_proxy: "# If using a proxy",
     code_comment_verify_install: "# Verify installation",
     guide_desc_api_base: "API Base URL",
-    guide_desc_api_key: "API Key"
+    guide_desc_api_key: "API Key",
+    code_comment_mac_zsh: "# If using zsh (macOS default)",
+    code_comment_mac_bash: "# If using bash",
+    guide_note_label: "Note:"
   }
 };
 function getLocale(acceptLanguage, cookieHeader) {
@@ -1272,7 +1278,7 @@ codex "Write a hello world in Python"</code>
             <code># ${T("guide_desc_mac_brew")}
 brew install node
 
-# \u9A8C\u8BC1\u5B89\u88C5
+${T("code_comment_verify_install")}
 node --version
 npm --version</code>
           </div>
@@ -1306,10 +1312,10 @@ claude</code>
           <p>${T("guide_text_edit_profile")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u5982\u679C\u4F7F\u7528 zsh\uFF08macOS \u9ED8\u8BA4\uFF09
+            <code>${T("code_comment_mac_zsh")}
 nano ~/.zshrc
 
-# \u5982\u679C\u4F7F\u7528 bash
+${T("code_comment_mac_bash")}
 nano ~/.bash_profile</code>
           </div>
           <p>${T("guide_text_append")}</p>
@@ -1345,7 +1351,7 @@ codex "Write a hello world in Python"</code>
           </div>
 
           <div class="tip-box warning">
-            <strong>\u6CE8\u610F\uFF1A</strong> ${T("guide_security_1")}
+            <strong>${T("guide_note_label")}</strong> ${T("guide_security_1")}
           </div>
         </div>
       </div>
@@ -3363,7 +3369,7 @@ async function onRequestGet10(context) {
 }
 __name(onRequestGet10, "onRequestGet");
 
-// ../.wrangler/tmp/pages-tSEuen/functionsRoutes-0.7156938953294911.mjs
+// ../.wrangler/tmp/pages-BhS2ND/functionsRoutes-0.6029118717717721.mjs
 var routes = [
   {
     routePath: "/api/admin/export",
