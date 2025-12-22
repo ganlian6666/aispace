@@ -179,7 +179,10 @@ export const translations = {
         guide_nvm_tip: "<strong>提示：</strong> 如果遇到权限问题，可以考虑使用 nvm (Node Version Manager) 来管理 Node.js，这样可以避免使用 sudo 安装全局包。",
         code_comment_check_network: "# 检查网络连接",
         code_comment_check_dns: "# 检查 DNS 解析",
-        code_comment_use_proxy: "# 如果使用代理"
+        code_comment_use_proxy: "# 如果使用代理",
+        code_comment_verify_install: "# 验证安装",
+        guide_desc_api_base: "API 基础地址",
+        guide_desc_api_key: "API 密钥"
     },
 
     // English
@@ -362,7 +365,10 @@ export const translations = {
         guide_nvm_tip: "<strong>Tip:</strong> If you face permission issues, consider using nvm (Node Version Manager) to avoid using sudo for global packages.",
         code_comment_check_network: "# Check network connection",
         code_comment_check_dns: "# Check DNS resolution",
-        code_comment_use_proxy: "# If using a proxy"
+        code_comment_use_proxy: "# If using a proxy",
+        code_comment_verify_install: "# Verify installation",
+        guide_desc_api_base: "API Base URL",
+        guide_desc_api_key: "API Key"
     }
 };
 

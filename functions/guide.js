@@ -324,7 +324,7 @@ sudo yum install -y nodejs
 # Arch Linux
 sudo pacman -S nodejs npm
 
-# 验证安装
+${T('code_comment_verify_install')}
 node --version
 npm --version</code>
           </div>
@@ -447,26 +447,26 @@ export http_proxy=http://127.0.0.1:7890</code>
               <td
                 style="padding: 12px; border-bottom: 1px solid var(--card-border); font-family: monospace; color: var(--accent-glow);">
                 ANTHROPIC_BASE_URL</td>
-              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">API 基础地址</td>
+              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">${T('guide_desc_api_base')}</td>
             </tr>
             <tr>
               <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">Claude Code</td>
               <td
                 style="padding: 12px; border-bottom: 1px solid var(--card-border); font-family: monospace; color: var(--accent-glow);">
                 ANTHROPIC_API_KEY</td>
-              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">API 密钥</td>
+              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">${T('guide_desc_api_key')}</td>
             </tr>
             <tr>
               <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">Codex</td>
               <td
                 style="padding: 12px; border-bottom: 1px solid var(--card-border); font-family: monospace; color: var(--accent-glow);">
                 OPENAI_BASE_URL</td>
-              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">API 基础地址</td>
+              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">${T('guide_desc_api_base')}</td>
             </tr>
             <tr>
               <td style="padding: 12px;">Codex</td>
               <td style="padding: 12px; font-family: monospace; color: var(--accent-glow);">OPENAI_API_KEY</td>
-              <td style="padding: 12px;">API 密钥</td>
+              <td style="padding: 12px;">${T('guide_desc_api_key')}</td>
             </tr>
           </tbody>
         </table>

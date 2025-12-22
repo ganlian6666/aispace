@@ -846,7 +846,10 @@ var translations = {
     guide_nvm_tip: "<strong>\u63D0\u793A\uFF1A</strong> \u5982\u679C\u9047\u5230\u6743\u9650\u95EE\u9898\uFF0C\u53EF\u4EE5\u8003\u8651\u4F7F\u7528 nvm (Node Version Manager) \u6765\u7BA1\u7406 Node.js\uFF0C\u8FD9\u6837\u53EF\u4EE5\u907F\u514D\u4F7F\u7528 sudo \u5B89\u88C5\u5168\u5C40\u5305\u3002",
     code_comment_check_network: "# \u68C0\u67E5\u7F51\u7EDC\u8FDE\u63A5",
     code_comment_check_dns: "# \u68C0\u67E5 DNS \u89E3\u6790",
-    code_comment_use_proxy: "# \u5982\u679C\u4F7F\u7528\u4EE3\u7406"
+    code_comment_use_proxy: "# \u5982\u679C\u4F7F\u7528\u4EE3\u7406",
+    code_comment_verify_install: "# \u9A8C\u8BC1\u5B89\u88C5",
+    guide_desc_api_base: "API \u57FA\u7840\u5730\u5740",
+    guide_desc_api_key: "API \u5BC6\u94A5"
   },
   // English
   en: {
@@ -1017,7 +1020,10 @@ var translations = {
     guide_nvm_tip: "<strong>Tip:</strong> If you face permission issues, consider using nvm (Node Version Manager) to avoid using sudo for global packages.",
     code_comment_check_network: "# Check network connection",
     code_comment_check_dns: "# Check DNS resolution",
-    code_comment_use_proxy: "# If using a proxy"
+    code_comment_use_proxy: "# If using a proxy",
+    code_comment_verify_install: "# Verify installation",
+    guide_desc_api_base: "API Base URL",
+    guide_desc_api_key: "API Key"
   }
 };
 function getLocale(acceptLanguage, cookieHeader) {
@@ -1366,7 +1372,7 @@ sudo yum install -y nodejs
 # Arch Linux
 sudo pacman -S nodejs npm
 
-# \u9A8C\u8BC1\u5B89\u88C5
+${T("code_comment_verify_install")}
 node --version
 npm --version</code>
           </div>
@@ -1489,26 +1495,26 @@ export http_proxy=http://127.0.0.1:7890</code>
               <td
                 style="padding: 12px; border-bottom: 1px solid var(--card-border); font-family: monospace; color: var(--accent-glow);">
                 ANTHROPIC_BASE_URL</td>
-              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">API \u57FA\u7840\u5730\u5740</td>
+              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">${T("guide_desc_api_base")}</td>
             </tr>
             <tr>
               <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">Claude Code</td>
               <td
                 style="padding: 12px; border-bottom: 1px solid var(--card-border); font-family: monospace; color: var(--accent-glow);">
                 ANTHROPIC_API_KEY</td>
-              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">API \u5BC6\u94A5</td>
+              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">${T("guide_desc_api_key")}</td>
             </tr>
             <tr>
               <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">Codex</td>
               <td
                 style="padding: 12px; border-bottom: 1px solid var(--card-border); font-family: monospace; color: var(--accent-glow);">
                 OPENAI_BASE_URL</td>
-              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">API \u57FA\u7840\u5730\u5740</td>
+              <td style="padding: 12px; border-bottom: 1px solid var(--card-border);">${T("guide_desc_api_base")}</td>
             </tr>
             <tr>
               <td style="padding: 12px;">Codex</td>
               <td style="padding: 12px; font-family: monospace; color: var(--accent-glow);">OPENAI_API_KEY</td>
-              <td style="padding: 12px;">API \u5BC6\u94A5</td>
+              <td style="padding: 12px;">${T("guide_desc_api_key")}</td>
             </tr>
           </tbody>
         </table>
@@ -3357,7 +3363,7 @@ async function onRequestGet10(context) {
 }
 __name(onRequestGet10, "onRequestGet");
 
-// ../.wrangler/tmp/pages-Y6KhsX/functionsRoutes-0.9867861393034767.mjs
+// ../.wrangler/tmp/pages-tSEuen/functionsRoutes-0.7156938953294911.mjs
 var routes = [
   {
     routePath: "/api/admin/export",
