@@ -121,23 +121,23 @@ export async function onRequestGet(context) {
           <p>${T('guide_desc_node_check')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 检查 Node.js 版本
+            <code>${T('code_comment_check_node')}
 node --version
 
-# 如未安装，请从官网下载: https://nodejs.org/</code>
+${T('code_comment_install_node_missing')}</code>
           </div>
 
           <h4>${T('guide_step_2_cli')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 使用 npm 全局安装
+            <code>${T('code_comment_npm_global')}
 npm install -g @anthropic-ai/claude-code</code>
           </div>
 
           <h4>${T('guide_step_3_codex')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 使用 npm 全局安装
+            <code>${T('code_comment_npm_global')}
 npm install -g @openai/codex</code>
           </div>
 
@@ -147,13 +147,13 @@ npm install -g @openai/codex</code>
           <p>${T('guide_text_open_ps')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 设置 API 基础地址（替换为你的中转服务地址）
+            <code>${T('code_comment_anthropic_base_long')}
 set ANTHROPIC_BASE_URL=https://your-api-proxy.com
 
-# 设置 API 密钥（替换为你的密钥）
+${T('code_comment_anthropic_key_long')}
 set ANTHROPIC_API_KEY=sk-your-api-key-here
 
-# 启动 Claude Code
+${T('code_comment_start_claude')}
 claude</code>
           </div>
 
@@ -177,13 +177,13 @@ ${T('guide_var_value')}: sk-your-api-key-here</code>
           <h3>${T('guide_step_codex')}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 设置 OpenAI API 基础地址
+            <code>${T('code_comment_openai_base')}
 set OPENAI_BASE_URL=https://your-api-proxy.com/v1
 
-# 设置 API 密钥
+${T('code_comment_openai_key')}
 set OPENAI_API_KEY=sk-your-api-key-here
 
-# 启动 Codex
+${T('code_comment_start_codex')}
 codex</code>
           </div>
 
@@ -194,11 +194,11 @@ codex</code>
           <h3>${T('guide_step_verify')}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 测试 Claude Code
+            <code>${T('code_comment_test_claude')}
 claude --version
 claude "Hello, this is a test"
 
-# 测试 Codex
+${T('code_comment_test_codex')}
 codex --version
 codex "Write a hello world in Python"</code>
           </div>
@@ -232,10 +232,10 @@ npm --version</code>
           <h4>${T('guide_step_3_cli')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 安装 Claude Code
+            <code>${T('code_comment_install_claude')}
 npm install -g @anthropic-ai/claude-code
 
-# 安装 Codex
+${T('code_comment_install_codex')}
 npm install -g @openai/codex</code>
           </div>
 
@@ -244,13 +244,13 @@ npm install -g @openai/codex</code>
           <h4>${T('guide_method_1_temp')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 设置 API 基础地址
+            <code>${T('code_comment_set_api_base')}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 
-# 设置 API 密钥
+${T('code_comment_set_api_key')}
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 
-# 启动 Claude Code
+${T('code_comment_start_claude')}
 claude</code>
           </div>
 
@@ -267,32 +267,32 @@ nano ~/.bash_profile</code>
           <p>${T('guide_text_append')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># Claude Code API 配置
+            <code>${T('code_comment_claude_config')}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 
-# Codex API 配置
+${T('code_comment_codex_config')}
 export OPENAI_BASE_URL="https://your-api-proxy.com/v1"
 export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
           <p>${T('guide_text_save_apply')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 重新加载配置
+            <code>${T('code_comment_reload_config')}
 source ~/.zshrc  # 或 source ~/.bash_profile</code>
           </div>
 
           <h3>${T('guide_step_verify')}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 检查环境变量是否设置成功
+            <code>${T('code_comment_check_env')}
 echo $ANTHROPIC_BASE_URL
 echo $ANTHROPIC_API_KEY
 
-# 测试 Claude Code
+${T('code_comment_test_claude')}
 claude "Hello, this is a test"
 
-# 测试 Codex
+${T('code_comment_test_codex')}
 codex "Write a hello world in Python"</code>
           </div>
 
@@ -332,10 +332,10 @@ npm --version</code>
           <h4>${T('guide_step_3_cli')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 安装 Claude Code
+            <code>${T('code_comment_install_claude')}
 sudo npm install -g @anthropic-ai/claude-code
 
-# 安装 Codex
+${T('code_comment_install_codex')}
 sudo npm install -g @openai/codex</code>
           </div>
 
@@ -344,7 +344,7 @@ sudo npm install -g @openai/codex</code>
           <h4>${T('guide_method_1_temp')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 设置环境变量并启动
+            <code>${T('code_comment_set_env_launch')}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 claude</code>
@@ -354,20 +354,20 @@ claude</code>
           <p>${T('guide_text_edit_profile')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 使用你喜欢的编辑器
+            <code>${T('code_comment_use_editor')}
 vim ~/.bashrc
-# 或
+${T('code_comment_or')}
 nano ~/.bashrc</code>
           </div>
           <p>${T('guide_text_append')}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># ===== API 配置 =====
-# Claude Code
+            <code>${T('code_comment_api_config_header')}
+${T('code_comment_claude_config')}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 
-# Codex
+${T('code_comment_codex_config')}
 export OPENAI_BASE_URL="https://your-api-proxy.com/v1"
 export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
@@ -380,7 +380,7 @@ export OPENAI_API_KEY="sk-your-api-key-here"</code>
           <h4>${T('guide_method_3_systemd')}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 创建或编辑环境变量文件
+            <code>${T('code_comment_create_env_file')}
 mkdir -p ~/.config/environment.d
 nano ~/.config/environment.d/api.conf</code>
           </div>
@@ -396,32 +396,32 @@ OPENAI_API_KEY=sk-your-api-key-here</code>
           <h3>${T('guide_step_verify')}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 验证环境变量
+            <code>${T('code_comment_verify_env')}
 env | grep -E "(ANTHROPIC|OPENAI)"
 
-# 测试 Claude Code
+${T('code_comment_test_claude')}
 claude --version
 claude "Hello, this is a test"
 
-# 测试 Codex
+${T('code_comment_test_codex')}
 codex --version
 codex "Write a hello world in Python"</code>
           </div>
 
           <div class="tip-box">
-            <strong>提示：</strong> 如果遇到权限问题，可以考虑使用 nvm (Node Version Manager) 来管理 Node.js，这样可以避免使用 sudo 安装全局包。
+            ${T('guide_nvm_tip')}
           </div>
 
           <h3>${T('guide_step_troubleshoot')}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T('btn_copy')}</button>
-            <code># 检查网络连接
+            <code>${T('code_comment_check_network')}
 curl -I https://your-api-proxy.com/v1
 
-# 检查 DNS 解析
+${T('code_comment_check_dns')}
 nslookup your-api-proxy.com
 
-# 如果使用代理
+${T('code_comment_use_proxy')}
 export https_proxy=http://127.0.0.1:7890
 export http_proxy=http://127.0.0.1:7890</code>
           </div>

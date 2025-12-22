@@ -816,7 +816,37 @@ var translations = {
     guide_win_step_4: "\u6DFB\u52A0\u4EE5\u4E0B\u53D8\u91CF\uFF1A",
     guide_win_step_5: '\u70B9\u51FB"\u786E\u5B9A"\u4FDD\u5B58\uFF0C\u91CD\u542F\u7EC8\u7AEF\u751F\u6548',
     guide_var_name: "\u53D8\u91CF\u540D",
-    guide_var_value: "\u53D8\u91CF\u503C"
+    guide_var_value: "\u53D8\u91CF\u503C",
+    // Code Comments & Tips
+    code_comment_check_node: "# \u68C0\u67E5 Node.js \u7248\u672C",
+    code_comment_install_node_missing: "# \u5982\u672A\u5B89\u88C5\uFF0C\u8BF7\u4ECE\u5B98\u7F51\u4E0B\u8F7D: https://nodejs.org/",
+    code_comment_npm_global: "# \u4F7F\u7528 npm \u5168\u5C40\u5B89\u88C5",
+    code_comment_anthropic_base_long: "# \u8BBE\u7F6E API \u57FA\u7840\u5730\u5740\uFF08\u66FF\u6362\u4E3A\u4F60\u7684\u4E2D\u8F6C\u670D\u52A1\u5730\u5740\uFF09",
+    code_comment_anthropic_key_long: "# \u8BBE\u7F6E API \u5BC6\u94A5\uFF08\u66FF\u6362\u4E3A\u4F60\u7684\u5BC6\u94A5\uFF09",
+    code_comment_start_claude: "# \u542F\u52A8 Claude Code",
+    code_comment_openai_base: "# \u8BBE\u7F6E OpenAI API \u57FA\u7840\u5730\u5740",
+    code_comment_openai_key: "# \u8BBE\u7F6E API \u5BC6\u94A5",
+    code_comment_start_codex: "# \u542F\u52A8 Codex",
+    code_comment_test_claude: "# \u6D4B\u8BD5 Claude Code",
+    code_comment_test_codex: "# \u6D4B\u8BD5 Codex",
+    code_comment_install_claude: "# \u5B89\u88C5 Claude Code",
+    code_comment_install_codex: "# \u5B89\u88C5 Codex",
+    code_comment_set_api_base: "# \u8BBE\u7F6E API \u57FA\u7840\u5730\u5740",
+    code_comment_set_api_key: "# \u8BBE\u7F6E API \u5BC6\u94A5",
+    code_comment_claude_config: "# Claude Code API \u914D\u7F6E",
+    code_comment_codex_config: "# Codex API \u914D\u7F6E",
+    code_comment_reload_config: "# \u91CD\u65B0\u52A0\u8F7D\u914D\u7F6E",
+    code_comment_check_env: "# \u68C0\u67E5\u73AF\u5883\u53D8\u91CF\u662F\u5426\u8BBE\u7F6E\u6210\u529F",
+    code_comment_set_env_launch: "# \u8BBE\u7F6E\u73AF\u5883\u53D8\u91CF\u5E76\u542F\u52A8",
+    code_comment_use_editor: "# \u4F7F\u7528\u4F60\u559C\u6B22\u7684\u7F16\u8F91\u5668",
+    code_comment_or: "# \u6216",
+    code_comment_api_config_header: "# ===== API \u914D\u7F6E =====",
+    code_comment_create_env_file: "# \u521B\u5EFA\u6216\u7F16\u8F91\u73AF\u5883\u53D8\u91CF\u6587\u4EF6",
+    code_comment_verify_env: "# \u9A8C\u8BC1\u73AF\u5883\u53D8\u91CF",
+    guide_nvm_tip: "<strong>\u63D0\u793A\uFF1A</strong> \u5982\u679C\u9047\u5230\u6743\u9650\u95EE\u9898\uFF0C\u53EF\u4EE5\u8003\u8651\u4F7F\u7528 nvm (Node Version Manager) \u6765\u7BA1\u7406 Node.js\uFF0C\u8FD9\u6837\u53EF\u4EE5\u907F\u514D\u4F7F\u7528 sudo \u5B89\u88C5\u5168\u5C40\u5305\u3002",
+    code_comment_check_network: "# \u68C0\u67E5\u7F51\u7EDC\u8FDE\u63A5",
+    code_comment_check_dns: "# \u68C0\u67E5 DNS \u89E3\u6790",
+    code_comment_use_proxy: "# \u5982\u679C\u4F7F\u7528\u4EE3\u7406"
   },
   // English
   en: {
@@ -957,7 +987,37 @@ var translations = {
     guide_win_step_4: "Add the following variables:",
     guide_win_step_5: "Click 'OK' to save, restart terminal to take effect",
     guide_var_name: "Variable Name",
-    guide_var_value: "Variable Value"
+    guide_var_value: "Variable Value",
+    // Code Comments & Tips
+    code_comment_check_node: "# Check Node.js version",
+    code_comment_install_node_missing: "# If missing, download from: https://nodejs.org/",
+    code_comment_npm_global: "# Install globally via npm",
+    code_comment_anthropic_base_long: "# Set API Base URL (your proxy address)",
+    code_comment_anthropic_key_long: "# Set API Key (your key)",
+    code_comment_start_claude: "# Start Claude Code",
+    code_comment_openai_base: "# Set OpenAI API Base URL",
+    code_comment_openai_key: "# Set API Key",
+    code_comment_start_codex: "# Start Codex",
+    code_comment_test_claude: "# Test Claude Code",
+    code_comment_test_codex: "# Test Codex",
+    code_comment_install_claude: "# Install Claude Code",
+    code_comment_install_codex: "# Install Codex",
+    code_comment_set_api_base: "# Set API Base URL",
+    code_comment_set_api_key: "# Set API Key",
+    code_comment_claude_config: "# Claude Code API Config",
+    code_comment_codex_config: "# Codex API Config",
+    code_comment_reload_config: "# Reload configuration",
+    code_comment_check_env: "# Check if env vars are set",
+    code_comment_set_env_launch: "# Set env vars and start",
+    code_comment_use_editor: "# Use your preferred editor",
+    code_comment_or: "# OR",
+    code_comment_api_config_header: "# ===== API Config =====",
+    code_comment_create_env_file: "# Create/Edit env file",
+    code_comment_verify_env: "# Verify environment variables",
+    guide_nvm_tip: "<strong>Tip:</strong> If you face permission issues, consider using nvm (Node Version Manager) to avoid using sudo for global packages.",
+    code_comment_check_network: "# Check network connection",
+    code_comment_check_dns: "# Check DNS resolution",
+    code_comment_use_proxy: "# If using a proxy"
   }
 };
 function getLocale(acceptLanguage, cookieHeader) {
@@ -1103,23 +1163,23 @@ async function onRequestGet7(context) {
           <p>${T("guide_desc_node_check")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u68C0\u67E5 Node.js \u7248\u672C
+            <code>${T("code_comment_check_node")}
 node --version
 
-# \u5982\u672A\u5B89\u88C5\uFF0C\u8BF7\u4ECE\u5B98\u7F51\u4E0B\u8F7D: https://nodejs.org/</code>
+${T("code_comment_install_node_missing")}</code>
           </div>
 
           <h4>${T("guide_step_2_cli")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u4F7F\u7528 npm \u5168\u5C40\u5B89\u88C5
+            <code>${T("code_comment_npm_global")}
 npm install -g @anthropic-ai/claude-code</code>
           </div>
 
           <h4>${T("guide_step_3_codex")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u4F7F\u7528 npm \u5168\u5C40\u5B89\u88C5
+            <code>${T("code_comment_npm_global")}
 npm install -g @openai/codex</code>
           </div>
 
@@ -1129,13 +1189,13 @@ npm install -g @openai/codex</code>
           <p>${T("guide_text_open_ps")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u8BBE\u7F6E API \u57FA\u7840\u5730\u5740\uFF08\u66FF\u6362\u4E3A\u4F60\u7684\u4E2D\u8F6C\u670D\u52A1\u5730\u5740\uFF09
+            <code>${T("code_comment_anthropic_base_long")}
 set ANTHROPIC_BASE_URL=https://your-api-proxy.com
 
-# \u8BBE\u7F6E API \u5BC6\u94A5\uFF08\u66FF\u6362\u4E3A\u4F60\u7684\u5BC6\u94A5\uFF09
+${T("code_comment_anthropic_key_long")}
 set ANTHROPIC_API_KEY=sk-your-api-key-here
 
-# \u542F\u52A8 Claude Code
+${T("code_comment_start_claude")}
 claude</code>
           </div>
 
@@ -1159,13 +1219,13 @@ ${T("guide_var_value")}: sk-your-api-key-here</code>
           <h3>${T("guide_step_codex")}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u8BBE\u7F6E OpenAI API \u57FA\u7840\u5730\u5740
+            <code>${T("code_comment_openai_base")}
 set OPENAI_BASE_URL=https://your-api-proxy.com/v1
 
-# \u8BBE\u7F6E API \u5BC6\u94A5
+${T("code_comment_openai_key")}
 set OPENAI_API_KEY=sk-your-api-key-here
 
-# \u542F\u52A8 Codex
+${T("code_comment_start_codex")}
 codex</code>
           </div>
 
@@ -1176,11 +1236,11 @@ codex</code>
           <h3>${T("guide_step_verify")}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u6D4B\u8BD5 Claude Code
+            <code>${T("code_comment_test_claude")}
 claude --version
 claude "Hello, this is a test"
 
-# \u6D4B\u8BD5 Codex
+${T("code_comment_test_codex")}
 codex --version
 codex "Write a hello world in Python"</code>
           </div>
@@ -1214,10 +1274,10 @@ npm --version</code>
           <h4>${T("guide_step_3_cli")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u5B89\u88C5 Claude Code
+            <code>${T("code_comment_install_claude")}
 npm install -g @anthropic-ai/claude-code
 
-# \u5B89\u88C5 Codex
+${T("code_comment_install_codex")}
 npm install -g @openai/codex</code>
           </div>
 
@@ -1226,13 +1286,13 @@ npm install -g @openai/codex</code>
           <h4>${T("guide_method_1_temp")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u8BBE\u7F6E API \u57FA\u7840\u5730\u5740
+            <code>${T("code_comment_set_api_base")}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 
-# \u8BBE\u7F6E API \u5BC6\u94A5
+${T("code_comment_set_api_key")}
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 
-# \u542F\u52A8 Claude Code
+${T("code_comment_start_claude")}
 claude</code>
           </div>
 
@@ -1249,32 +1309,32 @@ nano ~/.bash_profile</code>
           <p>${T("guide_text_append")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># Claude Code API \u914D\u7F6E
+            <code>${T("code_comment_claude_config")}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 
-# Codex API \u914D\u7F6E
+${T("code_comment_codex_config")}
 export OPENAI_BASE_URL="https://your-api-proxy.com/v1"
 export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
           <p>${T("guide_text_save_apply")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u91CD\u65B0\u52A0\u8F7D\u914D\u7F6E
+            <code>${T("code_comment_reload_config")}
 source ~/.zshrc  # \u6216 source ~/.bash_profile</code>
           </div>
 
           <h3>${T("guide_step_verify")}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u68C0\u67E5\u73AF\u5883\u53D8\u91CF\u662F\u5426\u8BBE\u7F6E\u6210\u529F
+            <code>${T("code_comment_check_env")}
 echo $ANTHROPIC_BASE_URL
 echo $ANTHROPIC_API_KEY
 
-# \u6D4B\u8BD5 Claude Code
+${T("code_comment_test_claude")}
 claude "Hello, this is a test"
 
-# \u6D4B\u8BD5 Codex
+${T("code_comment_test_codex")}
 codex "Write a hello world in Python"</code>
           </div>
 
@@ -1314,10 +1374,10 @@ npm --version</code>
           <h4>${T("guide_step_3_cli")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u5B89\u88C5 Claude Code
+            <code>${T("code_comment_install_claude")}
 sudo npm install -g @anthropic-ai/claude-code
 
-# \u5B89\u88C5 Codex
+${T("code_comment_install_codex")}
 sudo npm install -g @openai/codex</code>
           </div>
 
@@ -1326,7 +1386,7 @@ sudo npm install -g @openai/codex</code>
           <h4>${T("guide_method_1_temp")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u8BBE\u7F6E\u73AF\u5883\u53D8\u91CF\u5E76\u542F\u52A8
+            <code>${T("code_comment_set_env_launch")}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 claude</code>
@@ -1336,20 +1396,20 @@ claude</code>
           <p>${T("guide_text_edit_profile")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u4F7F\u7528\u4F60\u559C\u6B22\u7684\u7F16\u8F91\u5668
+            <code>${T("code_comment_use_editor")}
 vim ~/.bashrc
-# \u6216
+${T("code_comment_or")}
 nano ~/.bashrc</code>
           </div>
           <p>${T("guide_text_append")}</p>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># ===== API \u914D\u7F6E =====
-# Claude Code
+            <code>${T("code_comment_api_config_header")}
+${T("code_comment_claude_config")}
 export ANTHROPIC_BASE_URL="https://your-api-proxy.com"
 export ANTHROPIC_API_KEY="sk-your-api-key-here"
 
-# Codex
+${T("code_comment_codex_config")}
 export OPENAI_BASE_URL="https://your-api-proxy.com/v1"
 export OPENAI_API_KEY="sk-your-api-key-here"</code>
           </div>
@@ -1362,7 +1422,7 @@ export OPENAI_API_KEY="sk-your-api-key-here"</code>
           <h4>${T("guide_method_3_systemd")}</h4>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u521B\u5EFA\u6216\u7F16\u8F91\u73AF\u5883\u53D8\u91CF\u6587\u4EF6
+            <code>${T("code_comment_create_env_file")}
 mkdir -p ~/.config/environment.d
 nano ~/.config/environment.d/api.conf</code>
           </div>
@@ -1378,32 +1438,32 @@ OPENAI_API_KEY=sk-your-api-key-here</code>
           <h3>${T("guide_step_verify")}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u9A8C\u8BC1\u73AF\u5883\u53D8\u91CF
+            <code>${T("code_comment_verify_env")}
 env | grep -E "(ANTHROPIC|OPENAI)"
 
-# \u6D4B\u8BD5 Claude Code
+${T("code_comment_test_claude")}
 claude --version
 claude "Hello, this is a test"
 
-# \u6D4B\u8BD5 Codex
+${T("code_comment_test_codex")}
 codex --version
 codex "Write a hello world in Python"</code>
           </div>
 
           <div class="tip-box">
-            <strong>\u63D0\u793A\uFF1A</strong> \u5982\u679C\u9047\u5230\u6743\u9650\u95EE\u9898\uFF0C\u53EF\u4EE5\u8003\u8651\u4F7F\u7528 nvm (Node Version Manager) \u6765\u7BA1\u7406 Node.js\uFF0C\u8FD9\u6837\u53EF\u4EE5\u907F\u514D\u4F7F\u7528 sudo \u5B89\u88C5\u5168\u5C40\u5305\u3002
+            ${T("guide_nvm_tip")}
           </div>
 
           <h3>${T("guide_step_troubleshoot")}</h3>
           <div class="code-block">
             <button class="copy-btn" onclick="copyCode(this)">${T("btn_copy")}</button>
-            <code># \u68C0\u67E5\u7F51\u7EDC\u8FDE\u63A5
+            <code>${T("code_comment_check_network")}
 curl -I https://your-api-proxy.com/v1
 
-# \u68C0\u67E5 DNS \u89E3\u6790
+${T("code_comment_check_dns")}
 nslookup your-api-proxy.com
 
-# \u5982\u679C\u4F7F\u7528\u4EE3\u7406
+${T("code_comment_use_proxy")}
 export https_proxy=http://127.0.0.1:7890
 export http_proxy=http://127.0.0.1:7890</code>
           </div>
@@ -3297,7 +3357,7 @@ async function onRequestGet10(context) {
 }
 __name(onRequestGet10, "onRequestGet");
 
-// ../.wrangler/tmp/pages-Hh8XQT/functionsRoutes-0.17892695987170715.mjs
+// ../.wrangler/tmp/pages-Y6KhsX/functionsRoutes-0.9867861393034767.mjs
 var routes = [
   {
     routePath: "/api/admin/export",
