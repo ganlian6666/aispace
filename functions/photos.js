@@ -131,6 +131,57 @@ export async function onRequestGet(context) {
         border-color: var(--accent-glow);
     }
     
+    /* Upload Area */
+    .upload-area {
+        border: 2px dashed var(--panel-border);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        margin-bottom: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: rgba(0,0,0,0.2);
+        position: relative;
+    }
+    .upload-area:hover, .upload-area.dragover {
+        border-color: var(--accent-glow);
+        background: rgba(69, 224, 255, 0.05);
+    }
+    .upload-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 10px;
+        color: var(--text-muted);
+    }
+    .upload-preview {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        display: none;
+        margin-top: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .upload-hint {
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+    .clear-img-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+    
     /* Result Area */
     .result-display {
         margin-top: 24px;
@@ -263,6 +314,17 @@ export async function onRequestGet(context) {
         </div>
 
         <div class="gen-input-group">
+            <label>${T_Safe('lbl_ref_img', '参考图 (可选)')}</label>
+            <div class="upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+                <div id="uploadPlaceholder">
+                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <div class="upload-hint">${T_Safe('hint_upload', '点击或拖拽图片到这里 (用于图生图)')}</div>
+                </div>
+                <img id="imagePreview" class="upload-preview" />
+                <button class="clear-img-btn" id="clearImgBtn" onclick="clearImage(event)">×</button>
+            </div>
+
             <label>${T_Safe('lbl_prompt')} <span style="font-size:12px; color:var(--text-muted); font-weight:normal;">(${T_Safe('prompt_hint', '系统会自动组合主角与风格')})</span></label>
             <textarea id="promptInput" class="gen-textarea" placeholder="${T_Safe('ph_prompt')}"></textarea>
             <button id="genBtn" class="btn-primary" style="justify-content:center; padding: 12px;" onclick="generatePhoto()">
@@ -342,9 +404,52 @@ export async function onRequestGet(context) {
         setTimeout(() => input.style.borderColor = '', 300);
     }
 
+    let uploadedImageBase64 = null;
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) processFile(file);
+    }
+
+    // Drag and Drop
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) processFile(e.dataTransfer.files[0]);
+    });
+
+    function processFile(file) {
+        if (!file.type.startsWith('image/')) return alert('Please upload an image file');
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            uploadedImageBase64 = e.target.result; // Data URL
+            document.getElementById('imagePreview').src = uploadedImageBase64;
+            document.getElementById('imagePreview').style.display = 'inline-block';
+            document.getElementById('uploadPlaceholder').style.display = 'none';
+            document.getElementById('clearImgBtn').style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearImage(e) {
+        e.stopPropagation();
+        uploadedImageBase64 = null;
+        document.getElementById('fileInput').value = '';
+        document.getElementById('imagePreview').style.display = 'none';
+        document.getElementById('uploadPlaceholder').style.display = 'block';
+        document.getElementById('clearImgBtn').style.display = 'none';
+    }
+
     async function generatePhoto() {
         const prompt = document.getElementById('promptInput').value.trim();
-        if(!prompt) return alert('Please enter a description');
+        if(!prompt && !uploadedImageBase64) return alert('Please enter a description or upload an image');
 
         const btn = document.getElementById('genBtn');
         const loader = document.getElementById('loading');
@@ -362,7 +467,10 @@ export async function onRequestGet(context) {
             const res = await fetch('/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: prompt })
+                body: JSON.stringify({ 
+                    prompt: prompt,
+                    image: uploadedImageBase64 // Send existing image if any (Img2Img)
+                })
             });
 
             if(!res.ok) {
