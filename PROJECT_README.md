@@ -133,7 +133,7 @@
     *   在 Cloudflare 后台绑定 D1 数据库 (变量名 `DB`)。
     *   设置环境变量 `ADMIN_PASSWORD`。
     *   执行 `schema.sql` 初始化数据库。
-    
+
 ## 更新日志 (2025-12-05)
 
 ### ✨ 新增功能 (后台管理)
@@ -231,3 +231,29 @@
   - **前端 (SSR)**：新建 `functions/photos.js`，包含完整的交互逻辑（拖拽上传、Base64 转换、实时预览）。
   - **后端 (API)**：新建 `functions/api/generate.js` 作为安全代理，预留了对接 Nano Banana (Google Gemini) API 的能力。
   - **样式**：在 `style.css` 中新增了上传区域、加载动画及卡片选中态的样式支持。
+
+## Update Log - 2026-01-07
+
+### 🛡️ 安全加固 (Security Hardening)
+- **XSS 防御**：
+  - 移除了所有用户输入直接渲染 HTML 的逻辑。
+  - 新增 `functions/utils/escape.js` 工具模块，对所有动态内容进行严格的 HTML/URL 转义。
+  - 修复了 `index.js` (评论), `news.js` (新闻详情), `Ganlian.js` (表格渲染) 中的潜在注入漏洞。
+- **安全策略 (CSP)**：
+  - 全站启用严格的 CSP (Content Security Policy) 响应头。
+  - 新增 `functions/utils/security.js` 统一管理 HTTP 安全头 (X-Frame-Options, X-Content-Type-Options 等)。
+
+### 🎨 UI 重构 (UI Restructure)
+- **主题升级**：
+  - 从深色 Glassmorphism 全面迁移至 **Ant Design 5.0 风格的柔和浅色系** (Soft Light Theme)。
+  - 引入 Less 预处理器和 CSS 变量系统，建立了完整的 Design Token (Primary Color: #5b8def)。
+- **工程化构建**：
+  - 引入 **Vite** 作为前端构建工具。
+  - 建立了模块化的样式架构 (`src/styles/components/*.less`)，取代了臃肿的单文件 CSS。
+  - 实现了 CSS 的自动压缩与优化 (12kB gzip)。
+- **页面适配**：
+  - 重写了所有核心页面 (`Home`, `News`, `Guide`, `Admin`) 的样式以适配新主题。
+  - 优化了 `guide.js` 教程页面的阅读体验（增加了代码块复制、系统标签切换）。
+
+### 🧹 代码清理
+- **移除旧文件**：删除了废弃的 `admin.css`, `style.css`, `news.css`, `guide.css` 等遗留样式文件。
