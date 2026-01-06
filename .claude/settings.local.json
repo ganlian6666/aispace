@@ -6,7 +6,9 @@
       "Bash(npm install)",
       "Bash(npm run build)",
       "Bash(ls -la E:/Dev/web/*.css)",
-      "Bash(git add -A)"
+      "Bash(git add -A)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: security hardening + UI restructure\n\nSecurity:\n- Add XSS protection with escape.js utility \\(escapeHtml, escapeUrl\\)\n- Add CSP headers via security.js module\n- Fix XSS vulnerabilities in index.js, news.js, Ganlian.js\n\nUI Restructure:\n- Migrate from raw CSS to Less + Vite build system\n- Add Ant Design 5.x and soft light theme\n- Create modular Less components \\(variables, layout, card, button, etc.\\)\n- Unify all pages to use theme.css\n\nCleanup:\n- Remove old CSS files \\(admin.css, guide.css, news.css, style.css, vpn.css\\)\n- Remove deprecated DEPLOY_GUIDE.md\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)"
     ]
   }
 }
