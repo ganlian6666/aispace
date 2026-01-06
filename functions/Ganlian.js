@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>网站管理后台</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/admin.css">
-</head>
+  <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 
@@ -132,6 +131,23 @@
   </div>
 
   <script>
+    // XSS Protection - escape functions
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+    }
+    function escapeUrl(url) {
+      if (!url) return '';
+      var str = String(url).trim();
+      if (/^(javascript|data|vbscript):/i.test(str)) return '#';
+      return escapeHtml(str);
+    }
+
     let sites = [];
     let currentTab = 'websites'; // websites | submissions | news
     let selectedIds = new Set();
@@ -256,10 +272,10 @@
              rowHtml += \`
             <td>\${index + 1}</td>
             <td>
-              <div style="font-weight:600"><a href="\${site.url}" target="_blank" style="color:#e2e8f0;text-decoration:none">\${site.title}</a></div>
+              <div style="font-weight:600"><a href="\${escapeUrl(site.url)}" target="_blank" style="color:#e2e8f0;text-decoration:none">\${escapeHtml(site.title)}</a></div>
             </td>
-            <td>\${site.source}</td>
-            <td style="font-size:12px;color:#94a3b8">\${dateStr}</td>
+            <td>\${escapeHtml(site.source)}</td>
+            <td style="font-size:12px;color:#94a3b8">\${escapeHtml(dateStr)}</td>
             <td>
               <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
             </td>\`;
@@ -267,12 +283,12 @@
             rowHtml += \`
             <td>\${site.id}</td>
             <td>
-              <div style="font-weight:600; white-space:pre-wrap; max-width:400px;">\${site.content}</div>
+              <div style="font-weight:600; white-space:pre-wrap; max-width:400px;">\${escapeHtml(site.content)}</div>
             </td>
-            <td>\${site.contact || '-'}</td>
+            <td>\${escapeHtml(site.contact) || '-'}</td>
             <td>
-              <div style="font-size:12px">\${site.ip || 'Unknown'}</div>
-              <div style="font-size:12px; color:#94a3b8">\${new Date(site.created_at).toLocaleString()}</div>
+              <div style="font-size:12px">\${escapeHtml(site.ip) || 'Unknown'}</div>
+              <div style="font-size:12px; color:#94a3b8">\${escapeHtml(new Date(site.created_at).toLocaleString())}</div>
             </td>
             <td>
               <button class="btn-sm btn-danger" onclick="deleteSite(\${site.id})">删除</button>
@@ -281,13 +297,13 @@
             // SHOW ID for other tabs
             rowHtml += \`<td>\${site.id}</td>
             <td>
-              <div style="font-weight:600">\${site.name}</div>
-              <div style="font-size:12px; color:#94a3b8; max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${site.description || ''}</div>
+              <div style="font-weight:600">\${escapeHtml(site.name)}</div>
+              <div style="font-size:12px; color:#94a3b8; max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">\${escapeHtml(site.description) || ''}</div>
             </td>\`;
 
             if (currentTab === 'websites') {
               rowHtml += \`
-                <td><a href="\${site.display_url}" target="_blank" style="color:#3b82f6">\${site.display_url}</a></td>
+                <td><a href="\${escapeUrl(site.display_url)}" target="_blank" style="color:#3b82f6">\${escapeHtml(site.display_url)}</a></td>
                 <td>
                   <span style="color: \${site.status === 'online' ? '#4ade80' : '#ef4444'}">
                     \${site.status === 'online' ? '在线' : '离线'}
@@ -300,10 +316,10 @@
             } else {
               // Submissions
               rowHtml += \`
-                <td><a href="\${site.url}" target="_blank" style="color:#3b82f6">\${site.url}</a></td>
+                <td><a href="\${escapeUrl(site.url)}" target="_blank" style="color:#3b82f6">\${escapeHtml(site.url)}</a></td>
                 <td>
-                  <div style="font-size:12px">\${site.ip || 'Unknown'}</div>
-                  <div style="font-size:12px; color:#94a3b8">\${new Date(site.created_at).toLocaleString()}</div>
+                  <div style="font-size:12px">\${escapeHtml(site.ip) || 'Unknown'}</div>
+                  <div style="font-size:12px; color:#94a3b8">\${escapeHtml(new Date(site.created_at).toLocaleString())}</div>
                 </td>
                 <td>
                   <button class="btn-sm btn-success" onclick="addToMain(\${site.id})">加入主页</button>
@@ -654,6 +670,11 @@
 </html>`;
 
   return new Response(html, {
-    headers: { 'Content-Type': 'text/html;charset=UTF-8' }
+    headers: {
+      'Content-Type': 'text/html;charset=UTF-8',
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'",
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY'
+    }
   });
 }

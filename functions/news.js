@@ -1,4 +1,6 @@
 import { getLocale, t } from './utils/i18n.js';
+import { escapeHtml, escapeUrl, getClientEscapeScript } from './utils/escape.js';
+import { getSecurityHeaders } from './utils/security.js';
 
 export async function onRequestGet(context) {
   const { env, request } = context;
@@ -28,24 +30,24 @@ export async function onRequestGet(context) {
     item.formatted_date = formatDate(item.published_at);
   });
 
-  // 3. 生成 HTML Helper
+  // 3. 生成 HTML Helper (with XSS protection)
   const renderCard = (item) => `
       <article class="news-card">
-        <div class="news-source source-${item.source.toLowerCase()}">${item.source}</div>
+        <div class="news-source source-${escapeHtml(item.source.toLowerCase())}">${escapeHtml(item.source)}</div>
         <div class="news-date">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"></circle>
                 <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            ${item.formatted_date}
+            ${escapeHtml(item.formatted_date)}
         </div>
         <h3 class="news-title">
-            <a href="${item.url}" target="_blank">${item.title}</a>
+            <a href="${escapeUrl(item.url)}" target="_blank">${escapeHtml(item.title)}</a>
         </h3>
-        <p class="news-summary">${item.summary}</p>
+        <p class="news-summary">${escapeHtml(item.summary)}</p>
         <div class="news-footer">
-            <a href="${item.url}" target="_blank" class="read-more">
-                ${T('btn_read_more')} 
+            <a href="${escapeUrl(item.url)}" target="_blank" class="read-more">
+                ${T('btn_read_more')}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
@@ -65,28 +67,7 @@ export async function onRequestGet(context) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/news.css">
-  <style>
-    .lang-btn {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid var(--card-border);
-        color: var(--text-main);
-        padding: 4px 12px;
-        border-radius: 16px;
-        cursor: pointer;
-        font-size: 13px;
-        transition: all 0.2s;
-        margin-left: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .lang-btn:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: var(--accent-glow);
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
   <div class="app-shell">
@@ -158,6 +139,9 @@ export async function onRequestGet(context) {
   </div>
 
   <script>
+    // XSS Protection - Client-side escape functions
+    ${getClientEscapeScript()}
+
     let currentPage = 1;
 
     // Language Switcher Logic
@@ -212,21 +196,21 @@ export async function onRequestGet(context) {
                 const list = document.getElementById('news-list');
                 const html = newItems.map(item => \`
       <article class="news-card">
-        <div class="news-source source-\${item.source.toLowerCase()}">\${item.source}</div>
+        <div class="news-source source-\${escapeHtml(item.source.toLowerCase())}">\${escapeHtml(item.source)}</div>
         <div class="news-date">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"></circle>
                 <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            \${item.formatted_date}
+            \${escapeHtml(item.formatted_date)}
         </div>
         <h3 class="news-title">
-            <a href="\${item.url}" target="_blank">\${item.title}</a>
+            <a href="\${escapeUrl(item.url)}" target="_blank">\${escapeHtml(item.title)}</a>
         </h3>
-        <p class="news-summary">\${item.summary}</p>
+        <p class="news-summary">\${escapeHtml(item.summary)}</p>
         <div class="news-footer">
-            <a href="\${item.url}" target="_blank" class="read-more">
-                ${T('btn_read_more')} 
+            <a href="\${escapeUrl(item.url)}" target="_blank" class="read-more">
+                ${T('btn_read_more')}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
@@ -255,8 +239,6 @@ export async function onRequestGet(context) {
 </html>`;
 
   return new Response(html, {
-    headers: {
-      'content-type': 'text/html;charset=UTF-8',
-    },
+    headers: getSecurityHeaders(),
   });
 }

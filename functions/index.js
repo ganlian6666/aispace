@@ -1,4 +1,6 @@
 import { getLocale, t } from './utils/i18n.js';
+import { escapeHtml, escapeUrl, getClientEscapeScript } from './utils/escape.js';
+import { getSecurityHeaders } from './utils/security.js';
 
 export async function onRequestGet(context) {
   const { env, request } = context;
@@ -49,16 +51,16 @@ export async function onRequestGet(context) {
     return a.id - b.id;
   });
 
-  // 4. Generate HTML
+  // 4. Generate HTML (with XSS protection)
   const cardsHtml = sites.map(site => `
       <article class="card" data-card-id="${site.id}">
         <div class="card-head">
-          <h3>${site.name}</h3>
+          <h3>${escapeHtml(site.name)}</h3>
           <div class="status"><div>${T('status_checking')}</div></div>
         </div>
-        <p>${site.description}</p>
+        <p>${escapeHtml(site.description)}</p>
         <div class="link-block">
-          <a href="${site.invite_link}" target="_blank">${site.display_url}</a>
+          <a href="${escapeUrl(site.invite_link)}" target="_blank">${escapeHtml(site.display_url)}</a>
           <button type="button" onclick="copyLink(this)">${T('btn_invite_copy')}</button>
         </div>
         <div class="card-footer">
@@ -99,27 +101,7 @@ export async function onRequestGet(context) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/style.css">
-  <style>
-    .lang-btn {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid var(--card-border);
-        color: var(--text-main);
-        padding: 4px 12px;
-        border-radius: 16px;
-        cursor: pointer;
-        font-size: 13px;
-        transition: all 0.2s;
-        margin-left: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .lang-btn:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: var(--accent-glow);
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
   <div class="app-shell">
@@ -268,6 +250,9 @@ export async function onRequestGet(context) {
   </div>
 
   <script>
+    // XSS Protection - Client-side escape functions
+    ${getClientEscapeScript()}
+
     let pendingCommentCardId = null;
 
     // Language Switcher Logic
@@ -500,10 +485,10 @@ export async function onRequestGet(context) {
           div.className = 'comment-item';
           div.innerHTML = \`
             <div class="comment-header">
-              <span>\${c.nickname || 'Anonymous'}</span>
-              <span>\${new Date(c.created_at).toLocaleDateString()}</span>
+              <span>\${escapeHtml(c.nickname) || 'Anonymous'}</span>
+              <span>\${escapeHtml(new Date(c.created_at).toLocaleDateString())}</span>
             </div>
-            <div>\${c.content}</div>
+            <div>\${escapeHtml(c.content)}</div>
           \`;
           list.appendChild(div);
         });
@@ -585,8 +570,6 @@ export async function onRequestGet(context) {
 </html>`;
 
   return new Response(html, {
-    headers: {
-      'content-type': 'text/html;charset=UTF-8',
-    },
+    headers: getSecurityHeaders(),
   });
 }

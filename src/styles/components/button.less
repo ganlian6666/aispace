@@ -1,0 +1,151 @@
+/**
+ * 按钮样式
+ */
+
+// 基础按钮
+button {
+  font-family: @font-family;
+  cursor: pointer;
+  transition: @transition-base;
+}
+
+// 主要按钮
+.btn-primary {
+  background: @primary-color;
+  color: white;
+  border: none;
+  padding: @spacing-sm @spacing-lg;
+  border-radius: @border-radius-base;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: @spacing-sm;
+  transition: @transition-base;
+
+  &:hover {
+    background: @primary-color-hover;
+  }
+
+  &:active {
+    background: @primary-color-active;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// 次要按钮
+.btn-secondary {
+  background: transparent;
+  border: 1px solid @border-color-base;
+  color: @text-color-secondary;
+  padding: @spacing-sm @spacing-md;
+  border-radius: @border-radius-base;
+  cursor: pointer;
+  transition: @transition-base;
+
+  &:hover {
+    background: @hover-background;
+    border-color: @primary-color;
+    color: @primary-color;
+  }
+}
+
+// 轮廓按钮
+.btn-outline {
+  background: transparent;
+  border: 1px solid @border-color-base;
+  color: @text-color-secondary;
+  padding: @spacing-sm @spacing-md;
+  border-radius: @border-radius-base;
+  cursor: pointer;
+  transition: @transition-base;
+
+  &:hover {
+    background: @hover-background;
+    color: @text-color;
+  }
+}
+
+// 危险按钮
+.btn-danger {
+  background: @error-color;
+  color: white;
+  border: none;
+  padding: @spacing-sm @spacing-md;
+  border-radius: @border-radius-base;
+  cursor: pointer;
+  transition: @transition-base;
+
+  &:hover {
+    background: darken(@error-color, 10%);
+  }
+}
+
+// 成功按钮
+.btn-success {
+  background: @success-color;
+  color: white;
+  border: none;
+  padding: @spacing-sm @spacing-md;
+  border-radius: @border-radius-base;
+  cursor: pointer;
+  transition: @transition-base;
+
+  &:hover {
+    background: darken(@success-color, 10%);
+  }
+}
+
+// 小按钮
+.btn-sm {
+  padding: @spacing-xs @spacing-sm;
+  font-size: @font-size-sm;
+}
+
+// 大按钮
+.btn-lg {
+  padding: @spacing-md @spacing-xl;
+  font-size: @font-size-lg;
+}
+
+// 刷新按钮
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: @spacing-sm;
+  background: @component-background;
+  border: 1px solid @border-color-base;
+  color: @text-color-secondary;
+  padding: @spacing-sm @spacing-md;
+  border-radius: @border-radius-base;
+  cursor: pointer;
+  transition: @transition-base;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background: @hover-background;
+    border-color: @primary-color;
+    color: @primary-color;
+  }
+
+  &.loading svg {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

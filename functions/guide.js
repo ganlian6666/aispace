@@ -17,27 +17,7 @@ export async function onRequestGet(context) {
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="/guide.css">
-  <style>
-    .lang-btn {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid var(--card-border);
-        color: var(--text-main);
-        padding: 4px 12px;
-        border-radius: 16px;
-        cursor: pointer;
-        font-size: 13px;
-        transition: all 0.2s;
-        margin-left: 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-    .lang-btn:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: var(--accent-glow);
-    }
-  </style>
+  <link rel="stylesheet" href="/theme.css">
 </head>
 
 <body>

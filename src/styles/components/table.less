@@ -1,0 +1,148 @@
+/**
+ * 表格样式 (后台管理)
+ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: @component-background;
+  border-radius: @border-radius-base;
+  overflow: hidden;
+  box-shadow: @box-shadow-sm;
+}
+
+th,
+td {
+  padding: @spacing-sm @spacing-md;
+  text-align: left;
+  border-bottom: 1px solid @border-color-light;
+  vertical-align: middle;
+}
+
+th {
+  background: @body-background;
+  font-weight: 600;
+  color: @text-color-secondary;
+  font-size: @font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background: @hover-background;
+}
+
+tr.selected td {
+  background: fade(@primary-color, 8%);
+}
+
+.checkbox-col {
+  width: 40px;
+  text-align: center;
+}
+
+// 标签页
+.tabs {
+  display: flex;
+  gap: @spacing-sm;
+  margin-bottom: @spacing-lg;
+  border-bottom: 1px solid @border-color-base;
+  padding-bottom: @spacing-sm;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid @border-color-base;
+  color: @text-color-secondary;
+  padding: @spacing-sm @spacing-md;
+  cursor: pointer;
+  font-size: @font-size-base;
+  font-weight: 600;
+  border-radius: @border-radius-sm;
+  transition: @transition-base;
+
+  &.active {
+    background: fade(@primary-color, 10%);
+    color: @primary-color;
+    border-color: @primary-color;
+  }
+
+  &:hover:not(.active) {
+    color: @text-color;
+    border-color: @text-color-secondary;
+  }
+}
+
+// 工具栏
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: @spacing-md;
+  flex-wrap: wrap;
+  gap: @spacing-sm;
+}
+
+// 批量操作
+.bulk-actions {
+  display: flex;
+  gap: @spacing-sm;
+  align-items: center;
+  background: fade(@primary-color, 10%);
+  padding: @spacing-xs @spacing-sm;
+  border-radius: @border-radius-sm;
+  border: 1px solid fade(@primary-color, 20%);
+
+  span {
+    font-size: @font-size-sm;
+    color: @primary-color;
+  }
+}
+
+// 登录面板
+#login-panel {
+  max-width: 320px;
+  margin: 100px auto;
+  background: @component-background;
+  padding: @spacing-xl;
+  border-radius: @border-radius-lg;
+  border: 1px solid @border-color-base;
+  text-align: center;
+  box-shadow: @box-shadow-card;
+
+  h2 {
+    margin-bottom: @spacing-lg;
+    color: @text-color;
+  }
+
+  input {
+    margin-bottom: @spacing-md;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+// 管理面板
+#admin-panel {
+  display: none;
+
+  h1 {
+    margin-bottom: @spacing-lg;
+    font-size: @font-size-h2;
+    color: @text-color;
+  }
+}
+
+// 后台容器
+.container {
+  width: 100%;
+  max-width: @layout-max-width;
+  margin: 0 auto;
+  padding: @spacing-lg;
+}

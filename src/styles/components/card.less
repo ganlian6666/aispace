@@ -1,0 +1,341 @@
+/**
+ * 卡片样式
+ */
+
+.card {
+  background: @card-background;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-lg;
+  padding: @spacing-lg;
+  box-shadow: @box-shadow-card;
+  display: flex;
+  flex-direction: column;
+  gap: @spacing-md;
+  min-height: 220px;
+  transition: @transition-base;
+
+  &:hover {
+    box-shadow: @box-shadow-modal;
+    transform: translateY(-2px);
+  }
+}
+
+// 卡片头部
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: @spacing-sm;
+
+  h3 {
+    margin: 0;
+    font-size: @font-size-lg;
+    font-weight: 600;
+    color: @text-color;
+    line-height: 1.4;
+  }
+}
+
+// 状态标签
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: @border-radius-base;
+  padding: @spacing-xs @spacing-sm;
+  font-size: @font-size-sm;
+  line-height: 1.2;
+  min-width: 60px;
+  text-align: center;
+  font-weight: 500;
+
+  // 在线状态
+  &.online {
+    background: fade(@success-color, 10%);
+    color: @success-color;
+    border: 1px solid fade(@success-color, 30%);
+  }
+
+  // 离线状态
+  &.offline {
+    background: fade(@error-color, 10%);
+    color: @error-color;
+    border: 1px solid fade(@error-color, 30%);
+  }
+
+  // 检测中状态
+  &.checking {
+    background: fade(@primary-color, 10%);
+    color: @primary-color;
+    border: 1px solid fade(@primary-color, 30%);
+  }
+
+  .latency {
+    font-size: 10px;
+    opacity: 0.8;
+  }
+}
+
+// 卡片描述
+.card p {
+  margin: 0;
+  color: @text-color-secondary;
+  font-size: @font-size-base;
+  min-height: 42px;
+  line-height: 1.6;
+}
+
+// 链接区块
+.link-block {
+  display: flex;
+  flex-direction: column;
+  gap: @spacing-sm;
+  margin-top: auto;
+
+  a {
+    color: @primary-color;
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+    text-align: center;
+    transition: @transition-base;
+
+    &:hover {
+      color: @primary-color-hover;
+    }
+  }
+
+  button {
+    border: none;
+    border-radius: @border-radius-base;
+    padding: @spacing-sm;
+    background: @hover-background;
+    color: @text-color;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+    transition: @transition-base;
+
+    &:hover {
+      background: @active-background;
+      color: @primary-color;
+    }
+  }
+}
+
+// 卡片底部
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: @font-size-sm;
+  color: @text-color-secondary;
+  flex-wrap: wrap;
+  gap: @spacing-sm;
+  padding-top: @spacing-md;
+  border-top: 1px solid @border-color-light;
+}
+
+// 操作按钮组
+.card-actions {
+  display: flex;
+  gap: @spacing-sm;
+}
+
+// 操作按钮
+.action-btn {
+  background: transparent;
+  border: none;
+  color: @text-color-secondary;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: @spacing-xs;
+  padding: @spacing-xs @spacing-sm;
+  border-radius: @border-radius-sm;
+  transition: @transition-base;
+  font-size: @font-size-sm;
+
+  &:hover {
+    background: @hover-background;
+    color: @text-color;
+  }
+
+  &.liked {
+    color: @error-color;
+
+    svg {
+      fill: @error-color;
+      stroke: none;
+    }
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+}
+
+// 评论区域
+.comments-section {
+  display: none;
+  margin-top: @spacing-sm;
+  padding-top: @spacing-sm;
+  border-top: 1px solid @border-color-light;
+
+  &.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 评论列表
+.comment-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: @spacing-sm;
+  display: flex;
+  flex-direction: column;
+  gap: @spacing-sm;
+}
+
+// 单条评论
+.comment-item {
+  font-size: @font-size-sm;
+  padding: @spacing-sm @spacing-md;
+  background: @body-background;
+  border-radius: @border-radius-base;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  color: @text-color-secondary;
+  font-size: @font-size-sm;
+  margin-bottom: @spacing-xs;
+}
+
+// 评论表单
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: @spacing-sm;
+}
+
+.comment-input {
+  flex: 1;
+  background: @body-background;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-sm;
+  padding: @spacing-sm;
+  color: @text-color;
+  font-size: @font-size-sm;
+  transition: @transition-base;
+
+  &:focus {
+    outline: none;
+    border-color: @primary-color;
+  }
+}
+
+.comment-submit {
+  background: @primary-color;
+  color: white;
+  border: none;
+  border-radius: @border-radius-sm;
+  padding: 0 @spacing-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: @transition-base;
+
+  &:hover {
+    background: @primary-color-hover;
+  }
+}
+
+// 新闻卡片
+.news-card {
+  background: @card-background;
+  border: 1px solid @border-color-base;
+  border-radius: @border-radius-lg;
+  padding: @spacing-lg;
+  box-shadow: @box-shadow-card;
+  margin-bottom: @spacing-md;
+  transition: @transition-base;
+
+  &:hover {
+    box-shadow: @box-shadow-modal;
+  }
+
+  .news-source {
+    display: inline-block;
+    padding: @spacing-xs @spacing-sm;
+    border-radius: @border-radius-sm;
+    font-size: @font-size-sm;
+    font-weight: 500;
+    background: fade(@primary-color, 10%);
+    color: @primary-color;
+  }
+
+  .news-date {
+    display: flex;
+    align-items: center;
+    gap: @spacing-xs;
+    color: @text-color-secondary;
+    font-size: @font-size-sm;
+    margin-top: @spacing-sm;
+  }
+
+  .news-title {
+    margin: @spacing-md 0 @spacing-sm;
+    font-size: @font-size-lg;
+
+    a {
+      color: @text-color;
+      text-decoration: none;
+
+      &:hover {
+        color: @primary-color;
+      }
+    }
+  }
+
+  .news-summary {
+    color: @text-color-secondary;
+    line-height: 1.6;
+    margin-bottom: @spacing-md;
+  }
+
+  .news-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .read-more {
+    display: flex;
+    align-items: center;
+    gap: @spacing-xs;
+    color: @primary-color;
+    font-weight: 500;
+    font-size: @font-size-sm;
+
+    &:hover {
+      color: @primary-color-hover;
+    }
+  }
+}
