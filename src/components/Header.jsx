@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Github, Globe } from 'lucide-react';
+import { Github, Globe, Home, Newspaper, Shield, BookOpen } from 'lucide-react';
 import { useI18n } from '@/contexts/I18nContext';
 import './Header.less';
 
@@ -30,15 +30,19 @@ const Header = () => {
 
       <nav className="main-nav">
         <Link to="/" className={isActive('/') ? 'active' : ''}>
+          <Home size={18} strokeWidth={2} style={{ marginRight: '6px' }} />
           {t('nav_home')}
         </Link>
         <Link to="/news" className={isActive('/news') ? 'active' : ''}>
+          <Newspaper size={18} strokeWidth={2} style={{ marginRight: '6px' }} />
           {t('nav_news')}
         </Link>
         <Link to="/vpn" className={isActive('/vpn') ? 'active' : ''}>
+          <Shield size={18} strokeWidth={2} style={{ marginRight: '6px' }} />
           {t('nav_vpn')}
         </Link>
         <Link to="/guide" className={isActive('/guide') ? 'active' : ''}>
+          <BookOpen size={18} strokeWidth={2} style={{ marginRight: '6px' }} />
           {t('nav_guide')}
         </Link>
       </nav>

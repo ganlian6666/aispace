@@ -11,7 +11,9 @@
       "Bash(git push)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix\\(guide\\): add OS tabs switching + improve readability\n\n- Add guide.less with proper styles for OS tabs, code blocks, step lists\n- Fix tab switching functionality \\(now properly styled\\)\n- Improve code block layout: copy button in top-right corner\n- Add better spacing and typography for developer-friendly reading\n- Update variables.less with padding aliases\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git commit:*)",
-      "Bash(npm install react react-dom react-router-dom lucide-react @vitejs/plugin-react)"
+      "Bash(npm install react react-dom react-router-dom lucide-react @vitejs/plugin-react)",
+      "Bash(npm run dev)",
+      "Bash(ls:*)"
     ]
   }
 }

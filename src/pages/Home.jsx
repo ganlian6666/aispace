@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Spin, Button, message, Modal, Form, Input } from 'antd';
-import { Plus, Sparkles } from 'lucide-react';
+import { Row, Col, Spin, Button, Modal, Form, Input } from 'antd';
+import { Plus, Sparkles, Zap, TrendingUp } from 'lucide-react';
 import Header from '@/components/Header';
 import WebsiteCard from '@/components/WebsiteCard';
 import { useI18n } from '@/contexts/I18nContext';
 import { useWebsites, useLike, useSubmit, useFeedback, useStatus } from '@/hooks/useApi';
+import { customMessage } from '../App';
 import './Home.less';
 
 const { TextArea } = Input;
@@ -44,7 +45,7 @@ const Home = () => {
   const handleLike = async (cardId) => {
     try {
       const result = await toggleLike(cardId);
-      message.success(t('btn_copied'));
+      customMessage.success(t('btn_copied'));
       // 更新本地数据
       setEnrichedWebsites(prev =>
         prev.map(site =>
@@ -53,9 +54,9 @@ const Home = () => {
       );
     } catch (error) {
       if (error.message === 'like_limit') {
-        message.warning(t('alert_like_limit'));
+        customMessage.warning(t('alert_like_limit'));
       } else {
-        message.error(t('alert_network_error'));
+        customMessage.error(t('alert_network_error'));
       }
     }
   };
@@ -63,23 +64,23 @@ const Home = () => {
   const handleSubmit = async (values) => {
     try {
       await submitWebsite(values);
-      message.success(t('alert_submit_success'));
+      customMessage.success(t('alert_submit_success'));
       setSubmitModalOpen(false);
       submitForm.resetFields();
       refetch();
     } catch (error) {
-      message.error(t('alert_submit_fail'));
+      customMessage.error(t('alert_submit_fail'));
     }
   };
 
   const handleFeedback = async (values) => {
     try {
       await submitFeedback(values);
-      message.success(t('alert_feedback_success'));
+      customMessage.success(t('alert_feedback_success'));
       setFeedbackModalOpen(false);
       feedbackForm.resetFields();
     } catch (error) {
-      message.error(t('alert_network_error'));
+      customMessage.error(t('alert_network_error'));
     }
   };
 
@@ -91,17 +92,23 @@ const Home = () => {
         <div className="hero-content">
           <div className="hero-text">
             <h1>
-              <Sparkles size={32} className="sparkle-icon" />
+              <Sparkles size={36} color="#ffa502" strokeWidth={2.5} style={{ marginRight: '12px' }} />
               {t('hero_title')}
             </h1>
-            <p>{t('hero_subtitle')}</p>
+            <p>
+              <TrendingUp size={20} color="#52c41a" strokeWidth={2} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+              {t('hero_subtitle')}
+            </p>
           </div>
           <div className="submit-wrapper">
-            <span className="submit-hint">{t('submit_hint')}</span>
+            <span className="submit-hint">
+              <Zap size={18} color="#5b8def" strokeWidth={2} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
+              {t('submit_hint')}
+            </span>
             <Button
               type="primary"
               size="large"
-              icon={<Plus size={20} />}
+              icon={<Plus size={20} strokeWidth={2.5} />}
               onClick={() => setSubmitModalOpen(true)}
             >
               {t('btn_submit')}

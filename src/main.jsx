@@ -26,6 +26,14 @@ const theme = {
     Card: {
       borderRadiusLG: 12,
     },
+    Message: {
+      contentBg: '#ffffff',
+      contentPadding: '14px 20px',
+      fontSize: 15,
+    },
+    Notification: {
+      borderRadiusLG: 12,
+    }
   },
 };
 

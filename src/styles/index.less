@@ -19,3 +19,70 @@
 @import './components/modal.less';
 @import './components/table.less';
 @import './components/guide.less';
+
+// 全局 Message 和 Notification 样式增强
+.ant-message {
+  .ant-message-notice {
+    .ant-message-notice-content {
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+
+      .ant-message-custom-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 500;
+
+        .anticon {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  // 成功消息
+  .ant-message-success {
+    .ant-message-notice-content {
+      background: linear-gradient(135deg, rgba(82, 196, 26, 0.95) 0%, rgba(115, 209, 61, 0.95) 100%);
+      color: white;
+    }
+  }
+
+  // 错误消息
+  .ant-message-error {
+    .ant-message-notice-content {
+      background: linear-gradient(135deg, rgba(255, 77, 79, 0.95) 0%, rgba(255, 120, 117, 0.95) 100%);
+      color: white;
+    }
+  }
+
+  // 警告消息
+  .ant-message-warning {
+    .ant-message-notice-content {
+      background: linear-gradient(135deg, rgba(250, 173, 20, 0.95) 0%, rgba(250, 219, 20, 0.95) 100%);
+      color: white;
+    }
+  }
+
+  // 信息消息
+  .ant-message-info {
+    .ant-message-notice-content {
+      background: linear-gradient(135deg, rgba(24, 144, 255, 0.95) 0%, rgba(64, 169, 255, 0.95) 100%);
+      color: white;
+    }
+  }
+}
+
+// 全局 Notification 样式增强
+.ant-notification {
+  .ant-notification-notice {
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+

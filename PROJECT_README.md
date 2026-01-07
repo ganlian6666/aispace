@@ -284,23 +284,152 @@
   - Hero 区域：`Sparkles`（闪光）、`Plus`（添加）图标
   - 所有图标支持自定义颜色、大小、stroke-width，提升视觉表现力
 
-### 🛠️ 技术栈更新
-- **新增依赖**：
-  ```json
-  {
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-router-dom": "^7.11.0",
-    "lucide-react": "^0.562.0",
-    "@vitejs/plugin-react": "^5.1.2"
-  }
-  ```
+### 🛠️ 完整技术栈详解
 
-- **Vite 配置优化**：
-  - 新增 `@vitejs/plugin-react` 支持 JSX 转换
-  - 配置路径别名：`@`, `@components`, `@hooks`, `@utils`, `@styles`
-  - 开发服务器代理 `/api` 路由至 Cloudflare Functions (localhost:8788)
-  - 优化构建输出：CSS 代码分离、chunk 哈希命名
+#### 前端核心框架
+- **React 19.2.3**
+  - 采用最新的 React 19 版本
+  - 使用函数组件 + Hooks 模式（useState, useEffect, useContext, useCallback）
+  - React.StrictMode 开启严格模式检查
+  - 组件化开发，提升代码复用性
+
+- **React Router DOM 7.11.0**
+  - 客户端路由管理框架
+  - 使用 `BrowserRouter` 实现 HTML5 History API 路由
+  - `Routes` + `Route` 声明式路由配置
+  - `Link` 组件实现无刷新页面跳转
+  - `useLocation` Hook 获取当前路由状态
+
+- **React Context API**
+  - 使用原生 Context API 实现全局状态管理
+  - `I18nContext` 管理国际化状态（语言切换、翻译函数）
+  - 避免引入 Redux/Zustand 等重量级状态管理库
+
+#### UI 组件库与样式
+- **Ant Design 5.12.0**
+  - 蚂蚁金服开源的企业级 UI 组件库
+  - 使用组件：`Button`, `Card`, `Modal`, `Form`, `Input`, `Spin`, `Message`, `Row`, `Col`
+  - `ConfigProvider` 统一配置主题和国际化
+  - 主题定制：柔和浅色系（Primary Color: #5b8def）
+
+- **Less 4.2.0**
+  - CSS 预处理器
+  - 支持变量、嵌套、混合（Mixins）、函数
+  - 模块化样式架构：`src/styles/variables.less` 定义全局变量
+  - 组件样式隔离：每个组件独立的 `.less` 文件
+
+- **Lucide React 0.562.0**
+  - 现代化的开源图标库（600+ 图标）
+  - 基于 Feather Icons，提供 React 组件封装
+  - 支持自定义 `size`, `color`, `strokeWidth` 属性
+  - 使用的图标：`Github`, `Globe`, `Heart`, `MessageCircle`, `Copy`, `Check`, `Sparkles`, `Plus`
+  - Tree-shakable，仅打包使用的图标
+
+#### 构建工具与开发环境
+- **Vite 5.0.0**
+  - 下一代前端构建工具，基于 ESBuild + Rollup
+  - 开发服务器：原生 ESM 支持，极速热更新（HMR）
+  - 生产构建：Rollup 打包，自动代码分割和 Tree-shaking
+  - 插件生态：`@vitejs/plugin-react` 支持 JSX/TSX 转换
+
+- **@vitejs/plugin-react 5.1.2**
+  - Vite 官方 React 插件
+  - 支持 Fast Refresh（热更新时保留组件状态）
+  - 自动注入 React Runtime（无需手动 `import React`）
+  - 支持 JSX 和 TSX 文件
+
+#### 后端与数据库（保留）
+- **Cloudflare Pages Functions**
+  - Serverless 边缘计算平台
+  - 函数路由：`functions/api/*.js` 自动映射为 API 端点
+  - 支持 SSR 和 API 混合部署
+
+- **Cloudflare D1**
+  - 基于 SQLite 的全球分布式数据库
+  - 边缘计算数据存储，低延迟访问
+  - SQL 查询和事务支持
+
+#### 开发工具链
+- **Node.js >= 18.0.0**
+  - JavaScript 运行时环境
+
+- **npm**
+  - 包管理器，管理项目依赖
+
+- **Git**
+  - 版本控制系统
+
+#### Vite 配置优化详解
+```javascript
+// vite.config.js
+export default defineConfig({
+  plugins: [react()],                    // React 插件
+  root: 'src',                           // 源码根目录
+
+  resolve: {
+    alias: {                             // 路径别名配置
+      '@': resolve(__dirname, 'src'),
+      '@components': resolve(__dirname, 'src/components'),
+      '@hooks': resolve(__dirname, 'src/hooks'),
+      '@utils': resolve(__dirname, 'src/utils'),
+      '@styles': resolve(__dirname, 'src/styles')
+    }
+  },
+
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,         // 支持 Less 内联 JavaScript
+        modifyVars: {                    // Ant Design 主题定制
+          '@primary-color': '#5b8def',
+          '@border-radius-base': '8px',
+          // ... 更多主题变量
+        }
+      }
+    }
+  },
+
+  server: {
+    port: 3000,                          // 开发服务器端口
+    open: true,                          // 自动打开浏览器
+    proxy: {                             // API 代理配置
+      '/api': {
+        target: 'http://localhost:8788', // Cloudflare Workers 本地端口
+        changeOrigin: true
+      }
+    }
+  },
+
+  build: {
+    outDir: '../dist',                   // 构建输出目录
+    cssCodeSplit: false,                 // 合并所有 CSS 为单文件
+    rollupOptions: {
+      output: {
+        entryFileNames: 'js/[name].js',  // JS 文件命名
+        chunkFileNames: 'js/[name]-[hash].js',
+        assetFileNames: 'css/[name][extname]'  // CSS 文件命名
+      }
+    }
+  }
+})
+```
+
+#### 完整依赖列表
+```json
+{
+  "dependencies": {
+    "react": "^19.2.3",              // React 核心库
+    "react-dom": "^19.2.3",          // React DOM 渲染器
+    "react-router-dom": "^7.11.0",   // React 路由
+    "antd": "^5.12.0",               // Ant Design 组件库
+    "lucide-react": "^0.562.0",      // Lucide 图标库
+    "@vitejs/plugin-react": "^5.1.2" // Vite React 插件
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",                // Vite 构建工具
+    "less": "^4.2.0"                 // Less 预处理器
+  }
+}
 
 ### 📦 项目结构重组
 ```
@@ -351,13 +480,137 @@ src/
 
 - **构建产物**：
   - `dist/index.html` (0.66 kB gzip)
-  - `dist/css/style.css` (23.32 kB → 4.66 kB gzip)
-  - `dist/js/main.js` (730 kB → 236 kB gzip)
+  - `dist/css/style.css` (36.66 kB → 6.40 kB gzip)
+  - `dist/js/main.js` (813 kB → 260 kB gzip)
 
 ### 🔗 后续规划
-- [ ] 完善 News、VPN、Guide 页面的 React 实现
+- [x] 完善 News、VPN、Guide 页面的 React 实现
 - [ ] 实现评论展开/折叠功能
 - [ ] 对接真实的 Cloudflare D1 数据库 API
 - [ ] 优化代码分割，减少首屏 JS 体积
 - [ ] 添加骨架屏 (Skeleton) 提升加载体验
+
+## Update Log - 2026-01-07 (v3.1 - UI 彩色化升级)
+
+### 🎨 全面 UI 优化与彩色图标集成
+
+#### 1. VPN 页面重构 (`src/pages/VPN.jsx`)
+- **Hero 区域**：
+  - 添加大型 Shield 图标 (64px, 彩色 #5b8def)
+  - 渐变标题效果 (蓝色 → 天蓝色)
+  - 浮动动画效果
+- **优势展示卡片**：
+  - 4 个特色卡片：隐私保护 (Shield)、极速连接 (Zap)、解锁内容 (Globe2)、安全防护 (Lock)
+  - 每个图标配独立彩色主题 (#5b8def, #ffa502, #48dbfb, #ff4757)
+  - 悬停缩放 + 阴影动画
+- **VPN 服务商卡片**：
+  - ExpressVPN、NordVPN、Surfshark、CyberGhost 四大服务商
+  - Wifi 彩色图标 + 评分星标 (Star 图标，金色填充)
+  - CheckCircle2 图标标注特性列表
+  - ChevronRight 图标装饰按钮
+  - 每个服务商独立品牌色
+
+#### 2. News 页面重构 (`src/pages/News.jsx`)
+- **Hero 区域**：
+  - Newspaper 彩色图标 (64px) + 旋转动画
+  - Sparkles 闪光图标 (32px, 金色) + 脉冲动画
+- **新闻统计**：
+  - TrendingUp 图标 (绿色 #52c41a)
+  - 显示热门资讯总数
+- **新闻卡片**：
+  - Zap 图标标注来源标签
+  - Calendar 图标显示发布日期
+  - ExternalLink 图标装饰"阅读全文"链接
+  - 悬停时卡片上浮 + 蓝色阴影
+
+#### 3. Guide 页面重构 (`src/pages/Guide.jsx`)
+- **Hero 区域**：
+  - BookOpen 彩色图标 (64px) + 弹跳动画
+- **快速开始步骤卡片**：
+  - Download、Settings、Zap、CheckCircle2 四个步骤图标
+  - 彩色编号徽章 (右上角)
+  - 图标背景色渐变
+- **平台教程 Tabs**：
+  - Laptop 图标 (Windows/macOS)
+  - Terminal 图标 (Linux)
+  - Server 图标 (移动端)
+  - Code 图标标注命令行代码块
+- **常见问题**：
+  - AlertCircle 图标 (橙色 #ffa502)
+  - 渐变 Q 徽章标记问题
+
+#### 4. 全局 Message 组件美化
+- **样式增强** (`src/styles/index.less`):
+  - 圆角提升至 12px
+  - 毛玻璃效果 (backdrop-filter: blur(8px))
+  - 渐变背景色：
+    - 成功：绿色渐变 (#52c41a → #73d13d)
+    - 错误：红色渐变 (#ff4d4f → #ff7875)
+    - 警告：黄色渐变 (#faad14 → #fadb14)
+    - 信息：蓝色渐变 (#1890ff → #40a9ff)
+  - 多层阴影效果
+  - 白色文字 + 加粗字体
+
+- **主题配置** (`src/main.jsx`):
+  - Message contentPadding: 14px 20px
+  - fontSize: 15px
+  - Notification 圆角：12px
+
+#### 5. 图标使用统计
+本次新增 **22 个 Lucide React 彩色图标**：
+
+| 图标名称 | 使用位置 | 颜色 | 用途 |
+|---------|---------|------|------|
+| Shield | VPN Hero | #5b8def | 安全保护 |
+| Zap | VPN 优势、News 标签 | #ffa502 | 极速、热门 |
+| Globe2 | VPN 优势 | #48dbfb | 全球访问 |
+| Lock | VPN 优势 | #ff4757 | 隐私保护 |
+| Star | VPN 评分 | #ffa502 | 用户评分 |
+| Wifi | VPN 服务商 | 各品牌色 | 网络连接 |
+| CheckCircle2 | VPN 特性、Guide 步骤 | #52c41a, #48dbfb | 功能确认 |
+| ChevronRight | VPN 按钮 | 白色 | 前往链接 |
+| Newspaper | News Hero | #5b8def | 新闻资讯 |
+| Sparkles | News Hero | #ffa502 | 闪光效果 |
+| TrendingUp | News 统计 | #52c41a | 热门趋势 |
+| Calendar | News 卡片 | #999 | 发布日期 |
+| ExternalLink | News 卡片 | #5b8def | 外部链接 |
+| BookOpen | Guide Hero | #5b8def | 阅读指南 |
+| Download | Guide 步骤 | #5b8def | 下载客户端 |
+| Settings | Guide 步骤 | #ffa502 | 配置参数 |
+| Laptop | Guide Tabs | #00a4ef, #000 | 桌面系统 |
+| Terminal | Guide Tabs | #f7a500 | Linux 终端 |
+| Server | Guide Tabs | #52c41a | 移动设备 |
+| Code | Guide 命令行 | #999 | 代码块 |
+| AlertCircle | Guide FAQ | #ffa502 | 常见问题 |
+| Info | (预留) | #1890ff | 信息提示 |
+
+#### 6. 动画效果新增
+- **浮动动画** (float): VPN Shield 图标上下浮动
+- **旋转动画** (rotate): News Newspaper 图标 360° 旋转
+- **脉冲动画** (pulse): News Sparkles 图标缩放脉冲
+- **弹跳动画** (bounce): Guide BookOpen 图标上下弹跳
+- **悬停缩放**: 所有卡片图标 scale(1.1)
+
+#### 7. 文件修改清单
+- **新增文件**:
+  - `src/pages/VPN.less` (262 行)
+  - `src/pages/News.less` (189 行)
+  - `src/pages/Guide.less` (267 行)
+
+- **修改文件**:
+  - `src/pages/VPN.jsx` (214 行，从 21 行扩展)
+  - `src/pages/News.jsx` (135 行，从 21 行扩展)
+  - `src/pages/Guide.jsx` (333 行，从 21 行扩展)
+  - `src/styles/index.less` (+66 行，Message 美化)
+  - `src/main.jsx` (+8 行，主题配置)
+
+#### 8. 构建产物对比
+```diff
+- dist/css/style.css  23.32 kB → 4.66 kB gzip
++ dist/css/style.css  36.66 kB → 6.40 kB gzip  (+13 kB 原始，+1.7 kB gzip)
+
+- dist/js/main.js     730 kB → 236 kB gzip
++ dist/js/main.js     813 kB → 260 kB gzip    (+83 kB 原始，+24 kB gzip)
+```
+**影响分析**: 增加的体积主要来自新页面组件和图标，但 gzip 压缩后影响可控。
 

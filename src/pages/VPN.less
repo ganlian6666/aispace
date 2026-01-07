@@ -1,0 +1,318 @@
+/**
+ * VPN 页面样式
+ */
+@import '../styles/variables.less';
+
+.vpn-page {
+  min-height: 100vh;
+  background: @body-background;
+
+  // Hero Section
+  .vpn-hero {
+    padding: @spacing-xxl @spacing-xl;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    text-align: center;
+
+    .vpn-hero-content {
+      max-width: @layout-max-width;
+      margin: 0 auto;
+
+      .vpn-hero-icon {
+        margin-bottom: @spacing-lg;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+          filter: drop-shadow(0 4px 12px rgba(91, 141, 239, 0.25));
+        }
+      }
+
+      h1 {
+        font-size: 42px;
+        font-weight: 700;
+        color: @text-color;
+        margin-bottom: @spacing-md;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          flex-shrink: 0;
+        }
+      }
+
+      .vpn-hero-subtitle {
+        font-size: @font-size-xl;
+        color: @text-color-secondary;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Benefits Section
+  .vpn-benefits {
+    padding: @spacing-xxl @spacing-xl;
+    max-width: @layout-max-width;
+    margin: 0 auto;
+
+    .section-title {
+      font-size: @font-size-h2;
+      font-weight: 700;
+      color: @text-color;
+      text-align: center;
+      margin-bottom: @spacing-xxl;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .benefit-card {
+      height: 100%;
+      border-radius: @border-radius-lg;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .benefit-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: @border-radius-lg;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto @spacing-lg;
+      }
+
+      h3 {
+        font-size: @font-size-xl;
+        font-weight: 600;
+        color: @text-color;
+        text-align: center;
+        margin-bottom: @spacing-sm;
+      }
+
+      p {
+        font-size: @font-size-base;
+        color: @text-color-secondary;
+        text-align: center;
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+  }
+
+  // VPN Providers Section
+  .vpn-providers {
+    padding: @spacing-xxl @spacing-xl;
+    max-width: @layout-max-width;
+    margin: 0 auto;
+    background: #fafbfc;
+
+    .section-title {
+      font-size: @font-size-h2;
+      font-weight: 700;
+      color: @text-color;
+      text-align: center;
+      margin-bottom: @spacing-xxl;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vpn-card {
+      height: 100%;
+      border-radius: @border-radius-lg;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+      &:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+      }
+
+      .vpn-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: @spacing-lg;
+        padding-bottom: @spacing-md;
+        border-bottom: 1px solid #f0f0f0;
+
+        .vpn-name {
+          display: flex;
+          align-items: center;
+          gap: @spacing-md;
+
+          .vpn-icon-wrapper {
+            width: 52px;
+            height: 52px;
+            border-radius: @border-radius-base;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          h3 {
+            font-size: @font-size-xl;
+            font-weight: 700;
+            color: @text-color;
+            margin: 0;
+          }
+        }
+
+        .vpn-highlight {
+          font-size: @font-size-sm;
+          font-weight: 600;
+          padding: 4px 12px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .vpn-rating {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: @spacing-md;
+        padding: @spacing-sm @spacing-md;
+        background: #fafafa;
+        border-radius: @border-radius-base;
+
+        .rating-stars {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .rating-value {
+            font-size: @font-size-xl;
+            font-weight: 700;
+            color: @text-color;
+          }
+        }
+
+        .rating-text {
+          font-size: @font-size-sm;
+          color: @text-color-secondary;
+        }
+      }
+
+      .vpn-price {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: @spacing-lg;
+        padding: @spacing-md;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        border-radius: @border-radius-base;
+
+        .price-label {
+          font-size: @font-size-sm;
+          color: @text-color-secondary;
+          display: flex;
+          align-items: center;
+        }
+
+        .price-value {
+          font-size: @font-size-xl;
+          font-weight: 700;
+          color: @primary-color;
+        }
+      }
+
+      .vpn-features {
+        margin-bottom: @spacing-lg;
+
+        .feature-item {
+          display: flex;
+          align-items: center;
+          gap: @spacing-sm;
+          padding: @spacing-sm 0;
+          font-size: @font-size-base;
+          color: @text-color-secondary;
+
+          svg {
+            flex-shrink: 0;
+          }
+
+          &:not(:last-child) {
+            border-bottom: 1px dashed #f0f0f0;
+          }
+        }
+      }
+
+      .vpn-btn {
+        height: 48px;
+        font-size: @font-size-lg;
+        font-weight: 600;
+        border-radius: @border-radius-base;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: @spacing-xs;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  // Disclaimer
+  .vpn-disclaimer {
+    padding: @spacing-xl;
+    text-align: center;
+    background: #f5f5f5;
+
+    p {
+      font-size: @font-size-sm;
+      color: @text-color-secondary;
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .vpn-page {
+    .vpn-hero {
+      padding: @spacing-xl @spacing-md;
+
+      .vpn-hero-content {
+        h1 {
+          font-size: 32px;
+          flex-direction: column;
+          gap: @spacing-sm;
+        }
+
+        .vpn-hero-subtitle {
+          font-size: @font-size-lg;
+          flex-direction: column;
+          gap: @spacing-xs;
+        }
+      }
+    }
+
+    .vpn-benefits,
+    .vpn-providers {
+      padding: @spacing-xl @spacing-md;
+
+      .section-title {
+        font-size: @font-size-h3;
+        flex-direction: column;
+        gap: @spacing-xs;
+      }
+    }
+  }
+}

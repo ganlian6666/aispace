@@ -56,15 +56,30 @@
       font-size: @font-size-base;
       transition: @transition-base;
       border-radius: @border-radius-sm;
+      display: flex;
+      align-items: center;
+
+      svg {
+        transition: @transition-base;
+      }
 
       &:hover {
         color: @primary-color;
         background: @hover-background;
+
+        svg {
+          transform: scale(1.1);
+        }
       }
 
       &.active {
         color: @primary-color;
         background: @active-background;
+        font-weight: 600;
+
+        svg {
+          filter: drop-shadow(0 2px 4px rgba(91, 141, 239, 0.3));
+        }
 
         &::after {
           content: '';
@@ -72,9 +87,9 @@
           bottom: -1px;
           left: 50%;
           transform: translateX(-50%);
-          width: 24px;
-          height: 2px;
-          background: @primary-color;
+          width: 32px;
+          height: 3px;
+          background: linear-gradient(90deg, @primary-color, #48dbfb);
           border-radius: 2px;
         }
       }
