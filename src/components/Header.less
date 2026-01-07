@@ -1,0 +1,166 @@
+/**
+ * Header 组件样式
+ */
+@import '../styles/variables.less';
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: @header-height;
+  padding: 0 @spacing-xl;
+  display: flex;
+  align-items: center;
+  gap: @spacing-xl;
+  background: @header-background;
+  border-bottom: 1px solid @border-color-base;
+  box-shadow: @box-shadow-sm;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: @spacing-md;
+    margin-right: auto;
+
+    &-logo {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    strong {
+      display: block;
+      font-size: @font-size-lg;
+      font-weight: 600;
+      color: @text-color;
+      margin: 0;
+    }
+
+    &-subtitle {
+      font-size: @font-size-sm;
+      color: @text-color-secondary;
+      margin: 0;
+    }
+  }
+
+  .main-nav {
+    display: flex;
+    gap: @spacing-lg;
+
+    a {
+      position: relative;
+      padding: 8px @spacing-md;
+      color: @text-color-secondary;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: @font-size-base;
+      transition: @transition-base;
+      border-radius: @border-radius-sm;
+
+      &:hover {
+        color: @primary-color;
+        background: @hover-background;
+      }
+
+      &.active {
+        color: @primary-color;
+        background: @active-background;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -1px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 24px;
+          height: 2px;
+          background: @primary-color;
+          border-radius: 2px;
+        }
+      }
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: @spacing-md;
+
+    .github-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      color: @text-color-secondary;
+      text-decoration: none;
+      border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
+      font-size: @font-size-sm;
+      transition: @transition-base;
+
+      svg {
+        color: @text-color-secondary;
+        transition: @transition-base;
+      }
+
+      &:hover {
+        color: @text-color;
+        border-color: @primary-color;
+        background: @hover-background;
+
+        svg {
+          color: @primary-color;
+        }
+      }
+    }
+
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
+      color: @text-color-secondary;
+      font-size: @font-size-sm;
+      cursor: pointer;
+      transition: @transition-base;
+
+      svg {
+        color: @text-color-secondary;
+        transition: @transition-base;
+      }
+
+      &:hover {
+        color: @primary-color;
+        border-color: @primary-color;
+        background: @hover-background;
+
+        svg {
+          color: @primary-color;
+        }
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: @screen-md) {
+  .app-header {
+    padding: 0 @spacing-md;
+
+    .brand-subtitle {
+      display: none;
+    }
+
+    .main-nav {
+      gap: @spacing-sm;
+
+      a {
+        padding: 6px @spacing-sm;
+        font-size: @font-size-sm;
+      }
+    }
+  }
+}

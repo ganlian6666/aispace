@@ -1,0 +1,26 @@
+/**
+ * 通用页面样式
+ */
+@import '../styles/variables.less';
+
+.common-page {
+  min-height: 100vh;
+  background: @body-background;
+
+  .page-content {
+    max-width: @layout-max-width;
+    margin: 0 auto;
+    padding: @spacing-xxl @spacing-xl;
+
+    h1 {
+      font-size: @font-size-h1;
+      color: @text-color;
+      margin-bottom: @spacing-lg;
+    }
+
+    p {
+      font-size: @font-size-lg;
+      color: @text-color-secondary;
+    }
+  }
+}

@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+  plugins: [react()],
+
   // 源码目录
   root: 'src',
 
@@ -17,7 +20,7 @@ export default defineConfig({
       output: {
         // 简化文件名，便于 SSR 引用
         entryFileNames: 'js/[name].js',
-        chunkFileNames: 'js/[name].js',
+        chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.name.endsWith('.css')) {
             return 'css/[name][extname]';
@@ -47,9 +50,27 @@ export default defineConfig({
     }
   },
 
+  // 路径别名
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@components': resolve(__dirname, 'src/components'),
+      '@hooks': resolve(__dirname, 'src/hooks'),
+      '@utils': resolve(__dirname, 'src/utils'),
+      '@styles': resolve(__dirname, 'src/styles')
+    }
+  },
+
   // 开发服务器配置
   server: {
     port: 3000,
-    open: true
+    open: true,
+    // Cloudflare Functions API 代理
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8788',
+        changeOrigin: true
+      }
+    }
   }
 });
