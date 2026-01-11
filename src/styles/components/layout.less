@@ -1,0 +1,71 @@
+/**
+ * 布局样式
+ */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: @layout-max-width;
+  margin: 0 auto;
+  padding: @spacing-lg clamp(@spacing-md, 4vw, @spacing-xl) @spacing-xxl;
+  gap: @spacing-lg;
+}
+
+.container {
+  width: 100%;
+  max-width: @layout-max-width;
+  margin: 0 auto;
+  padding: 0 @spacing-lg;
+}
+
+// 区域样式
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: @spacing-lg;
+  background: @card-background;
+  border-radius: @border-radius-lg;
+  padding: @spacing-lg @spacing-xl;
+  border: 1px solid @border-color-base;
+  box-shadow: @box-shadow-sm;
+  flex-wrap: wrap;
+
+  h1 {
+    margin: 0;
+    font-size: @font-size-h1;
+    font-weight: 700;
+    color: @text-color;
+  }
+
+  p {
+    color: @text-color-secondary;
+    margin: @spacing-sm 0 0;
+    max-width: 500px;
+  }
+}
+
+// 网格布局
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: @spacing-lg;
+
+  @media (max-width: @screen-xl) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: @screen-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// 内容包装器
+.content-wrapper {
+  background: @card-background;
+  border-radius: @border-radius-lg;
+  padding: @spacing-xl;
+  border: 1px solid @border-color-base;
+  box-shadow: @box-shadow-card;
+}

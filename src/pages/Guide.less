@@ -1,0 +1,303 @@
+@import '../styles/variables.less';
+
+.guide-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-bottom: 60px;
+
+  .guide-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 24px;
+  }
+
+  // Hero Section
+  .guide-hero {
+    padding: 80px 24px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(91, 141, 239, 0.1) 0%, rgba(82, 196, 26, 0.1) 100%);
+
+    &-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    &-icon {
+      margin-bottom: 24px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #5b8def 0%, #52c41a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+
+      @media (max-width: 768px) {
+        font-size: 32px;
+      }
+    }
+
+    &-subtitle {
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+    }
+  }
+
+  // Section Title
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 48px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  // Quick Steps
+  .guide-steps {
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+
+      .step-card {
+        background: white;
+        border-radius: @border-radius-lg;
+        padding: 32px 24px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        position: relative;
+        overflow: hidden;
+
+        &:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 12px 32px rgba(91, 141, 239, 0.2);
+        }
+
+        .step-number {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: 700;
+        }
+
+        .step-icon {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 24px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+
+        &:hover .step-icon {
+          transform: scale(1.1) rotate(5deg);
+        }
+
+        h3 {
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 12px;
+          color: #2c3e50;
+        }
+
+        p {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.6;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  // Platform Guides
+  .guide-platforms {
+    background: white;
+    margin: 60px 0;
+
+    .guide-container {
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    .tab-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .platform-content {
+      max-width: 800px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+
+      .step-icon-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5b8def 0%, #48dbfb 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 16px;
+      }
+
+      .step-detail {
+        p {
+          font-size: 15px;
+          color: #666;
+          line-height: 1.8;
+          margin-bottom: 12px;
+        }
+
+        .command-box {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: #f6f8fa;
+          border: 1px solid #e1e4e8;
+          border-radius: @border-radius-base;
+          padding: 12px 16px;
+          margin-top: 12px;
+          font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+          code {
+            flex: 1;
+            font-size: 13px;
+            color: #24292e;
+            word-break: break-all;
+          }
+        }
+      }
+    }
+
+    :global {
+      .ant-steps-item-title {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #2c3e50 !important;
+      }
+
+      .ant-steps-item-description {
+        margin-top: 8px;
+      }
+
+      .ant-tabs-nav {
+        margin-bottom: 0 !important;
+      }
+
+      .ant-tabs-tab {
+        padding: 16px 24px !important;
+
+        &:hover {
+          background: rgba(91, 141, 239, 0.05);
+        }
+      }
+
+      .ant-tabs-ink-bar {
+        height: 3px !important;
+        background: linear-gradient(90deg, #5b8def 0%, #48dbfb 100%) !important;
+      }
+    }
+  }
+
+  // FAQ
+  .guide-faq {
+    .faq-collapse {
+      background: transparent;
+
+      :global {
+        .ant-collapse-item {
+          background: white;
+          border-radius: @border-radius-lg;
+          margin-bottom: 16px;
+          border: none;
+          overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+          &:hover {
+            box-shadow: 0 4px 16px rgba(91, 141, 239, 0.15);
+          }
+        }
+
+        .ant-collapse-header {
+          padding: 20px 24px !important;
+          font-size: 16px;
+          font-weight: 600;
+          color: #2c3e50 !important;
+
+          .ant-collapse-arrow {
+            color: @primary-color !important;
+          }
+        }
+
+        .ant-collapse-content {
+          border-top: 1px solid #f0f0f0;
+        }
+
+        .ant-collapse-content-box {
+          padding: 20px 24px !important;
+        }
+      }
+
+      .faq-question {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        &:before {
+          content: 'Q';
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #5b8def 0%, #48dbfb 100%);
+          color: white;
+          font-weight: 700;
+          font-size: 14px;
+        }
+      }
+
+      .faq-answer {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.8;
+        margin: 0;
+        padding-left: 40px;
+      }
+    }
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}

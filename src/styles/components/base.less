@@ -1,0 +1,99 @@
+/**
+ * 基础样式 - 重置与全局
+ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: @font-family;
+  background: @body-background;
+  color: @text-color;
+  min-height: 100vh;
+}
+
+a {
+  color: @primary-color;
+  text-decoration: none;
+  transition: @transition-base;
+
+  &:hover {
+    color: @primary-color-hover;
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// 滚动条样式
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: @border-color-light;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: @border-color-base;
+  border-radius: 3px;
+
+  &:hover {
+    background: @text-color-disabled;
+  }
+}
+
+// 文字辅助类
+.text-muted {
+  color: @text-color-secondary;
+}
+
+.text-disabled {
+  color: @text-color-disabled;
+}
+
+.text-primary {
+  color: @primary-color;
+}
+
+.text-success {
+  color: @success-color;
+}
+
+.text-warning {
+  color: @warning-color;
+}
+
+.text-error {
+  color: @error-color;
+}
+
+// 隐藏类
+.hidden {
+  display: none !important;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

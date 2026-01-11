@@ -1,0 +1,292 @@
+/**
+ * Guide 页面样式 - 程序员友好的文档风格
+ */
+
+// 内容容器
+.content-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: @padding-lg;
+}
+
+// 系统标签切换
+.os-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: @padding-xl;
+  background: @component-background;
+  border-radius: @border-radius-lg;
+  padding: 4px;
+  box-shadow: @box-shadow-base;
+  border: 1px solid @border-color-base;
+}
+
+.os-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: @border-radius-base;
+  color: @text-color-secondary;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: @transition-base;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  &:hover {
+    color: @text-color;
+    background: @background-color-light;
+  }
+
+  &.active {
+    background: @primary-color;
+    color: #fff;
+
+    svg {
+      fill: #fff;
+    }
+  }
+}
+
+// 内容区域切换
+.os-content {
+  display: none;
+
+  &.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// 教程章节
+.guide-section {
+  background: @component-background;
+  border-radius: @border-radius-lg;
+  padding: @padding-xl;
+  margin-bottom: @padding-lg;
+  box-shadow: @box-shadow-base;
+  border: 1px solid @border-color-base;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: @text-color;
+    margin-bottom: @padding-md;
+    padding-bottom: @padding-sm;
+    border-bottom: 2px solid @primary-color;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: @text-color;
+    margin: @padding-xl 0 @padding-md;
+
+    &:first-of-type {
+      margin-top: @padding-lg;
+    }
+  }
+
+  h4 {
+    font-size: 15px;
+    font-weight: 500;
+    color: @text-color-secondary;
+    margin: @padding-lg 0 @padding-sm;
+  }
+
+  > p {
+    color: @text-color-secondary;
+    line-height: 1.7;
+    margin-bottom: @padding-md;
+  }
+}
+
+// 代码块 - 程序员风格
+.code-block {
+  position: relative;
+  background: #1e1e1e;
+  border-radius: @border-radius-base;
+  margin: @padding-md 0 @padding-lg;
+  overflow: hidden;
+
+  code {
+    display: block;
+    padding: @padding-md @padding-lg;
+    padding-right: 80px; // 为复制按钮留出空间
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #d4d4d4;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #a0a0a0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+  }
+}
+
+// 步骤列表
+.step-list {
+  list-style: none;
+  counter-reset: step;
+  padding-left: 0;
+  margin: @padding-md 0;
+
+  li {
+    position: relative;
+    padding: @padding-sm 0 @padding-sm 40px;
+    margin-bottom: @padding-sm;
+    counter-increment: step;
+    line-height: 1.6;
+    color: @text-color-secondary;
+
+    &::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 26px;
+      height: 26px;
+      background: @primary-color;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .code-block {
+      margin-top: @padding-sm;
+      margin-left: -40px;
+      margin-right: 0;
+    }
+  }
+}
+
+// 提示框
+.tip-box {
+  background: fade(@primary-color, 8%);
+  border-left: 4px solid @primary-color;
+  border-radius: 0 @border-radius-base @border-radius-base 0;
+  padding: @padding-md @padding-lg;
+  margin: @padding-lg 0;
+  color: @text-color;
+  line-height: 1.6;
+
+  strong {
+    color: @primary-color;
+  }
+
+  &.warning {
+    background: fade(@warning-color, 8%);
+    border-left-color: @warning-color;
+
+    strong {
+      color: @warning-color;
+    }
+  }
+
+  ul {
+    margin: @padding-sm 0 0 @padding-lg;
+    padding: 0;
+
+    li {
+      margin-bottom: 6px;
+      color: @text-color-secondary;
+    }
+  }
+}
+
+// 表格样式覆盖
+.guide-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: @padding-md 0;
+  background: @component-background;
+  border-radius: @border-radius-base;
+  overflow: hidden;
+  border: 1px solid @border-color-base;
+
+  thead tr {
+    background: @background-color-light;
+  }
+
+  th, td {
+    padding: @padding-sm @padding-md;
+    text-align: left;
+    border-bottom: 1px solid @border-color-base;
+  }
+
+  th {
+    font-weight: 600;
+    color: @text-color;
+  }
+
+  td {
+    color: @text-color-secondary;
+
+    &[style*="monospace"] {
+      font-family: 'JetBrains Mono', monospace;
+      color: @primary-color;
+    }
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+// Hero 区域适配
+.hero {
+  text-align: center;
+  padding: @padding-xl @padding-lg;
+  margin-bottom: @padding-lg;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: @text-color;
+    margin-bottom: @padding-sm;
+  }
+
+  p {
+    font-size: 16px;
+    color: @text-color-secondary;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}

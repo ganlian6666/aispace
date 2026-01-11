@@ -1,0 +1,162 @@
+/**
+ * WebsiteCard 组件样式
+ */
+@import '../styles/variables.less';
+
+.website-card {
+  height: 100%;
+  transition: @transition-base;
+  border-radius: @border-radius-lg !important;
+  border: 1px solid @border-color-base;
+
+  &:hover {
+    box-shadow: @box-shadow-card;
+    transform: translateY(-2px);
+  }
+
+  .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing-md;
+    padding: @spacing-lg;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @spacing-md;
+
+    h3 {
+      margin: 0;
+      font-size: @font-size-lg;
+      font-weight: 600;
+      color: @text-color;
+      flex: 1;
+    }
+
+    .status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: @border-radius-sm;
+      font-size: @font-size-sm;
+      font-weight: 500;
+      border: 1px solid transparent;
+      min-width: 64px;
+      text-align: center;
+
+      &-success {
+        color: #4ade80;
+        background: rgba(74, 222, 128, 0.15);
+        border-color: rgba(74, 222, 128, 0.5);
+      }
+
+      &-error {
+        color: #f87171;
+        background: rgba(248, 113, 113, 0.15);
+        border-color: rgba(248, 113, 113, 0.5);
+      }
+
+      .latency {
+        font-size: 11px;
+        opacity: 0.85;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .card-description {
+    margin: 0;
+    font-size: @font-size-base;
+    color: @text-color-secondary;
+    line-height: @line-height-base;
+  }
+
+  .link-block {
+    display: flex;
+    align-items: center;
+    gap: @spacing-sm;
+    padding: @spacing-sm @spacing-md;
+    background: @background-color-light;
+    border-radius: @border-radius-base;
+    border: 1px solid @border-color-light;
+
+    a {
+      flex: 1;
+      color: @primary-color;
+      text-decoration: none;
+      font-size: @font-size-sm;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .ant-btn {
+      flex-shrink: 0;
+
+      &.copied {
+        color: #4ade80;
+        border-color: #4ade80;
+        background: rgba(74, 222, 128, 0.1);
+      }
+    }
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @spacing-md;
+    padding-top: @spacing-sm;
+    border-top: 1px solid @border-color-light;
+
+    .card-actions {
+      display: flex;
+      gap: @spacing-sm;
+
+      .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: @text-color-secondary;
+        padding: 4px 8px;
+
+        .icon-heart {
+          color: @error-color;
+          stroke-width: 1.5;
+        }
+
+        .icon-comment {
+          color: @primary-color;
+          stroke-width: 1.5;
+        }
+
+        &:hover {
+          background: @hover-background;
+
+          .like-count,
+          .comment-count {
+            color: @text-color;
+          }
+        }
+
+        &.like-btn.liked {
+          .icon-heart {
+            fill: @error-color;
+          }
+        }
+      }
+    }
+
+    .last-checked {
+      font-size: @font-size-sm;
+      color: @text-color-disabled;
+    }
+  }
+}
