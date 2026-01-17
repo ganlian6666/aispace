@@ -49,6 +49,7 @@ export async function onRequestGet(context) {
         <a href="/news">${T('nav_news')}</a>
         <a href="/vpn" class="active">${T('nav_vpn')}</a>
         <a href="/guide">${T('nav_guide')}</a>
+        <a href="/skills">${T('nav_skills')}</a>
       </nav>
       <div style="display:flex; align-items:center; margin-left: auto;">
         <div class="github-link" style="margin-left: 0;">

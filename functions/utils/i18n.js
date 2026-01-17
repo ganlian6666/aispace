@@ -185,7 +185,36 @@ export const translations = {
         guide_desc_api_key: "API 密钥",
         code_comment_mac_zsh: "# 如果使用 zsh（macOS 默认）",
         code_comment_mac_bash: "# 如果使用 bash",
-        guide_note_label: "注意："
+        guide_note_label: "注意：",
+
+        // Skills Page
+        nav_skills: "Skills & MCP",
+        skills_page_title: "Skills & MCP · 自由空间",
+        skills_hero_title: "Skills & MCP 收录",
+        skills_hero_desc: "精选 Claude Skills 插件和 MCP 服务器，按功能分类，包含安装和使用说明。",
+        skills_tab_skills: "Skills 插件",
+        skills_tab_mcp: "MCP 服务器",
+        skills_cat_hot: "🔥 新发布",
+        skills_cat_dev: "开发工具",
+        skills_cat_db: "数据库",
+        skills_cat_fs: "文件系统",
+        skills_cat_web: "网页自动化",
+        skills_cat_knowledge: "知识管理",
+        skills_cat_design: "设计工具",
+        skills_cat_search: "搜索引擎",
+        skills_cat_devops: "DevOps",
+        skills_cat_comm: "通讯工具",
+        skills_cat_aiml: "AI/ML",
+        skills_cat_data: "数据处理",
+        skills_cat_docs: "文档",
+        skills_cat_efficiency: "效率工具",
+        skills_cat_writing: "写作",
+        skills_cat_meta: "元技能",
+        skills_install: "安装",
+        skills_usage: "用法",
+        skills_github: "GitHub",
+        skills_view_comments: "查看评论",
+        skills_hide_comments: "收起"
     },
 
     // English
@@ -374,7 +403,36 @@ export const translations = {
         guide_desc_api_key: "API Key",
         code_comment_mac_zsh: "# If using zsh (macOS default)",
         code_comment_mac_bash: "# If using bash",
-        guide_note_label: "Note:"
+        guide_note_label: "Note:",
+
+        // Skills Page
+        nav_skills: "Skills & MCP",
+        skills_page_title: "Skills & MCP · AI Space",
+        skills_hero_title: "Skills & MCP Collection",
+        skills_hero_desc: "Curated Claude Skills plugins and MCP servers. Categorized by function with installation and usage guides.",
+        skills_tab_skills: "Skills Plugins",
+        skills_tab_mcp: "MCP Servers",
+        skills_cat_hot: "🔥 New Releases",
+        skills_cat_dev: "Dev Tools",
+        skills_cat_db: "Database",
+        skills_cat_fs: "File System",
+        skills_cat_web: "Web Automation",
+        skills_cat_knowledge: "Knowledge",
+        skills_cat_design: "Design",
+        skills_cat_search: "Search",
+        skills_cat_devops: "DevOps",
+        skills_cat_comm: "Communication",
+        skills_cat_aiml: "AI/ML",
+        skills_cat_data: "Data",
+        skills_cat_docs: "Docs",
+        skills_cat_efficiency: "Efficiency",
+        skills_cat_writing: "Writing",
+        skills_cat_meta: "Meta Skills",
+        skills_install: "Install",
+        skills_usage: "Usage",
+        skills_github: "GitHub",
+        skills_view_comments: "View Comments",
+        skills_hide_comments: "Hide"
     }
 };
 

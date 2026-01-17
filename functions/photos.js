@@ -243,6 +243,7 @@ export async function onRequestGet(context) {
         <a href="/photos" class="active">${T_Safe('photos_title')}</a>
         <a href="/vpn">${T('nav_vpn')}</a>
         <a href="/guide">${T('nav_guide')}</a>
+        <a href="/skills">${T('nav_skills')}</a>
       </nav>
       <!-- Same Right Nav -->
       <div style="display:flex; align-items:center; margin-left: auto;">
